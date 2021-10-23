@@ -1,0 +1,107 @@
+div#log-box {
+    width: 300px;
+    height: 350px;
+    background: #C4C4C4;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -150px;
+    margin-top: -175px;
+    border-radius: 41px;
+    text-align: center;
+}
+
+.logs {
+    margin-top: 5px;
+}
+
+input {
+    width: 80%;
+    height: 40px;
+    border-radius: 45px;
+    margin: 5px;
+    border: 0px;
+    box-shadow: 1px 1px 5px;
+}
+
+::placeholder {
+    padding-left: 10px;
+}
+
+.log-button {
+    margin-top: 10px;
+    width: 25%;
+    height: 30px;
+    background: #FFCF88;
+    border-radius: 45px;
+    border: 0px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.i42-button {
+    margin-top: 10px;
+    width: 75%;
+    height: 40px;
+    border-radius: 45px;
+    border: 0px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 38px;
+}
+
+img.i42-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.or-line {
+    margin-top: 10px;
+}
+
+.line {
+    fill: none;
+    stroke: black;
+    stroke-width: 6;
+    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+    width: 35%;
+    margin-inline: 10px;
+    margin-top: 5px;
+    align-items: center;
+    background: black;
+    display: inline-flex;
+}
+
+a.sign-in {
+    width: 100%;
+    color: black;
+    font-size: 12px;
+    display: flex;
+    margin-top: 20px;
+    position: absolute;
+    bottom: 2%;
+    justify-content: center;
+}
+
+a.log-in {
+    width: 100%;
+    color: black;
+    font-size: 12px;
+    display: flex;
+    margin-top: 20px;
+    position: absolute;
+    bottom: 2%;
+    justify-content: center;
+}
+
+.bg {
+    background-image: url(https://vistapointe.net/images/pong-9.jpg);
+}
+
+/*<img src="	https://vistapointe.net/images/pong-9.jpg" alt="" className="background"></img>*/
