@@ -1,47 +1,14 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import './login.css'
 import axios from "axios";
 import { Redirect } from 'react-router-dom';
 import { LogForm } from './login.form'
 
-function Request_token_42() {
-	axios.request({
-		url: "/oauth/token",
-		method: "post",
-		baseURL: "https://api.intra.42.fr",
-		auth: {
-			username: "3a68ec0578b1ddb8b72705c05b0e73ef78ff5a1775aa2fe801d02e5437c98a79",
-			password: "9944807a22d32f2777f88bdbe170d6144548d057ec5e39d5f8a7aec2775f05fc"
-		},
-		data: {
-			"grant_type": "client_credentials",
-			"scope": "public"
-		}
-	}).then(function (res: any) {
-		console.log(res.data);
-		axios.request({
-			url: "/v2/campus_users",
-			method: "get",
-			baseURL: "https://api.intra.42.fr",
-			params: {
-				access_token: res.data.access_token
-			},
-			data: {
-				"grant_type": "client_credentials",
-				"scope": "public"
-			}
-		}).then(function (res2: any) {
-			console.log(res2.data);
-		})
-	});
-}
-
-export function GetCode(): any {
+export function getCode(): ReactElement {
 
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	const code = urlParams.get("code");
-	console.log(code);
 	return (
 		<Redirect to='/' />
 	);
@@ -49,7 +16,6 @@ export function GetCode(): any {
 
 export class Login extends React.Component {
 	render() {
-		Request_token_42();
 		return (
 			<div className="bg">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -65,6 +31,6 @@ export class Login extends React.Component {
 					<a href="signin" rel="noreferrer" className="sign-in">New user ? Sign in</a>
 				</div>
 			</div>
-		)
+		);
 	}
 }
