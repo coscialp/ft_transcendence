@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import './login.css'
 import axios from "axios";
 import { Redirect } from 'react-router-dom';
@@ -55,8 +55,6 @@ export function GetCode(): any {
 
 export class Login extends React.Component {
 	render() {
-		//window.open("https://api.intra.42.fr/oauth/authorize?client_id=3a68ec0578b1ddb8b72705c05b0e73ef78ff5a1775aa2fe801d02e5437c98a79&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth%2Fredirect&response_type=code")
-		//Request_token_42();
 		return (
 			<div className="bg">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -72,6 +70,6 @@ export class Login extends React.Component {
 					<a href="signin" rel="noreferrer" className="sign-in">New user ? Sign in</a>
 				</div>
 			</div>
-		)
+		);
 	}
 }
