@@ -1,5 +1,6 @@
 import './login.css'
 import React from 'react'
+import axios from 'axios';
 
 export class LogForm extends React.Component<{}, { username: string, password: string }> {
     constructor(props: any) {
@@ -22,6 +23,15 @@ export class LogForm extends React.Component<{}, { username: string, password: s
     handleSubmit(event: any) {
       console.log('Username: ' + this.state.username)
       console.log('Password: ' + this.state.password)
+      axios.request({
+        url: '/auth/signin',
+        method: 'post',
+        baseURL: 'http://localhost:5000',
+        data: {
+          username: this.state.username,
+          password: this.state.password,
+        }
+      });
       event.preventDefault();
     }
 

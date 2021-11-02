@@ -9,7 +9,7 @@ function App(): ReactElement {
     <main>
       <Route exact path={'/'} component={ Login }/>
       <Route path={"/oauth/redirect"} component={ getCode } />
-			<Route exact path={"/signin"} component={ SignUp } />
+			<Route exact path={"/signup"} component={ SignUp } />
     </main>
     </Router>
   );
