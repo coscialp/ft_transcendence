@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
-import { Login, getCode } from './components/login/login';
+import { Login } from './components/login/login';
+import { Register } from './components/login/register';
 import { SignUp } from './components/login/signUp';
 
 function App(): ReactElement {
@@ -8,7 +9,7 @@ function App(): ReactElement {
     <Router>
     <main>
       <Route exact path={'/'} component={ Login }/>
-      <Route path={"/oauth/redirect"} component={ getCode } />
+      <Route path={"/oauth/redirect"} component={ Register } />
 			<Route exact path={"/signup"} component={ SignUp } />
     </main>
     </Router>
