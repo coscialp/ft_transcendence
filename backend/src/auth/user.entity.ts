@@ -8,6 +8,21 @@ export class User {
     @Column({ unique: true })
     username: string;
 
-    @Column()
-    password: string;
+    @Column({nullable: true})
+    password?: string | null;
+
+    @Column({nullable: true})
+    firstName?: string | null;
+
+    @Column({nullable: true})
+    lastName?: string | null;
+
+    @Column({nullable: true})
+    nickName?: string | null;
+
+    @Column({nullable: true})
+    profileImage?: string | null;
+
+    @Column({nullable: true})
+    email?: string | null;
 }

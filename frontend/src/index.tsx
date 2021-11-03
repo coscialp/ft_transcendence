@@ -5,9 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import './components/utils/tailwind.generated.css'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <App />,
   document.getElementById('root')
 );
 
