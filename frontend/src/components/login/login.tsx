@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import './login.css'
-import axios from "axios";
 import { Redirect } from 'react-router-dom';
 import { LogForm } from './login.form'
+import axios from "axios";
 
 function Request_token_42(code: string | null) {
 	axios.request({
@@ -46,8 +46,8 @@ export function GetCode(): any {
 	const queryString = window.location.search;
 	const urlParams = new URLSearchParams(queryString);
 	const code = urlParams.get("code");
-	console.log(code);
-	Request_token_42(code);
+
+	axios.post(`http://localhost:5000/auth/api42/signin?code=${code}`)
 	return (
 		<Redirect to='/' />
 	);
@@ -63,11 +63,11 @@ export class Login extends React.Component {
 					<div className="or-line">
 						<hr className="line"></hr>OR<hr className="line"></hr>
 					</div>
-					<button className="i42-button" onClick={() => window.open("https://api.intra.42.fr/oauth/authorize?client_id=3a68ec0578b1ddb8b72705c05b0e73ef78ff5a1775aa2fe801d02e5437c98a79&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth%2Fredirect&response_type=code")}>
+					<button className="i42-button" onClick={() => window.open("https://api.intra.42.fr/oauth/authorize?client_id=3a68ec0578b1ddb8b72705c05b0e73ef78ff5a1775aa2fe801d02e5437c98a79&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth%2Fredirect&response_type=code", '_self')}>
 						<img className="i42-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/42_Logo.svg/langfr-280px-42_Logo.svg.png" alt="" />
 						Connect with 42
 					</button><br />
-					<a href="signin" rel="noreferrer" className="sign-in">New user ? Sign in</a>
+					<a href="signup" rel="noreferrer" className="sign-in">New user ? Sign up</a>
 				</div>
 			</div>
 		);
