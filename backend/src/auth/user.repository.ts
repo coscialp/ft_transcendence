@@ -19,7 +19,22 @@ export class UsersRepository extends Repository<User> {
         }
     }
 
-    async createUser42(user: User) : Promise<void> {
+    async createUser42(authCredentialsDto: AuthCredentialsDto) : Promise<void> {
+        const { username, password, firstName, lastName, nickName, profileImage, email } = authCredentialsDto;
+        
+        const salt: string = await bcrypt.genSalt();
+        const hashedPassword: string = await bcrypt.hash(password, salt);
+
+        const user: User = this.create({
+            username: username,
+            password: hashedPassword,
+            firstName: firstName,
+            lastName: lastName,
+            nickName: nickName,
+            profileImage: profileImage,
+            email: email,
+          });
+        
         try {
             await this.save(user);
         } catch(error) {

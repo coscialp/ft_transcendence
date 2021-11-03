@@ -8,6 +8,7 @@ import { JwtPayload } from './jwt-payload.interface';
 import { User } from './user.entity';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
+import { Auth42Dto } from './dto/auth-42.dto';
 
 @Injectable()
 export class AuthService {
@@ -45,10 +46,10 @@ export class AuthService {
     }
   }
 
-  async signIn42(code: string): Promise<any> {
+  async signIn42(auth42Dto: Auth42Dto): Promise<{ accessToken: string }> {
     try {
       const token = this.http.post(
-        `${this.authorizationURI}?grant_type=authorization_code&client_id=${this.clientId}&client_secret=${this.clientSecret}&code=${code}&redirect_uri=${this.redirectURI}`,
+        `${this.authorizationURI}?grant_type=authorization_code&client_id=${this.clientId}&client_secret=${this.clientSecret}&code=${auth42Dto.code}&redirect_uri=${this.redirectURI}`,
       );
 
       this.accessToken = (await lastValueFrom(token)).data.access_token;
@@ -61,20 +62,26 @@ export class AuthService {
 
       console.log(`status: ${status}`);
 
-      //return data;
-
-      const user: User = this.usersRepository.create({
+      const authCredentialsDto: AuthCredentialsDto = {
         username: data.login,
+        password: auth42Dto.password,
+        nickName: auth42Dto.nickName,
         firstName: data.first_name,
         lastName: data.last_name,
         profileImage: data.image_url,
         email: data.email,
-      });
+      };
 
-      console.log(user);
+      const { username, password } = authCredentialsDto;
+      const user: User = await this.usersRepository.findOne({ username });
+  
+      if (!user || !(await bcrypt.compare(password, user.password))) {
+        this.usersRepository.createUser42(authCredentialsDto);
+      }
+      const payload: JwtPayload = { username };
+      const accessToken: string = this.jwtService.sign(payload);
+      return { accessToken };
 
-      this.usersRepository.createUser42(user);
-      
     } catch (error) {
       console.log(error);
     }
