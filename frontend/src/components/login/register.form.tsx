@@ -54,7 +54,7 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
 				<input type="password" placeholder="Enter your Password" value={this.state.password} onChange={this.handleChangePass} />
 			</div>
 			
-            <input className="log-button" type="submit" value="Sign In" />
+            <input className="log-button" type="submit" value="Register" />
         </form>
       );
     }

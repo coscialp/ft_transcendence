@@ -8,6 +8,7 @@ export class Register extends React.Component {
 			<div className="bg">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				<div id="log-box">
+					Register
 					<RegisterForm />
 				</div>
 			</div>

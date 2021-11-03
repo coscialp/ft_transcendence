@@ -35,7 +35,7 @@ services:
 
   frontend:
     image: node
-    command: yarn start
+    command: yarn start:dev
     volumes:
      - ./frontend:/usr/src/app
     working_dir: /usr/src/app

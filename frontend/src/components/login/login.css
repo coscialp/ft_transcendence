@@ -22,9 +22,6 @@ input {
     margin: 5px;
     border: 0px;
     box-shadow: 1px 1px 5px;
-}
-
-::placeholder {
     padding-left: 10px;
 }
 
