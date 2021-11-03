@@ -6,6 +6,7 @@ import { UsersRepository } from './user.repository';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.startegy';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { JwtStrategy } from './jwt.startegy';
         expiresIn: 3600,
       },
     }),
+    HttpModule,
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],

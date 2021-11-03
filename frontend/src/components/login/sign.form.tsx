@@ -3,7 +3,7 @@ import React from 'react'
 import axios from 'axios';
 
 export class SignForm extends React.Component<{}, { username: string, password: string }> {
-    constructor(props: any) {
+    constructor(props: {username: string, password: string}) {
       super(props);
       this.state = {username: '', password: ''};
   

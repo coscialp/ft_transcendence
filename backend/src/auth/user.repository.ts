@@ -18,4 +18,12 @@ export class UsersRepository extends Repository<User> {
             console.log(error.code);
         }
     }
+
+    async createUser42(user: User) : Promise<void> {
+        try {
+            await this.save(user);
+        } catch(error) {
+            console.log(error.code);
+        }
+    }
 }

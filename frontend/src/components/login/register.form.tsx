@@ -2,8 +2,8 @@ import './login.css'
 import React from 'react'
 import axios from 'axios';
 
-export class LogForm extends React.Component<{}, { username: string, password: string }> {
-    constructor(props: any) {
+export class RegisterForm extends React.Component<{}, { username: string, password: string }> {
+    constructor(props: {username: string, password: string}) {
       super(props);
       this.state = {username: '', password: ''};
   
@@ -21,17 +21,24 @@ export class LogForm extends React.Component<{}, { username: string, password: s
       }
   
     handleSubmit(event: any) {
+        
+        const queryString = window.location.search;
+		const urlParams = new URLSearchParams(queryString);
+		const code = urlParams.get("code");
+
       console.log('Username: ' + this.state.username)
       console.log('Password: ' + this.state.password)
       axios.request({
         url: '/auth/signin',
         method: 'post',
         baseURL: 'http://localhost:5000',
-        data: {
-          username: this.state.username,
-          password: this.state.password,
+        params: {
+            "code": code,
+            "nickname": this.state.username,
+            "password": this.state.password,
         }
-      });
+      }
+      )
       event.preventDefault();
     }
 
@@ -47,10 +54,10 @@ export class LogForm extends React.Component<{}, { username: string, password: s
 				<input type="password" placeholder="Enter your Password" value={this.state.password} onChange={this.handleChangePass} />
 			</div>
 			
-            <input className="log-button" type="submit" value="Log In" />
+            <input className="log-button" type="submit" value="Sign In" />
         </form>
       );
     }
   }
 
-export default LogForm
+export default RegisterForm
