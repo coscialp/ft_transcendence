@@ -62,9 +62,10 @@ export class AuthService {
 
       console.log(`status: ${status}`);
 
+
       const authCredentialsDto: AuthCredentialsDto = {
         username: data.login,
-        password: auth42Dto.password,
+        password: null,
         nickName: auth42Dto.nickName,
         firstName: data.first_name,
         lastName: data.last_name,
@@ -72,15 +73,17 @@ export class AuthService {
         email: data.email,
       };
 
-      const { username, password } = authCredentialsDto;
+      const { username } = authCredentialsDto;
       const user: User = await this.usersRepository.findOne({ username });
   
-      if (!user || !(await bcrypt.compare(password, user.password))) {
-        this.usersRepository.createUser42(authCredentialsDto);
+
+      if (!user) {
+        await this.usersRepository.createUser42(authCredentialsDto);
       }
+      
       const payload: JwtPayload = { username };
       const accessToken: string = this.jwtService.sign(payload);
-      return { accessToken };
+      return { accessToken: accessToken };
 
     } catch (error) {
       console.log(error);
