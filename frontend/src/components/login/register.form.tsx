@@ -33,7 +33,7 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
             "nickName": this.state.username,
         }
       }
-      )
+      ).then((response) => { window.open("/home", '_self'); });
       event.preventDefault();
     }
 
@@ -44,7 +44,7 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
 				Username<br/>
 				<input type="text" placeholder="Enter your Username" value={this.state.username} onChange={this.handleChangeUser} />
 			</div>
-            <input className="log-button" type="submit" value="Sign In" />
+            <input className="log-button" type="submit" value="Register" />
         </form>
       );
     }
