@@ -33,7 +33,7 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
             "nickName": this.state.username,
         }
       }
-      )
+      ).then((response) => { window.open("/home", '_self'); });
       event.preventDefault();
     }
 

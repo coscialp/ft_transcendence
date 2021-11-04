@@ -1,9 +1,7 @@
 import React from "react";
 import './login.css'
-import { Redirect } from 'react-router-dom';
 import { LogForm } from './login.form'
 import axios from "axios";
-import { Register } from "./register";
 
 
 export async function Request_token_42(code: string | null): Promise<any> {
