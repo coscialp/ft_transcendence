@@ -14,7 +14,7 @@ function App() {
       <NavBar />
       <main>
         <Route exact path={'/'} component={Login} />
-        <Route path={"/oauth/redirect"} component={GetCode} />
+        <Route path={"/oauth/redirect"} component={Register} />
         <Route exact path={"/signin"} component={SignUp} />
         <Route exact path={"/home"} component={Home} />
         <Route exact path={"/play"} component={GameModSelection}/>
