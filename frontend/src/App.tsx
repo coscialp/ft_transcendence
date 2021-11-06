@@ -7,10 +7,12 @@ import { Home } from './components/home/home';
 import { BackGround } from './components/background/BackGround'
 import { NavBar } from './components/navbar/navbar'
 import { GameModSelection } from './components/play/mod_selection'
+
+
 function App() {
   return (
     <Router>
-      <BackGround />
+      <BackGround/>
       <NavBar />
       <main>
         <Route exact path={'/'} component={Login} />
