@@ -1,9 +1,7 @@
 import React from "react";
 import './login.css'
-import { Redirect } from 'react-router-dom';
 import { LogForm } from './login.form'
 import axios from "axios";
-import { Register } from "./register";
 
 
 export async function Request_token_42(code: string | null): Promise<any> {
@@ -20,21 +18,6 @@ export async function Request_token_42(code: string | null): Promise<any> {
 		}
 	}).then((res: any) => console.log(res));
 }
-
-/*export function getCode(): any {
-	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	const code = urlParams.get("code");
-
-<<<<<<< HEAD
-	axios.post(`http://localhost:5000/auth/api42/signin?code=${code}`)
-=======
-	//axios.post(`http://localhost:5000/auth/api42/signin?code=${code}`)
->>>>>>> akerdeka
-	return (
-		<Register />
-	);
-}*/
 
 export class Login extends React.Component {
 	render() {

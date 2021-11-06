@@ -1,6 +1,7 @@
 import './login.css'
 import React from 'react'
 import axios from 'axios';
+import { Redirect } from 'react-router';
 
 export class RegisterForm extends React.Component<{}, { username: string, password: string }> {
     constructor(props: {username: string, password: string}) {
@@ -8,7 +9,6 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
       this.state = {username: '', password: ''};
   
       this.handleChangeUser = this.handleChangeUser.bind(this);
-      this.handleChangePass = this.handleChangePass.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
     }
   
@@ -16,9 +16,6 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
       this.setState({username: event.target.value});
     }
 
-    handleChangePass(event: any) {
-        this.setState({password: event.target.value});
-      }
   
     handleSubmit(event: any) {
         
@@ -26,19 +23,17 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
 		const urlParams = new URLSearchParams(queryString);
 		const code = urlParams.get("code");
 
-      console.log('Username: ' + this.state.username)
-      console.log('Password: ' + this.state.password)
+      console.log('NickName: ' + this.state.username)
       axios.request({
-        url: '/auth/signin',
+        url: '/auth/api42/signin',
         method: 'post',
         baseURL: 'http://localhost:5000',
         params: {
             "code": code,
-            "nickname": this.state.username,
-            "password": this.state.password,
+            "nickName": this.state.username,
         }
       }
-      )
+      ).then((response) => { window.open("/home", '_self'); });
       event.preventDefault();
     }
 
@@ -49,12 +44,7 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
 				Username<br/>
 				<input type="text" placeholder="Enter your Username" value={this.state.username} onChange={this.handleChangeUser} />
 			</div>
-			<div className="logs">
-				Password<br/>
-				<input type="password" placeholder="Enter your Password" value={this.state.password} onChange={this.handleChangePass} />
-			</div>
-			
-            <input className="log-button" type="submit" value="Sign In" />
+            <input className="log-button" type="submit" value="Register" />
         </form>
       );
     }

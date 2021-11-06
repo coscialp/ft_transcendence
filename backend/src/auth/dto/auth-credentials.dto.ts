@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString, Matches, MaxLength, MinLength } from 'class-valid
 export class AuthCredentialsDto {
   @IsNotEmpty()
   @IsString()
-  @MinLength(4)
+  @MinLength(2)
   @MaxLength(20)
   username: string;
 
@@ -15,4 +15,19 @@ export class AuthCredentialsDto {
     message: 'password is too weak',
   })
   password: string;
+
+  @IsString()
+  firstName?: string | null;
+
+  @IsString()
+  lastName?: string | null;
+
+  @IsString()
+  nickName?: string | null;
+
+  @IsString()
+  profileImage: string | null;
+
+  @IsString()
+  email: string | null;
 }
