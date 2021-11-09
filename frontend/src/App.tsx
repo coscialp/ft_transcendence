@@ -7,7 +7,7 @@ import { Home } from './components/home/home';
 import { BackGround } from './components/background/BackGround'
 import { NavBar } from './components/navbar/navbar'
 import { GameModSelection } from './components/play/mod_selection'
-
+import { Profile } from './components/profile/profile'
 
 function App() {
   return (
@@ -20,6 +20,7 @@ function App() {
         <Route exact path={"/signin"} component={SignUp} />
         <Route exact path={"/home"} component={Home} />
         <Route exact path={"/play"} component={GameModSelection}/>
+        <Route exact path={"/profile"} component={Profile}/>
       </main>
     </Router>
   );

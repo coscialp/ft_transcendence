@@ -14,7 +14,7 @@ export function Displayfriend({user, msg}: any): ReactElement
 {
     return (
         <div className="text-right right-4%  relative height-10% width-80% text-xl">
-            {user} {(online == 1)? "🟢" : "🔴"}
+            {user} {(online === 1)? "🔵" : "🔴"}
         </div>
     )
 }
