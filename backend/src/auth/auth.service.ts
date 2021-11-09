@@ -62,6 +62,7 @@ export class AuthService {
 
       console.log(`status: ${status}`);
 
+      console.log(auth42Dto.nickName);
 
       const authCredentialsDto: AuthCredentialsDto = {
         username: data.login,
