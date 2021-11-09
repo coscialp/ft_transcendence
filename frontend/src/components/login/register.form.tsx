@@ -1,7 +1,6 @@
 import './login.css'
 import React from 'react'
 import axios, { AxiosResponse } from 'axios';
-import { useCookies } from 'react-cookie';
 
 export class RegisterForm extends React.Component<{}, { username: string, password: string }> {
   constructor(props: {username: string, password: string}) {
@@ -32,7 +31,7 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
             "nickName": this.state.username,
         }
       }
-      ).then((response: AxiosResponse<unknown, any>) =>  {document.cookie = `access_token=${response.data}`; console.log(document.cookie)});
+      ).then((response: AxiosResponse<any, any>) =>  {window.open(`http://localhost:3000/cookies?token=${response.data.accessToken}`, '_self')});
       event.preventDefault();
     }
 
