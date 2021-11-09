@@ -1,27 +1,25 @@
 import './login.css'
 import React from 'react'
-import axios from 'axios';
-import { Redirect } from 'react-router';
+import axios, { AxiosResponse } from 'axios';
 
 export class RegisterForm extends React.Component<{}, { username: string, password: string }> {
-    constructor(props: {username: string, password: string}) {
+  constructor(props: {username: string, password: string}) {
       super(props);
       this.state = {username: '', password: ''};
   
       this.handleChangeUser = this.handleChangeUser.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
     }
-  
+
     handleChangeUser(event: any) {
       this.setState({username: event.target.value});
     }
 
-  
     handleSubmit(event: any) {
         
-        const queryString = window.location.search;
-		const urlParams = new URLSearchParams(queryString);
-		const code = urlParams.get("code");
+      const queryString = window.location.search;
+		  const urlParams = new URLSearchParams(queryString);
+		  const code = urlParams.get("code");
 
       console.log('NickName: ' + this.state.username)
       axios.request({
@@ -33,7 +31,7 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
             "nickName": this.state.username,
         }
       }
-      ).then((response) => { window.open("/home", '_self'); });
+      ).then((response: AxiosResponse<any, any>) =>  {window.open(`http://localhost:3000/cookies?token=${response.data.accessToken}`, '_self')});
       event.preventDefault();
     }
 

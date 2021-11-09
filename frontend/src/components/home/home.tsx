@@ -5,6 +5,18 @@ import Actuality from './actuality'
 import FriendList from './friendlist'
 import Message from './message'
 
+//function Checkconnected()
+//{
+//  const [cookies, setCookie] = useCookies(["access_token"]);
+//  var test = cookies.access_token;
+//  console.log(test.lenght)
+//
+//}
+//
+//window.onbeforeunload = function () {
+//  Checkconnected();
+//}
+
 export class Home extends React.Component {
   render() {
     return (

@@ -1,4 +1,3 @@
-import React from 'react'
 import { GetNews } from './props'
 import { usernews } from './usernews'
 function Actuality() {

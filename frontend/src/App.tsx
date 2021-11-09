@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { Cookies } from './components/cookies/cookies';
 import { Login } from './components/login/login';
 import { Register } from './components/login/register';
 import { SignUp } from './components/login/signUp';
@@ -15,9 +16,10 @@ function App() {
       <BackGround/>
       <NavBar />
       <main>
-        <Route exact path={'/'} component={Login} />
-        <Route path={"/oauth/redirect"} component={Register} />
-        <Route exact path={"/signin"} component={SignUp} />
+      <Route exact path={'/'} component={ Login }/>
+      <Route path={"/oauth/redirect"} component={ Register } />
+			<Route exact path={"/signup"} component={ SignUp } />
+      <Route path={"/cookies"} component={ Cookies } />
         <Route exact path={"/home"} component={Home} />
         <Route exact path={"/play"} component={GameModSelection}/>
         <Route exact path={"/profile"} component={Profile}/>
