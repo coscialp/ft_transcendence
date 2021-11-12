@@ -40,9 +40,9 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
         <form onSubmit={this.handleSubmit}>
           <div className="logs">
 				Username<br/>
-				<input type="text" placeholder="Enter your Username" value={this.state.username} onChange={this.handleChangeUser} />
+				<input type="text" className="InputStyle" placeholder="Enter your Username" value={this.state.username} onChange={this.handleChangeUser} />
 			</div>
-            <input className="log-button" type="submit" value="Register" />
+            <input className="log-button InputStyle" type="submit" value="Register" />
         </form>
       );
     }

@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import versus from './versus.png'
+import versus from './img/versus.png'
 import { useEffect } from 'react'
 import { setInterval } from 'timers'
 

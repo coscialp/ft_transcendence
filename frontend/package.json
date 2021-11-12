@@ -28,8 +28,8 @@
   },
   "scripts": {
     "css": "postcss ./src/components/utils/tailwind.css -o ./src/components/utils/tailwind.generated.css",
-    "prestart": "npm run css",
-    "prebuild": "npm run css",
+    "prestart": "yarn run css",
+    "prebuild": "yarn run css",
     "start": "react-scripts start",
     "start:dev": "CHOKIDAR_USEPOLLING=true react-scripts start",
     "build": "react-scripts build",

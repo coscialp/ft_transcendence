@@ -34,7 +34,7 @@ function GameMod() {
             <div className="absolute h-60% w-22% bg-Banner ml-7% top-20% opacity-95">
                 <img className="h-40% w-50% ml-25% mt-10%" src={solopong} alt="Error" />
                 <p className="justify-center flex mt-10% text-4xl text-white font-small tracking-widest"> Solo </p>
-                <div className="mt-5% line"></div>
+                <div className="mt-5% line1"></div>
                 <ul className="mt-10% list-disc list-inside text-3xl">
                     <li id="001" className="text-gray-400 ml-25% p-1">
                         <button className="text-white" onClick={() => SelectGameMod(1)}>Training</button>
@@ -50,7 +50,7 @@ function GameMod() {
             <div className="absolute h-60% w-22% bg-Banner ml-39% top-20% opacity-95">
                 <img className="flex center justify-center h-40% w-50% ml-25% mt-10%" src={duopong} alt="Error" />
                 <p className="justify-center flex mt-10% text-4xl text-white font-small tracking-widest"> Duo </p>
-                <div className="mt-5% line"></div>
+                <div className="mt-5% line1"></div>
                 <ul className="mt-10% list-disc list-inside text-3xl">
                     <li id="004" className="text-gray-400 ml-25% p-1">
                         <button className="text-white" onClick={() => SelectGameMod(4)}>Training</button>
@@ -66,7 +66,7 @@ function GameMod() {
             <div className="absolute h-60% w-22% bg-Banner ml-71% top-20% opacity-95">
                 <img className="flex center justify-center h-40% w-50% ml-25% mt-10%" src={superpong} alt="Error" />
                 <p className="justify-center flex mt-10% text-4xl text-white font-small tracking-widest"> Super Mega Pong </p>
-                <div className="mt-5% line"></div>
+                <div className="mt-5% line1"></div>
                 <ul className="mt-10% list-disc list-inside text-3xl">
                     <li id="007" className="text-gray-400 ml-25% p-1">
                         <button className="text-white" onClick={() => SelectGameMod(7)}>Training</button>

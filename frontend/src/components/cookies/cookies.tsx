@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { ReactElement } from "react";
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";

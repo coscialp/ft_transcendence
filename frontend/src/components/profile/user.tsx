@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react'
-import userimg from './userimg.jpeg'
+import userimg from './img/userimg.jpeg'
 
 export function User(): ReactElement
 {

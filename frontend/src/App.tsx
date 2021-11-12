@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { withCookies } from 'react-cookie';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { Cookies } from './components/cookies/cookies';

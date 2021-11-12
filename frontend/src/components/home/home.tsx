@@ -4,7 +4,7 @@ import Stream from './stream'
 import Actuality from './actuality'
 import FriendList from './friendlist'
 import Message from './message'
-
+import '../utils/tailwind.generated.css'
 //function Checkconnected()
 //{
 //  const [cookies, setCookie] = useCookies(["access_token"]);
