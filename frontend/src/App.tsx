@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import { withCookies } from 'react-cookie';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { Cookies } from './components/cookies/cookies';
 import { Login } from './components/login/login';
@@ -20,12 +21,12 @@ function App() {
       <Route path={"/oauth/redirect"} component={ Register } />
 			<Route exact path={"/signup"} component={ SignUp } />
       <Route path={"/cookies"} component={ Cookies } />
-        <Route exact path={"/home"} component={Home} />
-        <Route exact path={"/play"} component={GameModSelection}/>
-        <Route exact path={"/profile"} component={Profile}/>
-      </main>
+      <Route exact path={"/home"} component={Home} />
+      <Route exact path={"/play"} component={GameModSelection}/>
+      <Route exact path={"/profile"} component={Profile}/>
+    </main>
     </Router>
   );
 }
 
-export default App;
+export default withCookies(App);

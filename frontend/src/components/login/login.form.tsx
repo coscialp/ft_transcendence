@@ -21,8 +21,6 @@ export class LogForm extends React.Component<{}, { username: string, password: s
       }
   
     handleSubmit(event: any) {
-      console.log('Username: ' + this.state.username)
-      console.log('Password: ' + this.state.password)
       axios.request({
         url: '/auth/signin',
         method: 'post',
