@@ -31,7 +31,7 @@ function SelectGameMod(GameMod: number) {
 function GameMod() {
     return (
         <div className="h-full w-full">
-            <div className="absolute h-60% w-22% bg-Banner ml-7% top-20% opacity-95">
+            <div className="absolute h-60% w-22% bg-Banner ml-7% top-20% opacity-95 overflow-hidden">
                 <img className="h-40% w-50% ml-25% mt-10%" src={solopong} alt="Error" />
                 <p className="justify-center flex mt-10% text-4xl text-white font-small tracking-widest"> Solo </p>
                 <div className="mt-5% line1"></div>
@@ -47,7 +47,7 @@ function GameMod() {
                     </li>
                 </ul>
             </div>
-            <div className="absolute h-60% w-22% bg-Banner ml-39% top-20% opacity-95">
+            <div className="absolute h-60% w-22% bg-Banner ml-39% top-20% opacity-95 overflow-hidden">
                 <img className="flex center justify-center h-40% w-50% ml-25% mt-10%" src={duopong} alt="Error" />
                 <p className="justify-center flex mt-10% text-4xl text-white font-small tracking-widest"> Duo </p>
                 <div className="mt-5% line1"></div>
@@ -63,7 +63,7 @@ function GameMod() {
                     </li>
                 </ul>
             </div>
-            <div className="absolute h-60% w-22% bg-Banner ml-71% top-20% opacity-95">
+            <div className="absolute h-60% w-22% bg-Banner ml-71% top-20% opacity-95 overflow-hidden">
                 <img className="flex center justify-center h-40% w-50% ml-25% mt-10%" src={superpong} alt="Error" />
                 <p className="justify-center flex mt-10% text-4xl text-white font-small tracking-widest"> Super Mega Pong </p>
                 <div className="mt-5% line1"></div>
