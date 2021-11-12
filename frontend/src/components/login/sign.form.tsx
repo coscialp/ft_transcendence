@@ -21,8 +21,6 @@ export class SignForm extends React.Component<{}, { username: string, password: 
       }
   
     handleSubmit(event: any) {
-      console.log('Username: ' + this.state.username)
-      console.log('Password: ' + this.state.password)
       axios.request({
         url: '/auth/signup',
         method: 'post',

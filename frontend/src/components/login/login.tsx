@@ -1,11 +1,31 @@
+import axios from "axios";
 import React from "react";
+import { useCookies } from "react-cookie";
 import './login.css'
 import { LogForm } from './login.form'
 
-export class Login extends React.Component {
-	render() {
+export function Login(props: any) {
+
+	const [cookies] = useCookies();
+
+	function isLogged() {
+		if (cookies.access_token !== undefined) {
+			console.log(`Here ${cookies.access_token}`);
+			
+			axios.request({
+				url: '/user/me',
+				method: 'get',
+				baseURL: 'http://localhost:5000',
+				headers: {
+					"Authorization": `Bearer ${cookies.access_token}`,
+				}
+			  }).then((response: any) => { window.open("http://localhost:3000/home", '_self') })
+		}
+	}
+
 		return (
 			<div className="bg">
+				{isLogged()}
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				<div id="log-box">
 					<LogForm />
@@ -20,5 +40,4 @@ export class Login extends React.Component {
 				</div>
 			</div>
 		);
-	}
 }

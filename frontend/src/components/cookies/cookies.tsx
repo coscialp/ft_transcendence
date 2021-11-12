@@ -1,18 +1,18 @@
-import React from "react";
+import axios from "axios";
+import React, { ReactElement } from "react";
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
 
-export function Cookies(this: any) {
-    const [cookies, setCookie] = useCookies(["access_token"]);
+export function Cookies(props: any): ReactElement {
+  const [cookies, setCookie] = useCookies(["access_token"]);
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-	const token = urlParams.get("token");
+  	const token = urlParams.get("token");
 
     function HandleCookie(): any {
-        setCookie("access_token", token, {
-      path: "/"
-    });
+        setCookie("access_token", token, { path: "/" });
   }
+
   return (
       <div>
           {HandleCookie()}
