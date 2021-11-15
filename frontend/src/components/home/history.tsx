@@ -1,16 +1,26 @@
 import React from 'react'
+import './font.css'
 
 function History()
 { //md:w-80 h-44 md:h-52
     return (
-        <div className="top-10% ml-5% w-23% h-60% absolute font-sans text-white text-left sm:text-sm md:text-3xl float-left pb-80 overflow-hidden">
-            Last game
-            <div className="h-100% w-full grid grid-rows-2 grid-flow-col bg-Banner rounded-2xl">
-                <div className="font-sans overflow-hidden flex items-center justify-center text-sm sm:text-sm md:text-4xl lg:text-6xl text-LiGreen border-b-2 border-r-2">Win</div>
-                <div className="font-sans overflow-hidden flex items-center justify-center text-sm sm:text-sm md:text-4xl lg:text-6xl text-gold border-r-2"> Rank 3</div>
-                <div className="font-sans overflow-hidden flex items-center justify-center text-sm sm:text-sm md:text-4xl lg:text-6xl text-white border-b-2">11 : 6</div>
-                <div className="font-sans overflow-hidden flex items-center justify-center text-sm sm:text-sm md:text-4xl lg:text-6xl text-white">1256</div>
-            </div>
+        <div className="absolute h-60% w-15% bg-Banner top-13% left-20% rounded-2xl text-5xl overflow-hidden">
+        <div className=" text-center horror">
+            Survival mod
+        </div>
+        <div className="absolute bg-yellow-100 h-60 w-60 top-20% left-17% transform rotate-12 postit horror">
+            <div className="test">Rules</div>
+            <div className="text-left mt-2 ml-2">1: Survive</div>
+            <div className="text-left mt-2 ml-2">2: Dead End</div>
+            <div className="text-left mt-2 ml-2">3: Random</div>
+        </div>
+        <a href="#" className="animated-button1 horror1">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Start
+        </a>
         </div>
     )
 }

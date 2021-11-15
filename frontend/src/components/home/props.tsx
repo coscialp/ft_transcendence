@@ -1,23 +1,34 @@
 import React, { ReactElement } from 'react'
+import { ChatAltIcon } from '@heroicons/react/outline'
 
-var online: number = 1
-export function GetNews({ user, msg }: any): ReactElement {
+export function GetNews({ user, msg, img, connect }: { user: string, msg: string, img: string, connect: number }): ReactElement {
     return (
-        <div className="bg-BoxActuality rounded-Actuality h-40 w-4/5 mx-10% my-5%">
-            <p className="text-red-400 mr-40 lg:text-sm text-xs left-50% relative top-80%">from {user}</p>
-            <p className="text-black lg:text-xl text-xs relative bottom-8% w-80% left-10%">{msg}</p>
+        <div className="bg-BoxActuality rounded-Actuality h-40 w-4/5 mx-10% my-5% opacity-70 overflow-hidden">
+            <img src={img} className="text-red-400 w-8 h-8 rounded-full ml-5 mt-2"></img>
+            <p className="text-black w-40 h-5 text-left relative ml-16 -mt-7 text-xl">{user} :</p>
+            <p className="text-black w-95% h-5 mt-5 text-left relative ml-4 text-xl">{msg}</p>
         </div>
     )
+}
+
+function friendlist_msg(id: string, opt: number)
+{
+    var element: HTMLElement | null = document.getElementById(id)
+
+    if (opt === 1)
+        element?.classList.remove("hidden");
+    else
+    element?.classList.add("hidden");
 }
 
 export function Displayfriend({ user, msg, img, connect }: { user: string, msg: string, img: string, connect: number }): ReactElement {
     return (
         <div>
-            <div className="right-4% relative height-10% width-80% text-xl">
-                <img src={img} className="absolute left-10% top-13% rounded-full h-80% w-8%" alt="error"></img>
-                <div className="absolute left-22% text-left lg:text-2xl md:text-xl sm:text-sm text-sm">{user} </div> <div className="relative left-47%">{(connect === 1) ? "🔵" : "🔴"} </div>
+            <div id={user + msg + connect + img + "1"} className="relative h-16 w-100% text-xl hover:bg-gray-500" onMouseEnter={ () => friendlist_msg(user + msg + connect + img, 1)} onMouseLeave={ () => friendlist_msg(user + msg + connect + img, 0)}>
+                <img src={img} className="absolute left-5 top-2 rounded-full h-12 w-12" alt="error"></img>
+                <div className="absolute left-20 top-1 text-left text-md">@{user} </div> <div className={(connect ===1) ? "absolute left-20 top-11 text-sm bg-green-400 rounded-full h-2 w-2" : "absolute left-20 top-11 text-sm bg-gray-400 rounded-full h-2 w-2"}></div> <div className={connect === 1 ? "absolute left-24 top-8 text-base" :"absolute left-24 top-8 text-base opacity-50"}>{(connect === 1) ? "online" : "offline"} </div>
+                <ChatAltIcon id={user + msg + connect + img} className="absolute h-10 w-10 right-5 top-2 hidden"/>
             </div>
-            <hr className="mt-1 mb-1 right-0%"></hr>
         </div>
     )
 }

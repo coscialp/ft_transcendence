@@ -45,7 +45,7 @@ export const usernews: { user: string, msg: string, img: string, connect: number
     },
     {
         user: "akerdeka",
-        msg: "Salut a tous 1",
+        msg: "Salut a tous 8",
         img: truite,
         connect: 1
     },
