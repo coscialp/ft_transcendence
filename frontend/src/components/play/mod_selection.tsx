@@ -1,14 +1,44 @@
-import React, { Component } from 'react';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
+import { Redirect } from 'react-router';
 import Message from '../home/message'
 import GameMod from './gamemod'
 
-export class GameModSelection extends Component {
-  render() {
-    return (
-      <div>
-          <GameMod />
-          <Message />
-    </div>
-    );
+async function isLogged(cookies: any, setUnauthorized: any) {
+  
+	await axios.request({
+		url: '/user/me',
+		method: 'get',
+		baseURL: 'http://localhost:5000',
+		headers: {
+			"Authorization": `Bearer ${cookies.access_token}`,
+		}
+		}).catch(err => {
+			if (err.response.status === 401) {          
+				setUnauthorized(true);
+			}
+	});
+	setUnauthorized(false);
+}
+
+export function GameModSelection() {
+
+	const [unauthorized, setUnauthorized] = useState(false);
+  const [cookies] = useCookies();
+  
+  useEffect(()=>{
+    isLogged(cookies, setUnauthorized);
+  }, [cookies])
+
+  if (unauthorized) {
+    return (<Redirect to="/" />);
   }
+
+	return (
+		<div>
+			<GameMod />
+			<Message />
+		</div>
+	);
 }

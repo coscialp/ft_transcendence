@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { withCookies } from 'react-cookie';
 import { Route, BrowserRouter as Router } from 'react-router-dom';
 import { Cookies } from './components/cookies/cookies';
@@ -12,18 +12,19 @@ import { GameModSelection } from './components/play/mod_selection'
 import { Profile } from './components/profile/profile'
 
 function App() {
+
   return (
     <Router>
       <BackGround/>
       <NavBar />
       <main>
-      <Route exact path={'/'} component={ Login }/>
+      <Route exact path={'/'} component={ Login } />
       <Route path={"/oauth/redirect"} component={ Register } />
 			<Route exact path={"/signup"} component={ SignUp } />
       <Route path={"/cookies"} component={ Cookies } />
       <Route exact path={"/home"} component={Home} />
-      <Route exact path={"/play"} component={GameModSelection}/>
-      <Route exact path={"/profile"} component={Profile}/>
+      <Route exact path={"/play"} component={ GameModSelection }/>
+      <Route exact path={"/profile"} component={ Profile }/>
     </main>
     </Router>
   );
