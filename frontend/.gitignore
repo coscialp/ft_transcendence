@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-
+/src/components/utils/tailwind.generated.css
 # testing
 /coverage
 

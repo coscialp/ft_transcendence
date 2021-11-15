@@ -3,6 +3,7 @@ import { CookiesProvider } from 'react-cookie';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import './components/utils/tailwind.generated.css'
 
 ReactDOM.render(
   <CookiesProvider>
