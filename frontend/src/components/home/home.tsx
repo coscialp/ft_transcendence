@@ -7,6 +7,7 @@ import Message from './message'
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { Redirect } from 'react-router';
+import { NavBar } from '../navbar/navbar';
 //async function isLogged(cookies: any, setUnauthorized: any) {
 //  
 //    await axios.request({
@@ -38,11 +39,7 @@ export function Home() {
 
     return (
       <div>
-        
-        <History />
-        <Actuality />
-        <FriendList />
-        <Message />
-    </div>
+        <NavBar />
+      </div>
     );
 }

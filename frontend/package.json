@@ -28,9 +28,6 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "css": "postcss ./src/components/utils/tailwind.css -o ./src/components/utils/tailwind.generated.css",
-    "prestart": "yarn run css",
-    "prebuild": "yarn run css",
     "start": "react-scripts start",
     "start:dev": "CHOKIDAR_USEPOLLING=true react-scripts start",
     "build": "react-scripts build",

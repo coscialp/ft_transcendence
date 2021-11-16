@@ -1,0 +1,91 @@
+@font-face {
+    font-family: "neon";
+    src: url("../home/font/NeonSans.ttf") format("truetype");
+}
+
+body {
+    margin: 0px;
+    font-family: "Vibur", sans-serif;
+}
+
+.navBar {
+    background-color: black;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    place-content: space-between;
+}
+
+button {
+    background-color: transparent;
+    border: 0px;
+    height: inherit;
+    width: 5rem;
+    color: aqua;
+    cursor: pointer;
+}
+
+.neonTextOn {
+    animation: flicker 1.5s infinite alternate;
+  color: #fff;
+}
+
+/* Flickering animation */
+@keyframes flicker {
+    
+    0%, 18%, 22%, 25%, 53%, 57%, 100% {
+  
+        text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #0fa,
+        0 0 80px #0fa,
+        0 0 90px #0fa,
+        0 0 100px #0fa,
+        0 0 150px #0fa;
+    
+    }
+    
+    20%, 24%, 55% {        
+        text-shadow: none;
+    }    
+  }
+
+  .neonTextOff {
+    color: #fff;
+  }
+    
+h1 {
+    font-family: neon;
+    font-size: 1.2rem;
+    text-align: center;
+    text-transform: uppercase;
+    margin: 0px;
+}
+
+img {
+    display: flex;
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: 20px;
+    margin-left: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #0fa, 0 0 42px #0fa;
+}
+
+input.searchBar {
+    border-radius: 15px;
+    padding-left: 10px;
+    height: 1.5rem;
+    border: 0px;
+    margin-left: 20px;
+}
+
+.prof-search {
+    display: flex;
+    height: 50px;
+    align-items: center;
+    place-content: flex-end;
+}

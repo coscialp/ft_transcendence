@@ -14,7 +14,7 @@ function History()
             <div className="text-left mt-2 ml-2">2: Dead End</div>
             <div className="text-left mt-2 ml-2">3: Random</div>
         </div>
-        <a href="#" className="animated-button1 horror1">
+        <a href="/test" className="animated-button1 horror1">
             <span></span>
             <span></span>
             <span></span>
