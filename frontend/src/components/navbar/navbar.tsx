@@ -1,12 +1,11 @@
 import React from 'react'
 import { Disclosure } from '@headlessui/react'
 import { MenuAlt1Icon, XIcon } from '@heroicons/react/outline'
-import NavBarFriend from './navbar_friend'
 import NavBarProfile from './navbar_profile'
 import SearchBar from './SearchBar'
 import { Link } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
-
+import './button.css'
 
 export function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
@@ -31,7 +30,7 @@ export function NavBar() {
   let location = useLocation()
   PageSwitcher(location.pathname)
   return (
-    <Disclosure as="nav" className="bg-Banner">
+    <Disclosure as="nav" className="">
       {({ open }) => (
         <>
           <div className="grid-cols-1 mx-auto pr-6">
@@ -55,7 +54,7 @@ export function NavBar() {
                         id={item.name}
                         key={item.name}
                         className={classNames(
-                          item.current ? 'bg-gold text-black' : 'text-white  hover:text-gold',
+                          item.current ? 'bg-MenuColor text-black opacity-60' : 'text-white  transition duration-500 hover:text-MenuColor opacity-30 hover:opacity-60',
                           'px-4 py-4  text-2xl font-medium'
                         )}>
                         {item.name}
@@ -66,7 +65,6 @@ export function NavBar() {
               </div>
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 -mr-4">
                 <SearchBar />
-                <NavBarFriend />
                 {/* Profile dropdown */}
                 <NavBarProfile />
               </div>

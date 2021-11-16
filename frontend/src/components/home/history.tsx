@@ -4,7 +4,7 @@ import './font.css'
 function History()
 { //md:w-80 h-44 md:h-52
     return (
-        <div className="absolute h-60% w-15% bg-Banner top-13% left-20% rounded-2xl text-5xl overflow-hidden">
+        <div className="absolute h-60% w-15% bg-Banner top-13% left-5% rounded-2xl text-5xl overflow-hidden opacity-60">
         <div className=" text-center horror mt-8%">
             Survival mod
         </div>

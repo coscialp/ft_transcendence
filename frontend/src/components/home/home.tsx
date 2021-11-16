@@ -7,7 +7,6 @@ import Message from './message'
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { Redirect } from 'react-router';
-
 //async function isLogged(cookies: any, setUnauthorized: any) {
 //  
 //    await axios.request({
@@ -26,7 +25,6 @@ import { Redirect } from 'react-router';
 //}
 
 export function Home() {
-  
   //const [unauthorized, setUnauthorized] = useState(false);
   //const [cookies] = useCookies();
   
@@ -40,6 +38,7 @@ export function Home() {
 
     return (
       <div>
+        
         <History />
         <Actuality />
         <FriendList />
