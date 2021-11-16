@@ -5,6 +5,7 @@ import { Redirect } from 'react-router';
 import Message from '../home/message'
 import GameMod from './gamemod'
 
+
 async function isLogged(cookies: any, setUnauthorized: any) {
   
 	await axios.request({

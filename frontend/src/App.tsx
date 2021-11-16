@@ -8,8 +8,9 @@ import { SignUp } from './components/login/signUp';
 import { Home } from './components/home/home';
 import { BackGround } from './components/background/BackGround'
 import { NavBar } from './components/navbar/navbar'
-import { GameModSelection } from './components/play/mod_selection'
-import { Profile } from './components/profile/profile'
+import { GameModSelection } from './components/play/mod_selection';
+import { Profile } from './components/profile/profile';
+
 
 function App() {
 
