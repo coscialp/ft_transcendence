@@ -3,10 +3,10 @@ import { ChatAltIcon } from '@heroicons/react/outline'
 
 export function GetNews({ user, msg, img, connect }: { user: string, msg: string, img: string, connect: number }): ReactElement {
     return (
-        <div className="bg-Banner rounded-xl h-40 w-98% mx-1% mb-2% overflow-hidden">
+        <div className="bg-Banner rounded-xl h-40 w-100% mb-2% overflow-hidden">
             <img src={img} className="text-red-400 w-16 h-16 rounded-full ml-5 mt-6"></img>
             <p className="text-white w-40 h-5 text-left relative ml-24 -mt-16 text-xl font-medium">{user}</p>
-            <p className="text-white w-82% h-5 mt-3 text-left relative ml-24 text-gray-200 text-xl">{msg}</p>
+            <p className="text-white w-82% h-5 mt-3 text-left relative ml-24 text-gray-300 text-xl">{msg}</p>
         </div>
     )
 }

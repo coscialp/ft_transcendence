@@ -4,8 +4,8 @@ import { Displayfriend } from './props'
 
 function FriendList(): ReactElement {
     return (
-        <div className="top-13% absolute right-20% h-35% w-15% font-sans text-white text-center text-xl sm:text-sm md:text-3xl">
-            <div className="bg-Banner h-full w-full overflow-y-scroll scrollbar-hide rounded-2xl opacity-90">
+        <div className="top-13% absolute right-20% h-60% w-15% font-sans text-white text-center text-xl sm:text-sm md:text-3xl">
+            <div className="bg-Banner h-full w-full overflow-y-scroll scrollbar-hide rounded-2xl">
                 {usernews.map(({ user, msg, img, connect }: { user: string, msg: string, img: string, connect: number }) => (
                     <Displayfriend
                         user={user}
