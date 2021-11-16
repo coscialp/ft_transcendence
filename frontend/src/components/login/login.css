@@ -15,7 +15,7 @@ div#log-box {
     margin-top: 5px;
 }
 
-input {
+.InputStyle {
     width: 80%;
     height: 40px;
     border-radius: 45px;
@@ -50,6 +50,7 @@ input {
     justify-content: center;
     align-items: center;
     margin-left: 38px;
+    background:white;
 }
 
 img.i42-logo {
@@ -63,6 +64,10 @@ img.i42-logo {
 }
 
 .line {
+    border: 0;
+    height: 0;
+    border-top: 2px solid rgba(0, 0, 0, 0);
+    margin-bottom: 4px;
     fill: none;
     stroke: black;
     stroke-width: 6;
@@ -100,5 +105,3 @@ a.log-in {
 .bg {
     background-image: url(https://vistapointe.net/images/pong-9.jpg);
 }
-
-/*<img src="	https://vistapointe.net/images/pong-9.jpg" alt="" className="background"></img>*/

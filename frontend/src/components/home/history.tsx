@@ -1,16 +1,26 @@
 import React from 'react'
+import './font.css'
 
 function History()
 { //md:w-80 h-44 md:h-52
     return (
-        <div className="top-10% ml-5% w-20% h-60 absolute font-sans text-white text-center text-3xl md:text-4xl float-left pb-80">
-            Last game
-            <div className="h-52 w-full mt-1 grid grid-rows-2 grid-flow-col  bg-Banner">
-                <div className="font-sans flex items-center justify-center text-2xl md:text-3xl text-LiGreen border-b-2 border-r-2">Win</div>
-                <div className="font-sans flex items-center justify-center text-2xl md:text-3xl text-gold border-r-2"> Rank 3</div>
-                <div className="font-sans flex items-center justify-center text-2xl md:text-3xl text-white border-b-2">11 : 6</div>
-                <div className="font-sans flex items-center justify-center text-2xl md:text-3xl text-white">1256</div>
-            </div>
+        <div className="absolute h-60% w-15% bg-Banner top-13% left-5% rounded-2xl text-5xl overflow-hidden opacity-60">
+        <div className=" text-center horror mt-8%">
+            Survival mod
+        </div>
+        <div className="absolute bg-yellow-100 h-60 w-60 top-25% left-17% transform rotate-12 postit horror">
+            <div className="test">Rules</div>
+            <div className="text-left mt-2 ml-2">1: Survive</div>
+            <div className="text-left mt-2 ml-2">2: Dead End</div>
+            <div className="text-left mt-2 ml-2">3: Random</div>
+        </div>
+        <a href="#" className="animated-button1 horror1">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            Start
+        </a>
         </div>
     )
 }

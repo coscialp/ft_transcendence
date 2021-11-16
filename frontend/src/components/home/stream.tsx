@@ -10,9 +10,9 @@ function Stream() {
     },
   };
   return (
-    <div className="top-35% absolute ml-5% w-20% h-60  font-sans text-white float text-center text-3xl md:text-4xl">
+    <div className="top-50% absolute ml-5% w-23% h-35% font-sans text-white text-left text-xl sm:text-sm md:text-3xl">
       Stream
-      <YouTube className="w-full h-60 " videoId="H2x7NW4Qjds" opts={opts} />
+      <YouTube className="absolute w-full h-100% rounded-2xl" videoId="H2x7NW4Qjds" opts={opts} />
     </div>
   )
 }

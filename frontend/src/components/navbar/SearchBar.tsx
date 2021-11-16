@@ -18,9 +18,9 @@ function SearchBar() {
 
     return (
         <div>
-        <div className="-ml-15% mr-15% relative bg-BoxActuality rounded-3xl">
-            <SearchIcon className="ml-3% mt-6% absolute h-5 w-5" onClick={() => send_val(inputValue)} />
-            <input type="text" className=" ml-18% shadow-none rounded-none bg-transparent w-full mr-3% focus:outline-none" placeholder="Search User..." onChange={(e) => setInputValue(e.target.value)} />
+        <div className="absolute h-8 -ml-15% mr-15% relative bg-BoxActuality rounded-3xl">
+            <SearchIcon className="ml-3% mt-4% absolute h-5 w-5" onClick={() => send_val(inputValue)} />
+            <input type="text" className=" mt-2.5% ml-18% shadow-none rounded-none bg-transparent w-full mr-3% focus:outline-none" placeholder="Search User..." onChange={(e) => setInputValue(e.target.value)} />
         </div>
         </div>
     )

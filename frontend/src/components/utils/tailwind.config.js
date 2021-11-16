@@ -1,8 +1,8 @@
 module.exports = {
-  purge: {
-    enabled: true,
-    content: ['../**/*.tsx'],
-  },
+  //purge: {
+  //  enabled: true,
+  //  content: ['../**/*.tsx'],
+  //},
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
@@ -21,13 +21,14 @@ module.exports = {
           DEFAULT: '#FFCF88',
         },
         'Banner': {
-          DEFAULT: '#3D3D3D',
+          DEFAULT: '#2C5579',
         },
         'LiGreen': {
           DEFAULT: '#14FF00'
         },
         'BoxActuality': '#C4C4C4',
         'HoverM': '#887558',
+        'MenuColor': '#ADD8E6',
       },
       animation: ['hover', 'focus'],
     },
