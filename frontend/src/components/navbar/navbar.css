@@ -148,19 +148,22 @@ summary::after {
     overflow: hidden;
     animation: closeMenu 300ms ease-in-out forwards;
   }
-  .menu a {
+  .menu .menuBtn {
     padding: 12px 24px;
+    border: 0;
+    background: transparent;
+    font-size: inherit;
     margin: 0 16px;
     color: var(--secoColor);
     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     text-decoration: none;
     text-align: center;
     transition: filter 200ms linear 0s;
-  }
-  .menu a:nth-last-of-type(1) {
+}
+  .menu .menuBtn:nth-last-of-type(1) {
     border-bottom: none;
   }
-  .menu a:hover {
+  .menu .menuBtn:hover {
     filter: brightness(200%);
   }
   @keyframes menuAnim {

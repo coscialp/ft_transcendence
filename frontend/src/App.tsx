@@ -8,6 +8,7 @@ import { SignUp } from './components/login/signUp';
 import { Home } from './components/home/home';
 import { Play } from './components/play/play';
 import './App.css';
+import { Profile } from './components/profile/profile';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
       <Route path={"/cookies"} component={ Cookies } />
       <Route exact path={"/home"} component={ Home } />
       <Route exact path={"/play"} component={ Play }/>
+      <Route path={"/profile"} component={ Profile }/>
     </main>
     </Router>
   );
