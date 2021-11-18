@@ -38,14 +38,14 @@ export class LogForm extends React.Component<{}, { username: string, password: s
         <form onSubmit={this.handleSubmit}>
           <div className="logs">
 				Username<br/>
-				<input type="text" placeholder="Enter your Username" value={this.state.username} onChange={this.handleChangeUser} />
+				<input type="text" className="InputStyle" placeholder="Enter your Username" value={this.state.username} onChange={this.handleChangeUser} />
 			</div>
 			<div className="logs">
 				Password<br/>
-				<input type="password" placeholder="Enter your Password" value={this.state.password} onChange={this.handleChangePass} />
+				<input type="password" className="InputStyle" placeholder="Enter your Password" value={this.state.password} onChange={this.handleChangePass} />
 			</div>
 			
-            <input className="log-button" type="submit" value="Log In" />
+            <input className="log-button InputStyle" type="submit" value="Log In" />
         </form>
       );
     }
