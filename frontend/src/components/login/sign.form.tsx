@@ -2,6 +2,8 @@ import './login.css'
 import React from 'react'
 import axios from 'axios';
 
+const ip = window.location.hostname;
+
 export class SignForm extends React.Component<{}, { username: string, password: string }> {
     constructor(props: {username: string, password: string}) {
       super(props);
@@ -24,7 +26,7 @@ export class SignForm extends React.Component<{}, { username: string, password: 
       axios.request({
         url: '/auth/signup',
         method: 'post',
-        baseURL: 'http://localhost:5000',
+        baseURL: `http://${ip}:5000`,
         data: {
           username: this.state.username,
           password: this.state.password,

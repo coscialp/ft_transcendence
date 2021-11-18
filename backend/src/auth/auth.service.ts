@@ -9,7 +9,6 @@ import { User } from '../user/user.entity';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { Auth42Dto } from './dto/auth-42.dto';
-
 @Injectable()
 export class AuthService {
   private readonly clientSecret: string = process.env.CLIENT_SECRET;
@@ -55,6 +54,7 @@ export class AuthService {
       this.accessToken = (await lastValueFrom(token)).data.access_token;
       this.headers = { Authorization: `Bearer ${this.accessToken}` };
 
+      console.log(this.accessToken);
      const response$ = this.http.get(`${this.endpoint}/me`, {
         headers: this.headers,
       });

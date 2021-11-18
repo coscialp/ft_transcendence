@@ -2,6 +2,8 @@ import './login.css'
 import React from 'react'
 import axios, { AxiosResponse } from 'axios';
 
+const ip = window.location.hostname;
+
 export class RegisterForm extends React.Component<{}, { username: string, password: string }> {
   constructor(props: {username: string, password: string}) {
       super(props);
@@ -26,13 +28,13 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
       axios.request({
         url: '/auth/api42/signin',
         method: 'post',
-        baseURL: 'http://localhost:5000',
+        baseURL: `http://${ip}:5000`,
         params: {
             "code": code,
             "nickName": this.state.username,
         }
       }
-      ).then((response: AxiosResponse<any, any>) =>  {window.open(`http://localhost:3000/cookies?token=${response.data.accessToken}`, '_self')});
+      ).then((response: AxiosResponse<any, any>) =>  {window.open(`http://${ip}:3000/cookies?token=${response.data.accessToken}`, '_self')});
       event.preventDefault();
     }
 
