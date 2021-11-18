@@ -4,6 +4,8 @@ import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router'
 import './navbar.css'
 
+const ip = window.location.hostname;
+
 export function NavBar(props: any) {
   
   let history = useHistory();
@@ -25,7 +27,7 @@ export function NavBar(props: any) {
   axios.request({
       url: '/user/me/avatar',
       method: 'get',
-      baseURL: 'http://localhost:5000',
+      baseURL: `http://${ip}:5000`,
       headers: {
         "Authorization": `Bearer ${cookies.access_token}`,
       }

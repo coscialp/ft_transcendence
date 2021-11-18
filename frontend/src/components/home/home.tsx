@@ -4,12 +4,14 @@ import { useCookies } from 'react-cookie';
 import { Redirect } from 'react-router';
 import { NavBar } from '../navbar/navbar';
 
+const ip = window.location.hostname;
+
 async function isLogged(cookies: any, setUnauthorized: any) {
 
     await axios.request({
       url: '/user/me',
       method: 'get',
-      baseURL: 'http://localhost:5000',
+      baseURL: `http://${ip}:5000`,
       headers: {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
