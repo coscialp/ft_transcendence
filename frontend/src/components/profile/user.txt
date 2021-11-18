@@ -1,7 +1,0 @@
-
-
-Profile template: 
-
-                userid: string
-                username: string
-                
