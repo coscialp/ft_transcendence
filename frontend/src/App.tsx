@@ -6,8 +6,8 @@ import { Login } from './components/login/login';
 import { Register } from './components/login/register';
 import { SignUp } from './components/login/signUp';
 import { Home } from './components/home/home';
-import { GameModSelection } from './components/play/mod_selection'
 import { Profile } from './components/profile/profile'
+import { Play } from './components/play/play';
 
 function App() {
 
@@ -19,7 +19,7 @@ function App() {
 			<Route exact path={"/signup"} component={ SignUp } />
       <Route path={"/cookies"} component={ Cookies } />
       <Route exact path={"/home"} component={Home} />
-      <Route exact path={"/play"} component={ GameModSelection }/>
+      <Route exact path={"/play"} component={ Play }/>
       <Route exact path={"/profile"} component={ Profile }/>
     </main>
     </Router>
