@@ -1,14 +1,29 @@
 import axios from 'axios';
-import React from 'react'
+import React, { useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router'
 import './navbar.css'
 
+function ProfileTest() {
+  return (
+    <details>
+      <summary></summary>
+      <nav className="menu">
+        <a href="#link">Profile</a>
+        <a href="#link">Settings</a>
+        <a href="#link">Lougout</a>
+      </nav>
+    </details>
+  )
+}
+
 export function NavBar(props: any) {
   
   let history = useHistory();
-  var search: string | number | readonly string[] | undefined;
   const [cookies] = useCookies();
+  const [profilePicture, setProfilePicture] = useState("");
+  const [menu, setMenu] = useState("hide");
+  const [search, setSearch] = useState("");
 
   function handleClickPlay() {
     return (
@@ -23,15 +38,24 @@ export function NavBar(props: any) {
   }
 
   function handleInputSearch(e: any) {
-    search = e.target.value;
+    setSearch(e.target.value)
+    e.preventDefault()
   }
 
-  function handleSearch() {
+  function handleSearch(e: any) {
     console.log(search)
+    e.preventDefault()
   }
 
   function handleProfile() {
-    console.log("Profile menu !")
+    setMenu(menu === "hide" ? "visible" : "hide");
+    console.log(menu);
+    
+    return (
+      <div className="dropdownProfile">
+        Test
+      </div>
+    )
   }
 
   function loadProfilePicture() {
@@ -43,17 +67,19 @@ export function NavBar(props: any) {
       headers: {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
-    }).then((response: any) => { response =  response.data; })
-    return '/Beluga.jpeg';
+    }).then((response: any) => { setProfilePicture(response.data.avatar) })
+    return profilePicture;
   }
-
+//<img src={ loadProfilePicture() } alt="" className="navProfile" onClick={ handleProfile }></img>
   return(
     <div className="navBar">
       <button className="navBtn" onClick={ handleClickHome } ><h1 className={ props.page==="Home" ? "neonTextOn" : "neonTextOff"}>Home</h1></button>
       <button className="navBtn" onClick={ handleClickPlay } ><h1 className={ props.page==="Play" ? "neonTextOn" : "neonTextOff"}>Play</h1></button>
         <div className="prof-search">
-          <input type="text" className="searchBar" placeholder="Search" value={ search } onChange={ handleInputSearch } onSubmit={ handleSearch } />
-          <img src={ loadProfilePicture() } alt="" className="navProfile" onClick={ handleProfile }></img>
+          <form onSubmit={ handleSearch } >
+            <input type="text" className="searchBar" placeholder="Search" value={ search } onChange={ handleInputSearch } />
+          </form>
+          <ProfileTest />
         </div>
     </div>
   )
