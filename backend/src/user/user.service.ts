@@ -1,11 +1,11 @@
 import {
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersRepository } from 'src/auth/user.repository';
-import { User } from '../auth/user.entity';
+import { UsersRepository } from './user.repository';
+import { User } from './user.entity';
+import { GetUserFilterDto } from './dto/user-filter.dto';
 
 @Injectable()
 export class UserService {
@@ -19,12 +19,8 @@ export class UserService {
     return regexExp.test(id);
   }
 
-  async getUser(): Promise<User[]> {
-    const query = this.userRepository.createQueryBuilder('user');
-
-    const users = await query.getMany();
-
-    return users;
+  async getUser(filterDto: GetUserFilterDto): Promise<User[]> {
+    return this.userRepository.getUser(filterDto);
   }
 
   async getUserById(id: string, user: User): Promise<User> {
