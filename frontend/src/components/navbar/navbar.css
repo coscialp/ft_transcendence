@@ -63,7 +63,7 @@ h1 {
     margin: 0px;
 }
 
-.navProfile {
+/*.navProfile {
     display: flex;
     width: 2.5rem;
     height: 2.5rem;
@@ -73,7 +73,7 @@ h1 {
     cursor: pointer;
     object-fit: cover;
     box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #0fa, 0 0 42px #0fa;
-}
+}*/
 
 input.searchBar {
     border-radius: 15px;
@@ -106,33 +106,24 @@ input.searchBar {
     margin: 10px;
   }
   summary {
-    writing-mode: vertical-lr;
     text-align: center;
-    padding: 12px 10px;
-    width: 23px;
-    height: 17px;
-    background-color: var(--primColor);
-    border: 2px solid var(--secoColor);
-    border-radius: var(--cornerRad);
-    color: var(--secoColor);
+    width: 40px;
+    height: 40px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+    box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #0fa, 0 0 42px #0fa;
     cursor: pointer;
-    user-select: none;
     outline: none;
     transition: transform 200ms ease-in-out 0s;
-  }
-  summary::before,
-  summary::after {
+}
+summary::before,
+summary::after {
     position: static;
     top: 0;
     left: 0;
   }
-  summary::before {
-    content: "";
-  }
-  summary::after {
-    content: "III";
-    letter-spacing: -1px;
-  }
+  
   summary:hover {
     transform: scale(1.1);
   }
@@ -145,12 +136,7 @@ input.searchBar {
   details[open] .menu {
     animation-name: menuAnim;
   }
-  details[open] summary::before {
-    content: "X";
-  }
-  details[open] summary::after {
-    content: "";
-  }
+  
   .menu {
     width: fit-content;
     border-radius: var(--cornerRad);

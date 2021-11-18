@@ -4,19 +4,6 @@ import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router'
 import './navbar.css'
 
-function ProfileTest() {
-  return (
-    <details>
-      <summary></summary>
-      <nav className="menu">
-        <a href="#link">Profile</a>
-        <a href="#link">Settings</a>
-        <a href="#link">Lougout</a>
-      </nav>
-    </details>
-  )
-}
-
 export function NavBar(props: any) {
   
   let history = useHistory();
@@ -71,6 +58,7 @@ export function NavBar(props: any) {
     return profilePicture;
   }
 //<img src={ loadProfilePicture() } alt="" className="navProfile" onClick={ handleProfile }></img>
+//<summary></summary>
   return(
     <div className="navBar">
       <button className="navBtn" onClick={ handleClickHome } ><h1 className={ props.page==="Home" ? "neonTextOn" : "neonTextOff"}>Home</h1></button>
@@ -79,7 +67,14 @@ export function NavBar(props: any) {
           <form onSubmit={ handleSearch } >
             <input type="text" className="searchBar" placeholder="Search" value={ search } onChange={ handleInputSearch } />
           </form>
-          <ProfileTest />
+          <details>
+            <summary style={{backgroundImage: `url(${ loadProfilePicture() })`}} ></summary>
+            <nav className="menu">
+              <a href="#link">Profile</a>
+              <a href="#link">Settings</a>
+              <a href="#link">Lougout</a>
+            </nav>
+          </details>
         </div>
     </div>
   )
