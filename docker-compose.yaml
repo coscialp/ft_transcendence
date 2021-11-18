@@ -34,7 +34,7 @@ services:
       - webapp
 
   frontend:
-    image: node
+    image: node:17.0.1
     command: yarn start:dev
     volumes:
      - ./frontend:/usr/src/app

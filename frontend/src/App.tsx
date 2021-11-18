@@ -6,7 +6,6 @@ import { Login } from './components/login/login';
 import { Register } from './components/login/register';
 import { SignUp } from './components/login/signUp';
 import { Home } from './components/home/home';
-import { Profile } from './components/profile/profile'
 import { Play } from './components/play/play';
 import './App.css';
 
@@ -21,7 +20,6 @@ function App() {
       <Route path={"/cookies"} component={ Cookies } />
       <Route exact path={"/home"} component={ Home } />
       <Route exact path={"/play"} component={ Play }/>
-      <Route exact path={"/profile"} component={ Profile }/>
     </main>
     </Router>
   );

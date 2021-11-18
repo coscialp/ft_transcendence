@@ -16,7 +16,8 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
     }
 
     handleSubmit(event: any) {
-        
+      
+      console.log(window.location.hostname);
       const queryString = window.location.search;
 		  const urlParams = new URLSearchParams(queryString);
 		  const code = urlParams.get("code");
