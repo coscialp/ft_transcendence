@@ -10,7 +10,7 @@ body {
 
 .navBar {
     background-color: black;
-    height: 50px;
+    height: 7vh;
     display: flex;
     align-items: center;
     place-content: space-between;

@@ -1,10 +1,42 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { Redirect } from "react-router";
 import './login.css'
 import { LogForm } from './login.form'
 
 const ip = window.location.hostname;
 
+async function isLogged(cookies: any, setUnauthorized: any) {
+
+    await axios.request({
+      url: '/user/me',
+      method: 'get',
+      baseURL: `http://${ip}:5000`,
+      headers: {
+        "Authorization": `Bearer ${cookies.access_token}`,
+      }
+      }).catch(err => {
+        if (err.response.status === 401) {          
+          setUnauthorized(true);
+        }
+    });
+  setUnauthorized(false);
+}
+
 export function Login() {
+
+	const [unauthorized, setUnauthorized] = useState(false);
+  	const [cookies] = useCookies();
+  
+  	useEffect(()=>{
+    	isLogged(cookies, setUnauthorized);
+  	}, [cookies])
+
+  	if (unauthorized === false) {
+    	return (<Redirect to="/home" />);
+  	} 
+
 		return (
 			<div className="bg">
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />

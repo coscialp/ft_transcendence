@@ -3,6 +3,10 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { Redirect } from 'react-router';
 import { NavBar } from '../navbar/navbar';
+import { Gamemode } from './gamemode';
+import { MainMenu } from './mainMenu';
+import { Friendlist } from './friendlist';
+import './home.css'
 
 const ip = window.location.hostname;
 
@@ -36,8 +40,13 @@ export function Home() {
   } 
 
     return (
-      <div>
+      <div className="HomePage" >
         <NavBar page="Home" />
+        <div className="HomeMain" >
+          <Gamemode />
+          <MainMenu />
+          <Friendlist />
+        </div>
       </div>
     );
 }
