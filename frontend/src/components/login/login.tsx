@@ -33,9 +33,9 @@ export function Login() {
     	isLogged(cookies, setUnauthorized);
   	}, [cookies])
 
-  	if (unauthorized === false) {
-    	return (<Redirect to="/home" />);
-  	} 
+  	if (unauthorized === true) {
+    	return (<Redirect to="/" />);
+  	}
 
 		return (
 			<div className="bg">

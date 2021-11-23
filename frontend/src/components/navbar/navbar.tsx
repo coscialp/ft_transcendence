@@ -34,7 +34,9 @@ export function NavBar(props: any) {
     }).then((response: any) => { localStorage.setItem( "ProfilePicture" , response.data.avatar) })
   }
 
-  loadProfilePicture();
+  if (localStorage.getItem("ProfilePicture") === null) {
+    loadProfilePicture();
+  }
 
   return(
     <div className="navBar">
