@@ -9,8 +9,9 @@ const ip = window.location.hostname;
 export function NavBar(props: any) {
   
   let history = useHistory();
-  const [cookies] = useCookies();
+  const [cookies, setCookie] = useCookies();
   const [search, setSearch] = useState("");
+  
 
   function handleInputSearch(e: any) {
     setSearch(e.target.value)
@@ -40,6 +41,7 @@ export function NavBar(props: any) {
 
   return(
     <div className="navBar">
+      <div className="gradientRight" ></div>
       <button className="navBtn" onClick={ () => { return history.push("/home") } } ><h1 className={ props.page==="Home" ? "neonTextOn" : "neonTextOff"}>Home</h1></button>
       <button className="navBtn" onClick={ () => { return history.push("/play") } } ><h1 className={ props.page==="Play" ? "neonTextOn" : "neonTextOff"}>Play</h1></button>
         <div className="prof-search">
@@ -51,7 +53,7 @@ export function NavBar(props: any) {
             <nav className="menu">
               <button className="menuBtn" onClick={ () => { return history.push("/profile") } } >Profile</button>
               <button className="menuBtn" onClick={ () => { return history.push("/settings") } } >Settings</button>
-              <button className="menuBtn" onClick={ () => { return history.push("/logout") } } >Logout</button>
+              <button className="menuBtn" onClick={ () => { setCookie("access_token", ""); return history.push("/") } } >Logout</button>
             </nav>
           </details>
         </div>

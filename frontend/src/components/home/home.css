@@ -16,20 +16,13 @@
 
 .GMElement {
     font-family: neon;
-    text-shadow:
-        0 0 4px #fff,
-        0 0 11px #fff,
-        0 0 19px #fff,
-        0 0 40px #0fa,
-        0 0 80px #0fa,
-        0 0 90px #0fa,
-        0 0 100px #0fa,
-        0 0 150px #0fa;
+    text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
     width: 17%;
     height: 50vh;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 15px;
     padding-top: 10px;
+    box-shadow: rgb(207 29 61 / 30%) 0px 54px 55px, rgb(230 33 67 / 24%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
 .MainElement {
@@ -38,24 +31,18 @@
     background-color: rgba(0, 0, 0, 0.4);
     position: relative;
     border-radius: 15px;
+    box-shadow: rgb(0 0 0) 0px 30px 60px -12px inset, rgb(0 0 0) 0px 18px 36px -18px inset;
 }
 
 .FriendElement {
     font-family: neon;
-    text-shadow:
-        0 0 4px #fff,
-        0 0 11px #fff,
-        0 0 19px #fff,
-        0 0 40px #0fa,
-        0 0 80px #0fa,
-        0 0 90px #0fa,
-        0 0 100px #0fa,
-        0 0 150px #0fa;
+    text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
     width: 17%;
     height: 50vh;
     background-color: rgba(0, 0, 0, 0.7);
     border-radius: 15px;
     padding-top: 10px;
+    box-shadow: rgb(12 73 181 / 54%) 0px 54px 55px, rgb(5 72 177 / 38%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
 input.MainSendMessage {
@@ -70,4 +57,28 @@ input.MainSendMessage {
     width: 90%;
     margin-top: 20px;
     padding-left: 10px;
+}
+
+p.FriendTitle {
+    margin: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+    border-color: rgb(3 83 209);
+}
+
+p.GMTitle {
+    margin: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+    border-color: rgb(251 76 103);
+}
+
+.gradientRight {
+    position: absolute;
+    top: 7vh;
+    height: 2px;
+    width: 100vw;
+    background: linear-gradient(to right, #cd1b3e, black, #034cc2);
 }

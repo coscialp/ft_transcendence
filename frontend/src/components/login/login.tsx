@@ -17,8 +17,9 @@ async function isLogged(cookies: any, setUnauthorized: any) {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
       }).catch(err => {
-        if (err.response.status === 401) {          
+        if (err.response.status === 401) {
           setUnauthorized(true);
+		  return;
         }
     });
   setUnauthorized(false);
@@ -30,7 +31,7 @@ export function Login() {
   	const [cookies] = useCookies();
   
   	useEffect(()=>{
-    	isLogged(cookies, setUnauthorized);
+		isLogged(cookies, setUnauthorized);
   	}, [cookies])
 
   	if (unauthorized === true) {

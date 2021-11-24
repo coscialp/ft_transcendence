@@ -1,28 +1,37 @@
 div#log-box {
     width: 300px;
     height: 350px;
-    background: #C4C4C4;
+    background-color: rgba(0, 0, 0, 0.4);
     position: absolute;
     top: 50%;
     left: 50%;
     margin-left: -150px;
     margin-top: -175px;
     border-radius: 41px;
+    color: wheat;
+    font-family: 'neon';
+    font-size: 2em;
     text-align: center;
+    padding-top: 10px;
 }
 
 .logs {
-    margin-top: 5px;
+    margin-top: 20px;
+    color: wheat;
+    font-family: 'neon';
+    font-size: 20px;
 }
 
 .InputStyle {
     width: 80%;
     height: 40px;
-    border-radius: 45px;
+    border-radius: 10px;
     margin: 5px;
     border: 0px;
     box-shadow: 1px 1px 5px;
     padding-left: 10px;
+    background-color: rgba(0,0,0, 0.3);
+    color: wheat;
 }
 
 .log-button {
@@ -35,13 +44,14 @@ div#log-box {
     font-size: 15px;
     cursor: pointer;
     font-weight: bold;
+    color: black;
+    padding-left: 5px;
 }
 
 .i42-button {
     margin-top: 10px;
     width: 75%;
     height: 40px;
-    border-radius: 45px;
     border: 0px;
     font-size: 15px;
     cursor: pointer;
@@ -50,7 +60,9 @@ div#log-box {
     justify-content: center;
     align-items: center;
     margin-left: 38px;
-    background:white;
+    border-radius: 10px;
+    border-color: white;
+    background-color: rgb(255 255 255);
 }
 
 img.i42-logo {
@@ -61,6 +73,8 @@ img.i42-logo {
 
 .or-line {
     margin-top: 10px;
+    color: white;
+    font-size: 16px;
 }
 
 .line {
@@ -69,20 +83,20 @@ img.i42-logo {
     border-top: 2px solid rgba(0, 0, 0, 0);
     margin-bottom: 4px;
     fill: none;
-    stroke: black;
+    /* stroke: white; */
     stroke-width: 6;
     transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1), stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
     width: 35%;
     margin-inline: 10px;
     margin-top: 5px;
     align-items: center;
-    background: black;
+    background: white;
     display: inline-flex;
 }
 
 a.sign-in {
     width: 100%;
-    color: black;
+    color: wheat;
     font-size: 12px;
     display: flex;
     margin-top: 20px;
@@ -93,7 +107,7 @@ a.sign-in {
 
 a.log-in {
     width: 100%;
-    color: black;
+    color: wheat;
     font-size: 12px;
     display: flex;
     margin-top: 20px;
