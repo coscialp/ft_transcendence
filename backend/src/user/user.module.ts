@@ -6,10 +6,11 @@ import { AuthModule } from 'src/auth/auth.module';
 import { UsersRepository } from './user.repository';
 import { UserController } from './user.controller'
 import { UserService } from './user.service';
+import { FriendRequestRepository } from './friend-request.repository';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([UsersRepository]),
+    TypeOrmModule.forFeature([UsersRepository, FriendRequestRepository]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: 'topsecret51',

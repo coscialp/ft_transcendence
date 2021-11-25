@@ -1,9 +1,10 @@
-import { Body, Controller, Get, Param, Patch, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from './user.entity';
 import { GetUserFilterDto } from './dto/user-filter.dto';
 import { UserService } from './user.service';
+import { FriendRequest } from './friend-request.entity';
 
 @Controller('user')
 @UseGuards(AuthGuard())
@@ -60,8 +61,18 @@ export class UserController {
         return await this.userService.getFriends(id, user);
     }
 
-    @Patch('/:id/friends/add')
-    async addFriends(@Param('id') id: string, @GetUser() user: User, @Body('newFriendId') newFriendId: string): Promise<void> {
-        return await this.userService.addFriends(id, user, newFriendId);
+    @Patch('/friends/add')
+    async addFriends(@GetUser() user: User, @Body('newFriendId') newFriendId: string): Promise<void> {
+        return await this.userService.addFriends(user, newFriendId);
+    }
+
+    @Post('/friends/request')
+    async requestFriend(@GetUser() user: User, @Body('newFriendId') newFriendId: string): Promise<void> {
+        return await this.userService.requestFriend(user, newFriendId);
+    }
+
+    @Get('/:id/friends/request')
+    async getFriendsRequest(@Param('id') id: string, @GetUser() user: User): Promise<{from: FriendRequest[], to: FriendRequest[]}> {
+        return await this.userService.getFriendsRequest(id, user);
     }
 }

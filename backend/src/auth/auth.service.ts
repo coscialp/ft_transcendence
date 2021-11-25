@@ -75,7 +75,7 @@ export class AuthService {
       };
 
       const { username } = authCredentialsDto;
-      const user: User = await this.usersRepository.findOne({ username });
+      let user: User = await this.usersRepository.findOne({ username });
   
 
       if (!user) {
@@ -84,10 +84,19 @@ export class AuthService {
       
       const payload: JwtPayload = { username };
       const accessToken: string = this.jwtService.sign(payload);
+      user = await this.usersRepository.findOne({ username });
+      user.isLogged = true;
+      await this.usersRepository.save(user);
       return { accessToken: accessToken };
 
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async logout(user: User): Promise<void> {
+
+    user.isLogged = false;
+    await this.usersRepository.save(user);
   }
 }

@@ -39,6 +39,19 @@ export function NavBar(props: any) {
     loadProfilePicture();
   }
 
+  function logout(): void {
+    axios.request({
+      url: '/auth/logout',
+      method: 'patch',
+      baseURL: `http://${ip}:5000`,
+      headers: {
+        "Authorization": `Bearer ${cookies.access_token}`,
+      }
+    });
+    setCookie("access_token", "");
+    history.push("/");
+  }
+
   return(
     <div className="navBar">
       <div className="gradientRight" ></div>
@@ -53,7 +66,7 @@ export function NavBar(props: any) {
             <nav className="menu">
               <button className="menuBtn" onClick={ () => { return history.push("/profile") } } >Profile</button>
               <button className="menuBtn" onClick={ () => { return history.push("/settings") } } >Settings</button>
-              <button className="menuBtn" onClick={ () => { setCookie("access_token", ""); return history.push("/") } } >Logout</button>
+              <button className="menuBtn" onClick={ logout } >Logout</button>
             </nav>
           </details>
         </div>

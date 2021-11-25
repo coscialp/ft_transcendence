@@ -3,11 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './user.repository';
 import { User } from './user.entity';
 import { GetUserFilterDto } from './dto/user-filter.dto';
+import { FriendRequestRepository } from './friend-request.repository';
+import { FriendRequestDto } from './dto/friend-request.dto';
+import { FriendRequest } from './friend-request.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UsersRepository) private userRepository: UsersRepository,
+    @InjectRepository(FriendRequestRepository) private friendRequestRepository: FriendRequestRepository,
   ) {}
 
   private isUUID(id: string): Boolean {
@@ -20,7 +24,7 @@ export class UserService {
     return this.userRepository.getUser(filterDto);
   }
 
-  async getUserById(id: string, user: User): Promise<User> {
+  async getUserById(id: string, user?: User): Promise<User> {
     const username = id;
     if (id === 'me') {
       return user;
@@ -97,17 +101,33 @@ export class UserService {
     return { friends: friends };
   }
 
-  async addFriends(id: string, user: User, newFriendId: string): Promise<void> {
-    const newFriend = await this.getUserById(newFriendId, user);
-    const currentUser = await this.getUserById(id, user);
+  async addFriends(user: User, newFriendId: string): Promise<void> {
+    const newFriend = await this.getUserById(newFriendId);
 
-    currentUser.friends = (await this.getFriends(id, user)).friends;
-    currentUser.friends.push(newFriend);
+    user.friends = (await this.getFriends(user.id, user)).friends;
+    user.friends.push(newFriend);
 
     newFriend.friends = (await this.getFriends(newFriendId, user)).friends;
-    newFriend.friends.push(currentUser);
+    newFriend.friends.push(user);
 
-    this.userRepository.save(currentUser);
+    this.userRepository.save(user);
     this.userRepository.save(newFriend);
+  }
+
+  async requestFriend(user: User, newFriendId: string): Promise<void> {
+    const newFriend = await this.getUserById(newFriendId);
+
+    const friendRequestDto: FriendRequestDto= { from: user, to: newFriend };
+
+    return await this.friendRequestRepository.createFriendRequest(friendRequestDto);
+  }
+
+  async getFriendsRequest(id: string, user: User): Promise<{ from: FriendRequest[], to: FriendRequest[] }> {
+    const currentUser = await this.getUserById(id, user);
+    
+    const allUser = await this.userRepository.find({ relations: ['requestFrom', 'requestTo'] });
+    const { requestFrom, requestTo } = allUser.find((user) => { return user.username === currentUser.username; });
+    
+    return {from: requestFrom, to: requestTo };
   }
 }

@@ -32,7 +32,7 @@ export class UsersRepository extends Repository<User> {
     const salt: string = await bcrypt.genSalt();
     const hashedPassword: string = await bcrypt.hash(password, salt);
 
-    const user: User = this.create({ username, password: hashedPassword });
+    const user: User = this.create({ username, password: hashedPassword, isLogged: false});
     try {
       await this.save(user);
     } catch (error) {
@@ -59,6 +59,7 @@ export class UsersRepository extends Repository<User> {
       nickName: nickName,
       profileImage: profileImage,
       email: email,
+      isLogged: false,
       friends: [],
     });
 
