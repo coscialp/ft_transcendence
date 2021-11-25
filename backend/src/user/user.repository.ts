@@ -59,6 +59,7 @@ export class UsersRepository extends Repository<User> {
       nickName: nickName,
       profileImage: profileImage,
       email: email,
+      friends: [],
     });
 
     try {

@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -26,6 +26,7 @@ export class User {
     @Column({nullable: true})
     email?: string | null;
 
-    @ManyToMany(type => User, {cascade: false})
+    @ManyToMany(type => User, user => user.friends, {cascade: false})
+    @JoinTable()
     friends: User[];
 }

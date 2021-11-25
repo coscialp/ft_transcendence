@@ -54,4 +54,14 @@ export class UserController {
     async getAvatar(@Param('id') id: string, @GetUser() user: User): Promise<{ avatar: string }> {
         return await this.userService.getAvatar(id, user);
     }
+
+    @Get('/:id/friends')
+    async getFriends(@Param('id') id: string, @GetUser() user: User): Promise<{friends: User[]}> {
+        return await this.userService.getFriends(id, user);
+    }
+
+    @Patch('/:id/friends/add')
+    async addFriends(@Param('id') id: string, @GetUser() user: User, @Body('newFriendId') newFriendId: string): Promise<void> {
+        return await this.userService.addFriends(id, user, newFriendId);
+    }
 }

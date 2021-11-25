@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './user.repository';
 import { User } from './user.entity';
@@ -87,5 +84,30 @@ export class UserService {
     const { profileImage } = await this.getUserById(id, user);
 
     return { avatar: profileImage };
+  }
+
+  async getFriends(id: string, user: User): Promise<{ friends: User[] }> {
+    const currentUser = await this.getUserById(id, user);
+
+    const allUser = await this.userRepository.find({ relations: ['friends'] });
+    const friends = allUser.find((user) => {
+      return user.username === currentUser.username;
+    }).friends;
+
+    return { friends: friends };
+  }
+
+  async addFriends(id: string, user: User, newFriendId: string): Promise<void> {
+    const newFriend = await this.getUserById(newFriendId, user);
+    const currentUser = await this.getUserById(id, user);
+
+    currentUser.friends = (await this.getFriends(id, user)).friends;
+    currentUser.friends.push(newFriend);
+
+    newFriend.friends = (await this.getFriends(newFriendId, user)).friends;
+    newFriend.friends.push(currentUser);
+
+    this.userRepository.save(currentUser);
+    this.userRepository.save(newFriend);
   }
 }
