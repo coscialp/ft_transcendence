@@ -34,7 +34,7 @@ export function Home() {
   useEffect(()=>{
     isLogged(cookies, setUnauthorized);
   }, [cookies])
-
+  
   if (unauthorized) {
     return (<Redirect to="/" />);
   } 

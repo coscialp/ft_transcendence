@@ -1,4 +1,5 @@
 import { useState } from "react";
+//import { MessageContainer } from "./messageContainer";
 
 export function MainMenu() {
 
@@ -17,6 +18,8 @@ export function MainMenu() {
 
     return (
         <div className="MainElement" >
+            <div className="Message Container" >
+            </div>
             <form onSubmit={ handleSendMessage } >
                 <input type="text" className="MainSendMessage" placeholder="Message..." value={ message } onChange={ handleGetMessage } />
             </form>

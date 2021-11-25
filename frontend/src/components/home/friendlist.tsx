@@ -2,7 +2,7 @@ export function Friendlist() {
 
     return (
         <div className="FriendElement" >
-            FriendList
+            <p className="FriendTitle" >Friend List</p>
         </div>
     )
 }
