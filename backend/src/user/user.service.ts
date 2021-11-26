@@ -6,12 +6,15 @@ import { GetUserFilterDto } from './dto/user-filter.dto';
 import { FriendRequestRepository } from './friend-request.repository';
 import { FriendRequestDto } from './dto/friend-request.dto';
 import { FriendRequest } from './friend-request.entity';
+import { request, response } from 'express';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UsersRepository) private userRepository: UsersRepository,
-    @InjectRepository(FriendRequestRepository) private friendRequestRepository: FriendRequestRepository,
+    @InjectRepository(FriendRequestRepository)
+    private friendRequestRepository: FriendRequestRepository,
   ) {}
 
   private isUUID(id: string): Boolean {
@@ -114,20 +117,58 @@ export class UserService {
     this.userRepository.save(newFriend);
   }
 
-  async requestFriend(user: User, newFriendId: string): Promise<void> {
+  async createRequestFriend(user: User, newFriendId: string): Promise<void> {
     const newFriend = await this.getUserById(newFriendId);
 
-    const friendRequestDto: FriendRequestDto= { from: user, to: newFriend };
+    const friendRequestDto: FriendRequestDto = { from: user, to: newFriend };
 
-    return await this.friendRequestRepository.createFriendRequest(friendRequestDto);
+    return await this.friendRequestRepository.createFriendRequest(
+      friendRequestDto,
+      this.userRepository,
+    );
   }
 
-  async getFriendsRequest(id: string, user: User): Promise<{ from: FriendRequest[], to: FriendRequest[] }> {
+  async getFriendsRequest(
+    id: string,
+    user: User,
+  ): Promise<{ from: User[]; to: User[] }> {
     const currentUser = await this.getUserById(id, user);
+
+    const allRequest = await this.friendRequestRepository.find({
+      relations: ['from', 'to'],
+    });
+
+    const from: User[] = [],
+      to: User[] = [];
+
+    for (let request of allRequest) {
+      if (request.from.id === currentUser.id) {
+        to.push(request.to);
+      } else if (request.to.id === currentUser.id) {
+        from.push(request.from);
+      }
+    }
+
+    return { from: from, to: to };
+  }
+
+  async declineRequest(user: User, fromId: string): Promise<void> {
+    const fromUser = await this.getUserById(fromId);
+
+    const allRequest = await this.friendRequestRepository.find({
+      relations: ['from', 'to'],
+    });
+
+    const { from } = await this.getFriendsRequest(user.id, user);
+
+    if (!from.find((user) => { return user.id === fromId })) {
+      throw new NotFoundException(`Friend's request from ${fromUser.username} not found!`)
+    }
     
-    const allUser = await this.userRepository.find({ relations: ['requestFrom', 'requestTo'] });
-    const { requestFrom, requestTo } = allUser.find((user) => { return user.username === currentUser.username; });
-    
-    return {from: requestFrom, to: requestTo };
+    for (let request of allRequest) {
+      if (request.from.id === fromUser.id && request.to.id === user.id) {
+        await this.friendRequestRepository.delete(request.id);
+      }
+    }
   }
 }
