@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { FriendRequest } from "./friend-request.entity";
 
 @Entity()
 export class User {
@@ -26,6 +27,17 @@ export class User {
     @Column({nullable: true})
     email?: string | null;
 
-    @ManyToMany(type => User, {cascade: false})
+    @Column({nullable: true})
+    isLogged: boolean | null;
+
+    @OneToMany(type => FriendRequest, request => request.from)
+    requestFrom: FriendRequest[];
+
+    @OneToMany(type => FriendRequest, request => request.to)
+    requestTo: FriendRequest[];
+
+    @ManyToMany(type => User, user => user.friends, {cascade: false})
+    @JoinTable()
     friends: User[];
+
 }

@@ -1,16 +1,20 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './user.repository';
 import { User } from './user.entity';
 import { GetUserFilterDto } from './dto/user-filter.dto';
+import { FriendRequestRepository } from './friend-request.repository';
+import { FriendRequestDto } from './dto/friend-request.dto';
+import { FriendRequest } from './friend-request.entity';
+import { request, response } from 'express';
+import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(UsersRepository) private userRepository: UsersRepository,
+    @InjectRepository(FriendRequestRepository)
+    private friendRequestRepository: FriendRequestRepository,
   ) {}
 
   private isUUID(id: string): Boolean {
@@ -23,7 +27,7 @@ export class UserService {
     return this.userRepository.getUser(filterDto);
   }
 
-  async getUserById(id: string, user: User): Promise<User> {
+  async getUserById(id: string, user?: User): Promise<User> {
     const username = id;
     if (id === 'me') {
       return user;
@@ -87,5 +91,84 @@ export class UserService {
     const { profileImage } = await this.getUserById(id, user);
 
     return { avatar: profileImage };
+  }
+
+  async getFriends(id: string, user: User): Promise<{ friends: User[] }> {
+    const currentUser = await this.getUserById(id, user);
+
+    const allUser = await this.userRepository.find({ relations: ['friends'] });
+    const friends = allUser.find((user) => {
+      return user.username === currentUser.username;
+    }).friends;
+
+    return { friends: friends };
+  }
+
+  async addFriends(user: User, newFriendId: string): Promise<void> {
+    const newFriend = await this.getUserById(newFriendId);
+
+    user.friends = (await this.getFriends(user.id, user)).friends;
+    user.friends.push(newFriend);
+
+    newFriend.friends = (await this.getFriends(newFriendId, user)).friends;
+    newFriend.friends.push(user);
+
+    this.userRepository.save(user);
+    this.userRepository.save(newFriend);
+  }
+
+  async createRequestFriend(user: User, newFriendId: string): Promise<void> {
+    const newFriend = await this.getUserById(newFriendId);
+
+    const friendRequestDto: FriendRequestDto = { from: user, to: newFriend };
+
+    return await this.friendRequestRepository.createFriendRequest(
+      friendRequestDto,
+      this.userRepository,
+    );
+  }
+
+  async getFriendsRequest(
+    id: string,
+    user: User,
+  ): Promise<{ from: User[]; to: User[] }> {
+    const currentUser = await this.getUserById(id, user);
+
+    const allRequest = await this.friendRequestRepository.find({
+      relations: ['from', 'to'],
+    });
+
+    const from: User[] = [],
+      to: User[] = [];
+
+    for (let request of allRequest) {
+      if (request.from.id === currentUser.id) {
+        to.push(request.to);
+      } else if (request.to.id === currentUser.id) {
+        from.push(request.from);
+      }
+    }
+
+    return { from: from, to: to };
+  }
+
+  async declineRequest(user: User, fromId: string): Promise<void> {
+    const fromUser = await this.getUserById(fromId);
+
+    const allRequest = await this.friendRequestRepository.find({
+      relations: ['from', 'to'],
+    });
+
+    const { from } = await this.getFriendsRequest(user.id, user);
+
+    if (!from.find((user) => { return user.id === fromId })) {
+      throw new NotFoundException(`Friend's request from ${fromUser.username} not found!`)
+    }
+    
+    for (let request of allRequest) {
+      if (request.from.id === fromUser.id && request.to.id === user.id) {
+        await this.friendRequestRepository.delete(request.id);
+      }
+    }
   }
 }
