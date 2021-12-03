@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
+const ip = window.location.hostname;
+
 export function MainMenu() {
 
     const [messages, setMessages] : any = useState([]);
@@ -9,7 +11,7 @@ export function MainMenu() {
     
     useEffect(() => {
 
-      MainChat.current = new WebSocket("ws://localhost:8081");
+      MainChat.current = new WebSocket(`ws://${ip}:5001`);
 
       MainChat.current.onmessage = function (event: MessageEvent<any>) {
       console.log("OnMessage");
