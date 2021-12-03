@@ -1,27 +1,45 @@
-import { useState } from "react";
-//import { MessageContainer } from "./messageContainer";
+import { useEffect, useRef, useState } from "react";
 
 export function MainMenu() {
 
-    const [message, setMessage] = useState("");
+    const [messages, setMessages] : any = useState([]);
+    const [messageBody, setMessageBody] = useState('');
+    
+    const MainChat: any = useRef();
+    
+    useEffect(() => {
 
-    function handleGetMessage(e: any) {
-        setMessage(e.target.value)
-        e.preventDefault()
+      MainChat.current = new WebSocket("ws://localhost:8081");
+
+      MainChat.current.onmessage = function (event: MessageEvent<any>) {
+      console.log("OnMessage");
+      
+      const message = JSON.parse(event.data);
+		  setMessages((_messages: any) => [..._messages, message]);
+      event.preventDefault()
     }
+    return () => { };
+}, []);
 
     function handleSendMessage(e: any) {
-        console.log(message)
-        setMessage("");
+      console.log("Submit");
+
+      MainChat.current.send(JSON.stringify({sender: "name", body: messageBody}) );
+        setMessageBody("");
         e.preventDefault()
       }
 
-    return (
+      return (
         <div className="MainElement" >
             <div className="Message Container" >
+              {messages.map((message: any) => (
+                <article key={message.sentAt} className='message-container'>
+                <p className='message-body'>{message.body}</p>
+              </article>
+				      ))}
             </div>
             <form onSubmit={ handleSendMessage } >
-                <input type="text" className="MainSendMessage" placeholder="Message..." value={ message } onChange={ handleGetMessage } />
+                <input type="text" className="MainSendMessage" placeholder="Message..." value={ messageBody } onChange={(e) => setMessageBody(e.target.value)} />
             </form>
         </div>
     )

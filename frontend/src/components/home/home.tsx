@@ -19,6 +19,8 @@ async function isLogged(cookies: any, setUnauthorized: any) {
       headers: {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
+      }).then((response: any) => {
+        localStorage.setItem("me", JSON.stringify(response))
       }).catch(err => {
         if (err.response.status === 401) {          
           setUnauthorized(true);
@@ -37,7 +39,7 @@ export function Home() {
   
   if (unauthorized) {
     return (<Redirect to="/" />);
-  } 
+  }
 
     return (
       <div className="HomePage" >

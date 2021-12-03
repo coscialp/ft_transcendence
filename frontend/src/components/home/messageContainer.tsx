@@ -1,6 +1,6 @@
-export function MessageContainer(message: any) {
+export function MessageContainer() {
 
     return (
-        <div>{ message }</div>
+        <div>{}</div>
     )
 }

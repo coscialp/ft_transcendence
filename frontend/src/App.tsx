@@ -10,6 +10,7 @@ import { Play } from './components/play/play';
 import './App.css';
 import { Profile } from './components/profile/profile';
 import { NotFound } from './components/notFound';
+import { Settings } from './components/settings/settings';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
 					<Route exact path={"/home"} component={ Home } />
 					<Route exact path={"/play"} component={ Play } />
 					<Route path={"/profile"} component={ Profile } />
+					<Route path={"/settings"} component={ Settings } />
 					<Route component={ NotFound } />
 			</Switch>
 		</Router>

@@ -1,0 +1,19 @@
+.SettingsElement {
+    color: aliceblue;
+    display: flex;
+    justify-content: space-around;
+    height: 86vh;
+    text-align: center;
+    padding-bottom: 7vh;
+    flex-direction: row;
+    align-items: center;
+}
+
+.SettingsMain {
+    width: 70%;
+    position: relative;
+    height: 80vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    box-shadow: rgb(0 0 0) 0px 30px 60px -12px inset, rgb(0 0 0) 0px 18px 36px -18px inset;
+}
