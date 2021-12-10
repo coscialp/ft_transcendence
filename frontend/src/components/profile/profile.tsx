@@ -5,7 +5,6 @@ import { Overall } from "./overall";
 import './profile.css'
 
 export function Profile() {
-
 		return (
 				<div>
 					<NavBar page="Profile" />

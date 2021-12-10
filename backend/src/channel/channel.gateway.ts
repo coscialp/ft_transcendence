@@ -3,36 +3,34 @@ import {
   WebSocketGateway,
   OnGatewayInit,
   WebSocketServer,
-  OnGatewayConnection,
-  OnGatewayDisconnect,
   MessageBody,
   ConnectedSocket,
  } from '@nestjs/websockets';
  import { Logger } from '@nestjs/common';
  import { Socket, Server } from 'socket.io';
  
- @WebSocketGateway(5001)
- export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+ @WebSocketGateway(5001, {transports: ['websocket']})
+ export class ChannelGateway implements OnGatewayInit {
 
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChannelGateway');
  
-  @SubscribeMessage('message')
-  handleMessage(@ConnectedSocket() client: Socket, @MessageBody() payload: string): string {
-   this.logger.log('payload');
-   this.server.emit('message', payload);
-   return payload;
+  @SubscribeMessage('msg_toServer')
+  handleMessage(@MessageBody() message: string): void {
+   this.logger.log(message);
+   this.server.emit('msg_toClient', message);
   }
  
   afterInit(server: Server) {
    this.logger.log('Init');
   }
  
-  handleDisconnect(@ConnectedSocket() client: Socket) {
-   this.logger.log(`Client disconnected: ${client.id}`);
+  handleDisconnect(@ConnectedSocket() socket: Socket) {
+   this.logger.log(`Client disconnected`);
   }
  
-  handleConnection(@ConnectedSocket() client: Socket, ...args: any[]) {
-   this.logger.log(`Client connected: ${client.id}`);
+  handleConnection(@ConnectedSocket() socket: Socket) {
+   this.logger.log(socket.handshake.headers.cookie);
+   this.logger.log(`Client connected`);
   }
  }

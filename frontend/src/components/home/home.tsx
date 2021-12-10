@@ -46,7 +46,8 @@ export function Home() {
         <NavBar page="Home" />
         <div className="HomeMain" >
           <Gamemode />
-          <MainMenu />
+          <MainMenu/>
+          {/* <ChannelPrimary /> */}
           <Friendlist />
         </div>
       </div>
