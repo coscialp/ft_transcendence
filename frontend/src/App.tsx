@@ -23,8 +23,9 @@ function App() {
 					<Route path={"/cookies"} component={ Cookies } />
 					<Route exact path={"/home"} component={ Home } />
 					<Route exact path={"/play"} component={ Play } />
-					<Route path={"/profile"} component={ Profile } />
 					<Route path={"/settings"} component={ Settings } />
+
+					<Route path={"/:id/profile"} component={ Profile } />
 					<Route component={ NotFound } />
 			</Switch>
 		</Router>
