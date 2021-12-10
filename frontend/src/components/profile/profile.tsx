@@ -6,9 +6,10 @@ import './profile.css'
 
 export function Profile() {
 
-	const user = JSON.parse(localStorage.getItem("me") || '{}');
+	const me = JSON.parse(sessionStorage.getItem("me") || '{}');
+	const userProfile = window.location.pathname.split('/')[1];
 
-	console.log(user);
+	console.log(userProfile);
 		return (
 				<div>
 					<NavBar page="Profile" />

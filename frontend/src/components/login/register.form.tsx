@@ -13,6 +13,14 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
       this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    /*handleAlreadyLogged() {
+      const user = sessionStorage.getItem("me");
+
+      if (user !== null && JSON.parse(user).data.nickName) {
+        window.open(`http://${ip}:3000/home`, '_self');
+      }
+    }*/
+
     handleChangeUser(event: any) {
       this.setState({username: event.target.value});
     }
@@ -37,6 +45,7 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
     }
 
     render() {
+      //this.handleAlreadyLogged();
       return (
         <form onSubmit={this.handleSubmit}>
           <div className="logs">

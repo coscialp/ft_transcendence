@@ -3,7 +3,7 @@ import './settings.css'
 
 export function Settings() {
 
-	const user = JSON.parse(localStorage.getItem("me") || '{}');
+	const user = JSON.parse(sessionStorage.getItem("me") || '{}');
 
 	console.log(user);
 		return (

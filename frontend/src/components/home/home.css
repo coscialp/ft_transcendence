@@ -86,8 +86,9 @@ p.GMTitle {
 .Message.Container {
     width: -webkit-fill-available;
     display: flex;
-    height: 90%;
+    height: 80%;
     flex-direction: column;
+    border-top: 2px solid wheat;
     overflow-y: scroll;
 }
 
@@ -100,4 +101,26 @@ p.GMTitle {
     background-color: rgb(128 128 128 / 42%);
     border-radius: 50px;
     width: 5px;
+}
+
+.Channel.List {
+    padding-bottom: 2%;
+    padding-top: 2%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    width: 87%;
+}
+
+.Channel.List::-webkit-scrollbar-thumb {
+    background-color: wheat;
+    border-radius: 50px;
+}
+.Channel.List::-webkit-scrollbar {
+    /* display: none; */
+    background-color: rgb(128 128 128 / 42%);
+    border-radius: 50px;
+    height: 5px;
 }
