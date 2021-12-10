@@ -22,7 +22,7 @@ export function Overall() {
         }).then((response: any) => {
 			setUser(response.data);
 		})
-	}, []);
+	}, [userProfile, ip, cookies]);
 	
           return (
 				<div className="ImgName" >

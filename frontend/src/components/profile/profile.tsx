@@ -5,8 +5,6 @@ import { Overall } from "./overall";
 import './profile.css'
 
 export function Profile() {
-
-	const me = JSON.parse(sessionStorage.getItem("me") || '{}');
 	const userProfile = window.location.pathname.split('/')[1];
 
 	console.log(userProfile);
