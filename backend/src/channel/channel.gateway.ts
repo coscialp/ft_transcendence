@@ -15,11 +15,13 @@ import {
  export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
 
   @WebSocketServer() server: Server;
-  private logger: Logger = new Logger('AppGateway');
+  private logger: Logger = new Logger('ChannelGateway');
  
-  @SubscribeMessage('msgToServer')
-  handleMessage(@ConnectedSocket() client: Socket, @MessageBody() payload: string): void {
-   this.server.emit('msgToClient', payload);
+  @SubscribeMessage('message')
+  handleMessage(@ConnectedSocket() client: Socket, @MessageBody() payload: string): string {
+   this.logger.log('payload');
+   this.server.emit('message', payload);
+   return payload;
   }
  
   afterInit(server: Server) {

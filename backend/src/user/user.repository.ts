@@ -13,10 +13,8 @@ export class UsersRepository extends Repository<User> {
 
     if (search) {
       query.andWhere(
-        'LOWER(user.firstName) LIKE LOWER(:search) \
-        OR LOWER(user.nickName) LIKE LOWER(:search) \
-        OR LOWER(user.username) LIKE LOWER(:search) \
-        OR LOWER(user.lastName) LIKE LOWER(:search)',
+        'LOWER(user.nickName) LIKE LOWER(:search) \
+        OR LOWER(user.username) LIKE LOWER(:search)',
         { search: `%${search}%` },
       );
     }
