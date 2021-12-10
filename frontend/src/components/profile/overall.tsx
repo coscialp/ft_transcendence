@@ -5,11 +5,11 @@ import './profile.css'
 
 export function Overall() {
 
-    //const user = JSON.parse(sessionStorage.getItem("me") || '{}');
+    const me = JSON.parse(sessionStorage.getItem("me") || '{}');
 	const userProfile = window.location.pathname.split('/')[1];
 	const ip = window.location.hostname;
 	const [cookies] = useCookies();
-	const [user, setUser]: any = useState([]);
+	const [user, setUser]: any = useState([]);	
 
 	useEffect(() => {
 		axios.request({
@@ -22,7 +22,21 @@ export function Overall() {
         }).then((response: any) => {
 			setUser(response.data);
 		})
-	}, []);
+	}, [userProfile, ip, cookies]);
+
+	function handleAddfriend() {
+		axios.request({
+			url: `/user/${user.username}/friends/request`,
+			method: 'get',
+			baseURL: `http://${ip}:5000`,
+			headers: {
+			  "Authorization": `Bearer ${cookies.access_token}`,
+			},
+			
+			}).then((response: any) => {
+				console.log(response);
+			})
+	}
 	
           return (
 				<div className="ImgName" >
@@ -33,6 +47,7 @@ export function Overall() {
 					Winrate : (insert winrate ratio)%<br/>
 					Point Average : (insert KDA ratio)
 				</p>
+				{user.nickName !== me.data.nickName ? <img className="Add friend" src="/img/AddFriend.png" alt="" onClick={handleAddfriend} /> : null}
 			</div>
     		)
 }

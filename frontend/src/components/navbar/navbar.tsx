@@ -8,15 +8,33 @@ const ip = window.location.hostname;
 const me = JSON.parse(sessionStorage.getItem("me") || '{}');
 
 export function NavBar(props: any) {
-
+  
   let history = useHistory();
   const [cookies, setCookie] = useCookies();
   const [search, setSearch] = useState("");
-
-
+  const [searchingPop, setSearchingPop] = useState(false);
+  const [searchedUsers, setSearchedUsers]: any = useState([]);
+  
+  
   function handleInputSearch(e: any) {
     setSearch(e.target.value)
-    e.preventDefault()
+    if (e.target.value) {
+      axios.request({
+        url: `/user`,
+        method: 'get',
+        baseURL: `http://${ip}:5000`,
+        headers: {
+          "Authorization": `Bearer ${cookies.access_token}`,
+        },
+        params: {
+          "search": e.target.value,
+        }
+      }).then((response: any) => {
+        setSearchedUsers(response.data);
+      })
+       setSearchingPop(true); 
+      }
+    else { setSearchingPop(false); }
   }
 
   function handleSearch(e: any) {
@@ -33,11 +51,24 @@ export function NavBar(props: any) {
           "search": search,
         }
       }).then((response: any) => {
-        console.log(response);
-
+        setSearchedUsers(response.data);
       })
     }
     e.preventDefault()
+  }
+
+  function SearchingList() {
+    return (
+      <div className="searching list" >
+        {searchedUsers.map((users: any) => (
+          <div className="list" key={users.username} onClick={(e) => {history.push(`/${users.username}/profile`)}} >
+            <div className="Nick list" > {users.nickName}
+            <div className="User list"> {users.username} </div>
+          </div>
+          </div>
+        ))}
+      </div>
+    )
   }
 
   function loadProfilePicture() {
@@ -87,6 +118,7 @@ export function NavBar(props: any) {
           </nav>
         </details>
       </div>
+      { searchingPop ? <SearchingList /> : null }
     </div>
   )
 }

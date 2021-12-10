@@ -34,7 +34,7 @@ export function MainMenu() {
 			setMessages((_messages: any) => [..._messages, message]);
 			event.preventDefault()
 		}
-		return () => { };
+		return () => {};
 	}, []);
 
 	function AddChannelPopup() {

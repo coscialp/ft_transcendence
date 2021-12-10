@@ -83,6 +83,12 @@ p.Stats {
     font-size: 1vw;
 }
 
+img.Add.friend {
+    height: 5vw;
+    width: 5vw;
+    cursor: pointer;
+}
+
 @media screen and (orientation: portrait) {
 
     .ProfileMain {
