@@ -33,7 +33,7 @@ export function Overall() {
 			  "Authorization": `Bearer ${cookies.access_token}`,
 			},
 			data: {
-				"newFriendId": user.username,
+				'newFriendId': user.username,
 			}
 			}).then((response: any) => {
 				console.log(response);

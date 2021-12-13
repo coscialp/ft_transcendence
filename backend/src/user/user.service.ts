@@ -161,7 +161,9 @@ export class UserService {
 
     const { from } = await this.getFriendsRequest(user.id, user);
 
-    if (!from.find((user) => { return user.id === fromId })) {
+    console.log(from);
+
+    if (from.find((u) => { return u.id === fromId })) {
       throw new NotFoundException(`Friend's request from ${fromUser.username} not found!`)
     }
     
