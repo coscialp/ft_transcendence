@@ -26,13 +26,15 @@ export function Overall() {
 
 	function handleAddfriend() {
 		axios.request({
-			url: `/user/${user.username}/friends/request`,
-			method: 'get',
+			url: `/user/friends/request`,
+			method: 'post',
 			baseURL: `http://${ip}:5000`,
 			headers: {
 			  "Authorization": `Bearer ${cookies.access_token}`,
 			},
-			
+			data: {
+				'newFriendId': user.username,
+			}
 			}).then((response: any) => {
 				console.log(response);
 			})

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEventHandler } from "react";
 import { io, Socket } from "socket.io-client";
 import './mainMenu.css'
 
@@ -48,9 +48,6 @@ export class MainMenu extends React.Component<any, StateType> {
 			console.log(`msg: ${msg}`);
 			this.state.messages.push({ id: this.state.messages.length, sentAt: msg.sentAt, sender: msg.sender, body: msg.body, avatar: msg.avatar});
 			this.forceUpdate();
-			// if (this.state.scrollTarget) {
-			// 	this.state.scrollTarget.scrollIntoView();
-			// }
 		});
 	}
 
@@ -90,7 +87,7 @@ export class MainMenu extends React.Component<any, StateType> {
 		this.togglePopup();
 	}
 
-	changeChannel(e: React.ChangeEvent<HTMLInputElement>) {
+	changeChannel(e: any) {
 		console.log(e.target.innerText);
 		this.setState({ messages: [] });
 		e.preventDefault();
@@ -100,7 +97,7 @@ export class MainMenu extends React.Component<any, StateType> {
 		return (
 			<div className="MainElement" >
 				<div className="Channel List" >{this.state.channelList.map((channel: any) => (
-					<p key={channel} onClick={(e) => this.changeChannel} className="channelName">{channel}</p>
+					<p key={channel} onClick={this.changeChannel} className="channelName">{channel}</p>
 				))}
 					<button className="addChannel" onClick={this.handleAddChannel}>+</button>
 				</div>
