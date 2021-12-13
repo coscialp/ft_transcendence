@@ -11,6 +11,7 @@ import './App.css';
 import { Profile } from './components/profile/profile';
 import { NotFound } from './components/notFound';
 import { Settings } from './components/settings/settings';
+import { Notification } from './components/profile/notification';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
 					<Route path={"/cookies"} component={ Cookies } />
 					<Route exact path={"/home"} component={ Home } />
 					<Route exact path={"/play"} component={ Play } />
+					<Route exact path={"/alerts"} component={ Notification } />
 					<Route path={"/settings"} component={ Settings } />
 
 					<Route path={"/:id/profile"} component={ Profile } />
