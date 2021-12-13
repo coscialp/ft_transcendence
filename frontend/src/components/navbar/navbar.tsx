@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router'
 import './navbar.css'
@@ -14,7 +14,13 @@ export function NavBar(props: any) {
   const [search, setSearch] = useState("");
   const [searchingPop, setSearchingPop] = useState(false);
   const [searchedUsers, setSearchedUsers]: any = useState([]);
+  const [notification, setNotification] = useState(true);
   
+  function NewNotification() {
+    return (
+      <div className="Notification"></div>
+    )
+  }
   
   function handleInputSearch(e: any) {
     setSearch(e.target.value)
@@ -106,6 +112,7 @@ export function NavBar(props: any) {
       <button className="navBtn" onClick={() => { return history.push("/home") }} ><h1 className={props.page === "Home" ? "neonTextOn" : "neonTextOff"}>Home</h1></button>
       <button className="navBtn" onClick={() => { return history.push("/play") }} ><h1 className={props.page === "Play" ? "neonTextOn" : "neonTextOff"}>Play</h1></button>
       <div className="prof-search">
+        { notification ? <NewNotification /> : null }
         <form onSubmit={handleSearch} >
           <input type="text" className="searchBar" placeholder="Search" value={search} onChange={handleInputSearch} />
         </form>
@@ -113,6 +120,7 @@ export function NavBar(props: any) {
           <summary style={{ backgroundImage: `url(${localStorage.getItem("ProfilePicture")})` }} ></summary>
           <nav className="menu">
             <button className="menuBtn" onClick={() => { return history.push(`/${me.data.username}/profile`) }} >Profile</button>
+            <button className="menuBtn" onClick={() => { return history.push(`/alerts`) }} >Alerts</button>
             <button className="menuBtn" onClick={() => { return history.push("/settings") }} >Settings</button>
             <button className="menuBtn" onClick={logout} >Logout</button>
           </nav>

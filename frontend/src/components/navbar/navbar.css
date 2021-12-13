@@ -137,10 +137,6 @@ summary::after {
   details[open] .menu {
     animation-name: menuAnim;
   }
-
-  details[close] .menu {
-    animation-name: fadeMe;
-  }
   
   .menu {
     width: fit-content;
@@ -176,7 +172,7 @@ summary::after {
       height: 0;
     }
     100% {
-      height: 145.6px;
+      height: 187.2px;
     }
   }
   @keyframes fadeMe {
@@ -191,4 +187,15 @@ summary::after {
   nav.menu {
     position: absolute;
     transform: translateX(-68%);
+}
+
+.Notification {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #ff0000b0;
+  border-radius: 50%;
+  top: 5px;
+  z-index: 2;
+  right: 10px;
 }
