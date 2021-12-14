@@ -115,6 +115,8 @@ export class UserService {
 
     this.userRepository.save(user);
     this.userRepository.save(newFriend);
+
+    this.declineRequest(user, newFriendId);
   }
 
   async createRequestFriend(user: User, newFriendId: string): Promise<void> {
@@ -172,5 +174,24 @@ export class UserService {
         await this.friendRequestRepository.delete(request.id);
       }
     }
+  }
+
+  async deleteFriend(user: User, idToDelete: string): Promise<void> {
+    const userToDelete: User = await this.getUserById(idToDelete);
+
+    const friends = (await this.getFriends(user.id, user)).friends;
+
+    user.friends = [];
+    userToDelete.friends = [];
+  
+    for (let friend of friends) {
+      if (friend.id !== userToDelete.id) {
+        user.friends.push(friend);
+        userToDelete.friends.push(user);
+      }
+    }
+
+    this.userRepository.save(user);
+    this.userRepository.save(userToDelete);
   }
 }
