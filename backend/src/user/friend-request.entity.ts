@@ -6,9 +6,9 @@ export class FriendRequest {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
-    @ManyToOne(() => User, user => user.requestFrom, {cascade: true})
+    @ManyToOne(() => User, user => user.requestFrom)
     from: User;
 
-    @ManyToOne(() => User, user => user.requestTo, {cascade: true})
+    @ManyToOne(() => User, user => user.requestTo)
     to: User;
 }

@@ -6,8 +6,6 @@ import { GetUserFilterDto } from './dto/user-filter.dto';
 import { FriendRequestRepository } from './friend-request.repository';
 import { FriendRequestDto } from './dto/friend-request.dto';
 import { FriendRequest } from './friend-request.entity';
-import { request, response } from 'express';
-import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -155,9 +153,9 @@ export class UserService {
   }
 
   async declineRequest(user: User, fromId: string): Promise<void> {
-    const fromUser = await this.getUserById(fromId);
+    const fromUser: User = await this.getUserById(fromId);
 
-    const allRequest = await this.friendRequestRepository.find({
+    const allRequest: FriendRequest[] = await this.friendRequestRepository.find({
       relations: ['from', 'to'],
     });
 
