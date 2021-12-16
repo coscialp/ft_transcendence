@@ -46,7 +46,7 @@ export class MainMenu extends React.Component<any, StateType> {
 	componentDidMount() {
 		this.socket.on('msg_toClient', (msg: any) => {
 			console.log(`msg: ${msg}`);
-			this.state.messages.push({ id: this.state.messages.length, sentAt: msg.sentAt, sender: msg.sender, body: msg.body, avatar: msg.avatar});
+			this.state.messages.push({ id: this.state.messages.length, sentAt: msg.sentAt, sender: msg.sender, body: msg.body, avatar: msg.avatar });
 			this.forceUpdate();
 		});
 	}
@@ -76,9 +76,11 @@ export class MainMenu extends React.Component<any, StateType> {
 	}
 
 	handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
-		console.log(this.state.messageInput);
-		this.socket.emit('msg_toServer', { sentAt: Date(), body: this.state.messageInput });
-		this.setState({ messageInput: '' });
+		if (this.state.messageInput) {
+			console.log(this.state.messageInput);
+			this.socket.emit('msg_toServer', { sentAt: Date(), body: this.state.messageInput });
+			this.setState({ messageInput: '' });
+		}
 		e.preventDefault();
 	}
 
