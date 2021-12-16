@@ -1,4 +1,8 @@
-import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { UsersRepository } from '../user/user.repository';
@@ -19,6 +23,7 @@ export class AuthService {
   private readonly authorizationURI: string = process.env.AUTHORIZATION_URI;
   private accessToken: string;
   private headers: { Authorization: string };
+  private logger: Logger = new Logger('AuthService');
 
   constructor(
     @InjectRepository(UsersRepository)
@@ -58,7 +63,7 @@ export class AuthService {
       this.headers = { Authorization: `Bearer ${this.accessToken}` };
 
       console.log(this.accessToken);
-     const response$ = this.http.get(`${this.endpoint}/me`, {
+      const response$ = this.http.get(`${this.endpoint}/me`, {
         headers: this.headers,
       });
       const { status, data } = await lastValueFrom(response$);
@@ -79,34 +84,35 @@ export class AuthService {
 
       const { username } = authCredentialsDto;
       let user: User = await this.usersRepository.findOne({ username });
-  
 
       if (!user) {
         await this.usersRepository.createUser42(authCredentialsDto);
       }
-      
+
       const payload: JwtPayload = { username };
       const accessToken: string = this.jwtService.sign(payload);
       user = await this.usersRepository.findOne({ username });
       user.isLogged = true;
       await this.usersRepository.save(user);
       return { accessToken: accessToken };
-
     } catch (error) {
-      console.log(error);
+      this.logger.error(error);
     }
   }
 
   async logout(user: User): Promise<void> {
-
     user.isLogged = false;
     await this.usersRepository.save(user);
   }
 
   async getUserFromAuthenticationToken(token: string): Promise<User> {
-    const payload = this.jwtService.verify(token);
-    if (payload.username) {
-      return this.userService.getUserById(payload.username);
+    try {
+      const payload = this.jwtService.verify(token);
+      if (payload.username) {
+        return this.userService.getUserById(payload.username);
+      }
+    } catch (e) {
+      this.logger.error(e);
     }
   }
 }

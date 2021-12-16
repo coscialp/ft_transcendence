@@ -40,4 +40,7 @@ export class User {
     @JoinTable()
     friends: User[];
 
+    @ManyToMany(type => User, user => user.blackList, {cascade: false})
+    @JoinTable()
+    blackList: User[];
 }

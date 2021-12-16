@@ -85,4 +85,19 @@ export class UserController {
     async deleteFriend(@GetUser() user: User, @Body('idToDelete') idToDelete: string): Promise<void> {
         return await this.userService.deleteFriend(user, idToDelete);
     }
+
+    @Get('/:id/blacklist')
+    async getBlackList(@Param('id') id: string, @GetUser() user: User): Promise<{blackList: User[]}> {
+        return await this.userService.getBlackList(id, user);
+    }
+
+    @Patch('/blacklist/add')
+    async addBlackList(@GetUser() user: User, @Body('newBlackListId') newBlackListId: string): Promise<void> {
+        return await this.userService.addBlackList(user, newBlackListId);
+    }
+
+    @Delete('/blacklist/remove')
+    async deleteBlackList(@GetUser() user: User, @Body('idToDelete') idToDelete: string): Promise<void> {
+        return await this.userService.deleteBlackList(user, idToDelete);
+    }
 }
