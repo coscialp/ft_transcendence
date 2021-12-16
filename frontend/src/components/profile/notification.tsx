@@ -11,6 +11,7 @@ export function Notification() {
     const [fromRequest, setFromRequest]: any = useState([]);
 
     useEffect(() => {
+        let mounted = true;
         axios.request({
             url: `/user/me/friends/request`,
             method: 'get',
@@ -19,9 +20,13 @@ export function Notification() {
                 "Authorization": `Bearer ${cookies.access_token}`,
             },
         }).then((response: any) => {
-            setFromRequest(response.data.from);
+            if (mounted) {
+                setFromRequest(response.data.from);
+            }
         })
-    }, [ip, cookies]);
+
+        return () => {mounted = false}
+    }, [ip, cookies, fromRequest]);
 
     function AcceptFriend(request: any) {
         axios.request({
