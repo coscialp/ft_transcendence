@@ -18,10 +18,9 @@ import { FriendRequestRepository } from './friend-request.repository';
         expiresIn: 3600,
       },
     }),
-    AuthModule,
   ],
   controllers: [UserController],
   providers: [UserService],
-  exports: [],
+  exports: [UserService],
 })
 export class UserModule {}

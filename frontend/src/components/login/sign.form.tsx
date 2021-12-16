@@ -30,6 +30,11 @@ export class SignForm extends React.Component<{}, { username: string, password: 
         data: {
           username: this.state.username,
           password: this.state.password,
+          firstName: null,
+          lastName: null,
+          nickName: null,
+          profileImage: null,
+          email: null,
         }
       }
       )

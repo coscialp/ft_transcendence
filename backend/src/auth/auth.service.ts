@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { UsersRepository } from '../user/user.repository';
@@ -9,6 +9,7 @@ import { User } from '../user/user.entity';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { Auth42Dto } from './dto/auth-42.dto';
+import { UserService } from 'src/user/user.service';
 @Injectable()
 export class AuthService {
   private readonly clientSecret: string = process.env.CLIENT_SECRET;
@@ -24,6 +25,7 @@ export class AuthService {
     private usersRepository: UsersRepository,
     private jwtService: JwtService,
     private http: HttpService,
+    private userService: UserService,
   ) {}
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
@@ -39,6 +41,7 @@ export class AuthService {
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { username };
       const accessToken: string = this.jwtService.sign(payload);
+      console.log(accessToken);
       return { accessToken };
     } else {
       throw new UnauthorizedException('Please check your login credentials');
@@ -98,5 +101,12 @@ export class AuthService {
 
     user.isLogged = false;
     await this.usersRepository.save(user);
+  }
+
+  async getUserFromAuthenticationToken(token: string): Promise<User> {
+    const payload = this.jwtService.verify(token);
+    if (payload.username) {
+      return this.userService.getUserById(payload.username);
+    }
   }
 }

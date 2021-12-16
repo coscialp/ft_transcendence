@@ -32,7 +32,7 @@ async function isLogged(cookies: any, setUnauthorized: any) {
 export function Home() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [cookies] = useCookies();
-  
+
   useEffect(()=>{
     isLogged(cookies, setUnauthorized);
   }, [cookies])
@@ -47,7 +47,6 @@ export function Home() {
         <div className="HomeMain" >
           <Gamemode />
           <MainMenu/>
-          {/* <ChannelPrimary /> */}
           <Friendlist />
         </div>
       </div>

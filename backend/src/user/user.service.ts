@@ -142,9 +142,9 @@ export class UserService {
       to: User[] = [];
 
     for (let request of allRequest) {
-      if (request.from.id === currentUser.id) {
+      if (request.from && request.from.id === currentUser.id) {
         to.push(request.to);
-      } else if (request.to.id === currentUser.id) {
+      } else if (request.to && request.to.id === currentUser.id) {
         from.push(request.from);
       }
     }

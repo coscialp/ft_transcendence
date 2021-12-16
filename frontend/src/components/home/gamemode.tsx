@@ -1,6 +1,7 @@
 export function Gamemode() {
 
     return (
+        // <div>
         <div className="GMElement" >
             <p className="GMTitle" >Gamemode</p>
             <div className="GMBody" >Ultimate Survival</div>

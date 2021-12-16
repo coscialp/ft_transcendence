@@ -16,18 +16,18 @@ export class AuthCredentialsDto {
   })
   password: string;
 
-  @IsString()
+  // @IsString()
   firstName?: string | null;
 
-  @IsString()
+  // @IsString()
   lastName?: string | null;
 
-  @IsString()
+  // @IsString()
   nickName?: string | null;
 
-  @IsString()
-  profileImage: string | null;
+  // @IsString()
+  profileImage?: string | null;
 
-  @IsString()
-  email: string | null;
+  // @IsString()
+  email?: string | null;
 }
