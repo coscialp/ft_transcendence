@@ -65,7 +65,7 @@ export function Notification() {
             <NavBar page="Alerts" />
             <div className="AlertsELement" >
                 <div className="AlertsMain" >
-                    {fromRequest.map((request: any) => (
+                    {fromRequest.length === 0 ? <div className="no alerts">You have no alerts !</div> : fromRequest.map((request: any) => (
                         <div className="Friend Request Pending" key={request.id} >
                             <div className="NameImg box">
                                 <img className="FriendRequestImg" alt="" style={{ backgroundImage: `url(${request.profileImage})` }} />

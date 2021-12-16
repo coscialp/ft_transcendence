@@ -45,12 +45,15 @@ export class MainMenu extends React.Component<any, StateType> {
 
 	componentDidMount() {
 		this.socket.on('msg_toClient', (msg: any) => {
-			console.log(`msg: ${msg}`);
 			this.state.messages.push({ id: this.state.messages.length, sentAt: msg.sentAt, sender: msg.sender, body: msg.body, avatar: msg.avatar});
 			this.forceUpdate();
 		});
 	}
 
+	/*const scrollRef = React.createRef<HTMLInputElement>();
+		if (scrollRef.current) {
+			scrollRef.current.scrollIntoView({behavior: "smooth",});
+		}*/
 
 	togglePopup() {
 		this.setState({ showPopup: !this.state.showPopup });

@@ -9,6 +9,13 @@
     align-items: center;
 }
 
+.no.alerts {
+    font-family: 'neon';
+    font-size: 4vw;
+    top: 30%;
+    position: relative;
+}
+
 .AlertsMain {
     width: 70%;
     position: relative;

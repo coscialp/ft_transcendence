@@ -89,6 +89,14 @@ img.Add.friend {
     cursor: pointer;
 }
 
+.userNotLogged {
+    width: 2vw;
+    height: 2vw;
+    background-color: #535353eb;
+    border-radius: 50%;
+    margin: 0;
+}
+
 @media screen and (orientation: portrait) {
 
     .ProfileMain {

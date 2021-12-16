@@ -43,7 +43,10 @@ export function Overall() {
 
 	return (
 		<div className="ImgName" >
-			<img className="ProfileImage" style={{ backgroundImage: `url(${user.profileImage})` }} alt="" />
+			<div>
+				<img className="ProfileImage" style={{ backgroundImage: `url(${user.profileImage})` }} alt="" />
+				{user.isLogged ? <div className='userLogged' /> : <div className='userNotLogged' />}
+			</div>
 			<p className="ProfileName" > {user.firstName} "{user.nickName}" {user.lastName} </p>
 			<p className="Stats" >
 				Rank : (insert rank)<br />
