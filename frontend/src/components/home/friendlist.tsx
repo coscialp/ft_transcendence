@@ -10,6 +10,7 @@ export function Friendlist() {
 
 
   useEffect(() => {
+    let mounted = true;
     axios.request({
       url: '/user/me/friends',
       method: 'get',
@@ -18,8 +19,12 @@ export function Friendlist() {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
     }).then((response: any) => {
-      setFriends(response.data.friends)
+      if (mounted) {
+        setFriends(response.data.friends)
+      }
     })
+
+    return () => { mounted = false }
   }, [cookies])
 
   return (
