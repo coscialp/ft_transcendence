@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useState} from 'react'
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router'
 import './navbar.css'

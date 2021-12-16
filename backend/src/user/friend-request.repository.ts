@@ -13,14 +13,14 @@ export class FriendRequestRepository extends Repository<FriendRequest> {
 
         const allUser = await userRepository.find({ relations: ['requestFrom', 'requestTo'] });
 
-        const { requestFrom } = allUser.find((user) => { return user.id === to.id; });
-        const { requestTo } = allUser.find((user) => { return user.id === from.id; });
+        const { requestFrom } = allUser.find((user) => { return user.id === from.id; });
+        const { requestTo } = allUser.find((user) => { return user.id === to.id; });
         
         console.log(requestTo);
         console.log(requestFrom);
 
-        from.requestFrom = requestTo;
-        to.requestTo = requestFrom;
+        from.requestFrom = requestFrom;
+        to.requestTo = requestTo;
 
         from.requestFrom.push(request);
         to.requestTo.push(request);

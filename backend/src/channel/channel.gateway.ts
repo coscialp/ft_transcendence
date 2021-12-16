@@ -30,7 +30,12 @@ import {
   }
  
   handleConnection(@ConnectedSocket() socket: Socket) {
-   this.logger.log(socket.handshake.headers.cookie);
+   const cookie: string = socket.handshake.headers.cookie;
+
+  //  const access_token = cookie.split('=')[4];
+
+  //  console.log(access_token);
+  console.log(cookie);
    this.logger.log(`Client connected`);
   }
  }
