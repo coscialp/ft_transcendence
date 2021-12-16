@@ -80,4 +80,9 @@ export class UserController {
     async getFriendsRequest(@Param('id') id: string, @GetUser() user: User): Promise<{from: User[], to: User[]}> {
         return await this.userService.getFriendsRequest(id, user);
     }
+
+    @Delete('/friends/remove')
+    async deleteFriend(@GetUser() user: User, @Body('idToDelete') idToDelete: string): Promise<void> {
+        return await this.userService.deleteFriend(user, idToDelete);
+    }
 }

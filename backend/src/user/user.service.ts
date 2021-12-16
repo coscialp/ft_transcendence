@@ -6,8 +6,6 @@ import { GetUserFilterDto } from './dto/user-filter.dto';
 import { FriendRequestRepository } from './friend-request.repository';
 import { FriendRequestDto } from './dto/friend-request.dto';
 import { FriendRequest } from './friend-request.entity';
-import { request, response } from 'express';
-import { DeleteResult } from 'typeorm';
 
 @Injectable()
 export class UserService {
@@ -115,6 +113,8 @@ export class UserService {
 
     this.userRepository.save(user);
     this.userRepository.save(newFriend);
+
+    this.declineRequest(user, newFriendId);
   }
 
   async createRequestFriend(user: User, newFriendId: string): Promise<void> {
@@ -153,9 +153,9 @@ export class UserService {
   }
 
   async declineRequest(user: User, fromId: string): Promise<void> {
-    const fromUser = await this.getUserById(fromId);
+    const fromUser: User = await this.getUserById(fromId);
 
-    const allRequest = await this.friendRequestRepository.find({
+    const allRequest: FriendRequest[] = await this.friendRequestRepository.find({
       relations: ['from', 'to'],
     });
 
@@ -172,5 +172,24 @@ export class UserService {
         await this.friendRequestRepository.delete(request.id);
       }
     }
+  }
+
+  async deleteFriend(user: User, idToDelete: string): Promise<void> {
+    const userToDelete: User = await this.getUserById(idToDelete);
+
+    const friends = (await this.getFriends(user.id, user)).friends;
+
+    user.friends = [];
+    userToDelete.friends = [];
+  
+    for (let friend of friends) {
+      if (friend.id !== userToDelete.id) {
+        user.friends.push(friend);
+        userToDelete.friends.push(user);
+      }
+    }
+
+    this.userRepository.save(user);
+    this.userRepository.save(userToDelete);
   }
 }

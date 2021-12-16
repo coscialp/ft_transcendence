@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useState} from 'react'
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router'
 import './navbar.css'
@@ -148,10 +148,10 @@ export function NavBar(props: any) {
         <details>
           <summary style={{ backgroundImage: `url(${localStorage.getItem("ProfilePicture")})` }} ></summary>
           <nav className="menu">
-            <button className="menuBtn" onClick={() => { return history.push(`/${me.data.username}/profile`) }} >Profile</button>
-            <button className="menuBtn" onClick={() => { return history.push(`/alerts`) }} >Alerts</button>
-            <button className="menuBtn" onClick={() => { return history.push("/settings") }} >Settings</button>
-            <button className="menuBtn" onClick={logout} >Logout</button>
+            <button className="menuBtn" onClick={() => { return history.push(`/${me.data.username}/profile`) }} ><span /><span /><span /><span />Profile</button>
+            <button className="menuBtn" onClick={() => { return history.push(`/alerts`) }} ><span /><span /><span /><span />Alerts</button>
+            <button className="menuBtn" onClick={() => { return history.push("/settings") }} ><span /><span /><span /><span />Settings</button>
+            <button className="menuBtnOut" onClick={logout} ><span /><span /><span /><span />Logout</button>
           </nav>
         </details>
       </div>
