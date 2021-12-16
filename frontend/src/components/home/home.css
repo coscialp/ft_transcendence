@@ -49,7 +49,7 @@
     box-shadow: rgb(12 73 181 / 54%) 0px 54px 55px, rgb(5 72 177 / 38%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
-.FriendElement:hover, .FriendList:hover {
+.FriendElement:hover, .FriendList:hover{
     text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
 }
 
@@ -80,27 +80,27 @@ p.FriendTitle {
 }
 
 .FriendList {
-    margin: 0;
+    margin-top: 15px;
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-right: 2px solid;
     border-color: rgb(3 83 209);
+    cursor:pointer;
 }
 
-.buttonFriends {
-    border: 2px solid #9fa2a4;
-    height: 18px;
-    border-radius: 5px;
-    background: linear-gradient(#fbfbfb, #d1d1d1);
-  }
-  
-  .dots {
-      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-      font-size: 36px;
-      line-height: 0;
-      margin-top: -10px; 
-      letter-spacing: -2px;
-  }
+.allFriendList {
+    overflow-y: scroll;
+}
+
+.allFriendList::-webkit-scrollbar-thumb {
+    background-color: wheat;
+    border-radius: 50px;
+}
+.allFriendList::-webkit-scrollbar {
+    /* display: none; */
+    background-color: rgb(128 128 128 / 42%);
+    border-radius: 50px;
+}
 
 p.GMTitle {
     margin: 0;

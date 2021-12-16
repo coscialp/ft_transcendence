@@ -39,7 +39,7 @@ export function NavBar(props: any) {
             }
           })
         }
-      }, 10000);
+      }, 1000);
       return () => clearInterval(interval);
     }, [])
   }
@@ -146,7 +146,7 @@ export function NavBar(props: any) {
           <input type="text" className="searchBar" placeholder="Search" value={search} onChange={handleInputSearch} />
         </form>
         <details>
-          <summary style={{ backgroundImage: `url(${localStorage.getItem("ProfilePicture")})` }} ></summary>
+          <summary className="summaryProfile" style={{ backgroundImage: `url(${localStorage.getItem("ProfilePicture")})` }} ></summary>
           <nav className="menu">
             <button className="menuBtn" onClick={() => { return history.push(`/${me.data.username}/profile`) }} ><span /><span /><span /><span />Profile</button>
             <button className="menuBtn" onClick={() => { return history.push(`/alerts`) }} ><span /><span /><span /><span />Alerts</button>

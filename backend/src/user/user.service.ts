@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './user.repository';
 import { User } from './user.entity';
@@ -9,6 +9,8 @@ import { FriendRequest } from './friend-request.entity';
 
 @Injectable()
 export class UserService {
+  private logger: Logger = new Logger('UserService');
+
   constructor(
     @InjectRepository(UsersRepository) private userRepository: UsersRepository,
     @InjectRepository(FriendRequestRepository)
@@ -132,41 +134,53 @@ export class UserService {
     id: string,
     user: User,
   ): Promise<{ from: User[]; to: User[] }> {
-    const currentUser = await this.getUserById(id, user);
+    try {
+      const currentUser = await this.getUserById(id, user);
 
-    const allRequest = await this.friendRequestRepository.find({
-      relations: ['from', 'to'],
-    });
+      const allRequest = await this.friendRequestRepository.find({
+        relations: ['from', 'to'],
+      });
 
-    const from: User[] = [],
-      to: User[] = [];
+      const from: User[] = [],
+        to: User[] = [];
 
-    for (let request of allRequest) {
-      if (request.from && request.from.id === currentUser.id) {
-        to.push(request.to);
-      } else if (request.to && request.to.id === currentUser.id) {
-        from.push(request.from);
+      for (let request of allRequest) {
+        if (request.from.id === currentUser.id) {
+          to.push(request.to);
+        } else if (request.to.id === currentUser.id) {
+          from.push(request.from);
+        }
       }
-    }
 
-    return { from: from, to: to };
+      return { from: from, to: to };
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   async declineRequest(user: User, fromId: string): Promise<void> {
     const fromUser: User = await this.getUserById(fromId);
 
-    const allRequest: FriendRequest[] = await this.friendRequestRepository.find({
-      relations: ['from', 'to'],
-    });
+    const allRequest: FriendRequest[] = await this.friendRequestRepository.find(
+      {
+        relations: ['from', 'to'],
+      },
+    );
 
     const { from } = await this.getFriendsRequest(user.id, user);
 
     console.log(from);
 
-    if (from.find((u) => { return u.id === fromId })) {
-      throw new NotFoundException(`Friend's request from ${fromUser.username} not found!`)
+    if (
+      from.find((u) => {
+        return u.id === fromId;
+      })
+    ) {
+      throw new NotFoundException(
+        `Friend's request from ${fromUser.username} not found!`,
+      );
     }
-    
+
     for (let request of allRequest) {
       if (request.from.id === fromUser.id && request.to.id === user.id) {
         await this.friendRequestRepository.delete(request.id);
@@ -181,7 +195,7 @@ export class UserService {
 
     user.friends = [];
     userToDelete.friends = [];
-  
+
     for (let friend of friends) {
       if (friend.id !== userToDelete.id) {
         user.friends.push(friend);
@@ -191,5 +205,43 @@ export class UserService {
 
     this.userRepository.save(user);
     this.userRepository.save(userToDelete);
+  }
+
+  async getBlackList(id: string, user: User): Promise<{ blackList: User[] }> {
+    const currentUser = await this.getUserById(id, user);
+
+    const allUser = await this.userRepository.find({
+      relations: ['blackList'],
+    });
+    const blackList = allUser.find((user) => {
+      return user.username === currentUser.username;
+    }).blackList;
+
+    return { blackList: blackList };
+  }
+
+  async addBlackList(user: User, newBlackListId: string): Promise<void> {
+    const newBlackList = await this.getUserById(newBlackListId);
+
+    user.friends = (await this.getFriends(user.id, user)).friends;
+    user.friends.push(newBlackList);
+
+    this.userRepository.save(user);
+  }
+
+  async deleteBlackList(user: User, idToDelete: string): Promise<void> {
+    const userToDelete: User = await this.getUserById(idToDelete);
+
+    const blackList = (await this.getBlackList(user.id, user)).blackList;
+
+    user.blackList = [];
+
+    for (let u of blackList) {
+      if (u.id !== userToDelete.id) {
+        user.blackList.push(u);
+      }
+    }
+
+    this.userRepository.save(user);
   }
 }

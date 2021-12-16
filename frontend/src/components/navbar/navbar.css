@@ -106,7 +106,7 @@ input.searchBar {
   details {
     margin: 10px;
   }
-  summary {
+  .summaryProfile {
     text-align: center;
     width: 40px;
     height: 40px;
@@ -118,20 +118,20 @@ input.searchBar {
     outline: none;
     transition: transform 200ms ease-in-out 0s;
 }
-summary::before,
-summary::after {
+.summaryProfile::before,
+.summaryProfile::after {
     position: static;
     top: 0;
     left: 0;
   }
   
-  summary:hover {
+  .summaryProfile:hover {
     transform: scale(1.1);
   }
-  summary::marker {
+  .summaryProfile::marker {
     font-size: 0;
   }
-  summary::-webkit-details-marker {
+  .summaryProfile::-webkit-details-marker {
     display: none;
   }
   details[open] .menu {

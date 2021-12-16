@@ -9,7 +9,6 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { parse } from 'cookie';
 import { ChannelService } from './channel.service';
 import { User } from 'src/user/user.entity';
 
@@ -26,6 +25,7 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection {
   async handleMessage(@MessageBody() message: any, @ConnectedSocket() socket: Socket): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
     this.logger.log(message);
+    try {
     const response = {
       sentAt: message.sentAt,
       sender: user.username,
@@ -33,6 +33,9 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection {
       avatar: user.profileImage
     }
     this.server.emit('msg_toClient', response);
+  } catch (error) {
+    this.logger.error(error);
+  }
   }
 
   afterInit(server: Server) {
@@ -41,11 +44,19 @@ export class ChannelGateway implements OnGatewayInit, OnGatewayConnection {
 
   async handleDisconnect(@ConnectedSocket() socket: Socket) {
     const user: User = await this.channelService.getUserFromSocket(socket);
-    this.logger.log(`Client ${user.username} disconnected`);
+    try {
+      this.logger.log(`Client ${user.username} disconnected`);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   async handleConnection(@ConnectedSocket() socket: Socket) {
     const user: User = await this.channelService.getUserFromSocket(socket);
-    this.logger.log(`Client ${user.username} connected!`);
+    try {
+      this.logger.log(`Client ${user.username} connected`);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 }
