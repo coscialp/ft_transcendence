@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import './home.css'
 
 const ip = window.location.hostname;
 
@@ -25,14 +26,55 @@ export function Friendlist() {
     })
 
     return () => { mounted = false }
-  }, [cookies])
+  }, [cookies, friends])
+
+  function handleDeleteFriends(friendToDelete: any) {
+    console.log(friendToDelete)
+      axios.request({
+        url: '/user/friends/remove',
+        method: 'delete',
+        baseURL: `http://${ip}:5000`,
+        headers: {
+          "Authorization": `Bearer ${cookies.access_token}`,
+        },
+        data: {
+          'idToDelete': friendToDelete.username
+        }
+      })
+  }
+
+  function handleBlacklist(friendToDelete: any) {
+    console.log(friendToDelete)
+      axios.request({
+        url: '/user/blacklist/remove',
+        method: 'delete',
+        baseURL: `http://${ip}:5000`,
+        headers: {
+          "Authorization": `Bearer ${cookies.access_token}`,
+        },
+        data: {
+          'idToDelete': friendToDelete.username
+        }
+      })
+  }
+
 
   return (
     <div className="FriendElement" >
       <p className="FriendTitle" >Friend List</p>
-      {friends.map((friends: any) => (
-        <div className="FriendList" key={friends.id} >{friends.username}</div>
+      <div className="allFriendList">
+      {friends.map((friend: any) => (
+        <details>
+          <summary className="FriendList" key={friend.id}>{friend.username}</summary>
+          <nav className="menu">
+            <button className="menuBtn"  ><span /><span /><span /><span />Send message</button>
+            <button className="menuBtn"  ><span /><span /><span /><span />Invite game</button>
+            <button className="menuBtnOut" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
+            <button className="menuBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
+          </nav>
+        </details>
       ))}
+      </div>
     </div>
   )
 }

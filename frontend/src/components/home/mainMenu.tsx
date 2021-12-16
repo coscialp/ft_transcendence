@@ -79,9 +79,11 @@ export class MainMenu extends React.Component<any, StateType> {
 	}
 
 	handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
-		console.log(this.state.messageInput);
-		this.socket.emit('msg_toServer', { sentAt: Date(), body: this.state.messageInput });
-		this.setState({ messageInput: '' });
+		if (this.state.messageInput) {
+			console.log(this.state.messageInput);
+			this.socket.emit('msg_toServer', { sentAt: Date(), body: this.state.messageInput });
+			this.setState({ messageInput: '' });
+		}
 		e.preventDefault();
 	}
 

@@ -49,8 +49,12 @@
     box-shadow: rgb(12 73 181 / 54%) 0px 54px 55px, rgb(5 72 177 / 38%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
-.FriendElement:hover {
+.FriendElement:hover, .FriendList:hover{
     text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
+}
+
+.FriendList:not(hover) {
+    text-shadow: none;
 }
 
 input.MainSendMessage {
@@ -73,6 +77,29 @@ p.FriendTitle {
     padding-bottom: 10px;
     border-bottom: 2px solid;
     border-color: rgb(3 83 209);
+}
+
+.FriendList {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-right: 2px solid;
+    border-color: rgb(3 83 209);
+    cursor:pointer;
+}
+
+.allFriendList {
+    overflow-y: scroll;
+}
+
+.allFriendList::-webkit-scrollbar-thumb {
+    background-color: wheat;
+    border-radius: 50px;
+}
+.allFriendList::-webkit-scrollbar {
+    /* display: none; */
+    background-color: rgb(128 128 128 / 42%);
+    border-radius: 50px;
 }
 
 p.GMTitle {
