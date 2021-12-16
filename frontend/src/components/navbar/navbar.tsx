@@ -39,7 +39,7 @@ export function NavBar(props: any) {
             }
           })
         }
-      }, 10000);
+      }, 1000);
       return () => clearInterval(interval);
     }, [])
   }
