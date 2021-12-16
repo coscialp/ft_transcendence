@@ -5,7 +5,7 @@ import { useHistory } from 'react-router'
 import './navbar.css'
 
 const ip = window.location.hostname;
-const me = JSON.parse(sessionStorage.getItem("me") || '{}');
+var me = JSON.parse(sessionStorage.getItem("me") || '{}');
 
 export function NavBar(props: any) {
 
@@ -17,40 +17,28 @@ export function NavBar(props: any) {
   const [notification, setNotification] = useState(false);
 
   function GetNotifications() {
-
     useEffect(() => {
-
-      axios.request({
-        url: `/user/${me.data.username}/friends/request`,
-        method: 'get',
-        baseURL: `http://${ip}:5000`,
-        headers: {
-          "Authorization": `Bearer ${cookies.access_token}`,
-        },
-      }).then((response: any) => {
-        if (response.data.from.length > 0) {
-          setNotification(true);
-        }
-        else {
-          setNotification(false);
-        }
-      })
       const interval = setInterval(() => {
-        axios.request({
-          url: `/user/${me.data.username}/friends/request`,
-          method: 'get',
-          baseURL: `http://${ip}:5000`,
-          headers: {
-            "Authorization": `Bearer ${cookies.access_token}`,
-          },
-        }).then((response: any) => {
-          if (response.data.from.length > 0) {
-            setNotification(true);
-          }
-          else {
-            setNotification(false);
-          }
-        })
+        if (me.data === undefined) {
+          me = JSON.parse(sessionStorage.getItem("me") || '{}');
+        }
+        if (me.data !== undefined) {
+          axios.request({
+            url: `/user/${me.data.username}/friends/request`,
+            method: 'get',
+            baseURL: `http://${ip}:5000`,
+            headers: {
+              "Authorization": `Bearer ${cookies.access_token}`,
+            },
+          }).then((response: any) => {
+            if (response.data.from.length > 0) {
+              setNotification(true);
+            }
+            else {
+              setNotification(false);
+            }
+          })
+        }
       }, 10000);
       return () => clearInterval(interval);
     }, [])

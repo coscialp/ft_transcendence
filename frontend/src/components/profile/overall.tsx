@@ -20,6 +20,7 @@ export function Overall() {
 				"Authorization": `Bearer ${cookies.access_token}`,
 			}
 		}).then((response: any) => {
+			console.log(response)
 			setUser(response.data);
 		})
 	}, [userProfile, ip, cookies]);
