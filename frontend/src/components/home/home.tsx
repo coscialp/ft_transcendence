@@ -32,7 +32,7 @@ async function isLogged(cookies: any, setUnauthorized: any) {
 export function Home() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [cookies] = useCookies();
-  
+
   useEffect(()=>{
     isLogged(cookies, setUnauthorized);
   }, [cookies])
