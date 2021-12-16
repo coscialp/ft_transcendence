@@ -47,7 +47,6 @@ export function Home() {
         <div className="HomeMain" >
           <Gamemode />
           <MainMenu/>
-          {/* <ChannelPrimary /> */}
           <Friendlist />
         </div>
       </div>

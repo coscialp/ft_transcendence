@@ -77,7 +77,7 @@ export class MainMenu extends React.Component<any, StateType> {
 
 	handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
 		console.log(this.state.messageInput);
-		this.socket.emit('msg_toServer', {sentAt: Date(), sender: me.data.nickName, body: this.state.messageInput, avatar: me.data.profileImage});
+		this.socket.emit('msg_toServer', { sentAt: Date(), body: this.state.messageInput });
 		this.setState({ messageInput: '' });
 		e.preventDefault();
 	}
@@ -109,7 +109,7 @@ export class MainMenu extends React.Component<any, StateType> {
 							</div>
 							<div className="message-body" >
 								<header className='message-header'>
-									<h4 className='message-sender'>{message.sender === me.data.nickName ? 'You' : message.sender}</h4>
+									<h4 className='message-sender'>{message.sender === me.data.username ? 'You' : message.sender}</h4>
 									<span className='message-time'>
 										{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
 									</span>
