@@ -29,11 +29,11 @@ export class LogForm extends React.Component<{}, { username: string, password: s
         data: {
           username: this.state.username,
           password: this.state.password,
-          firstName: null,
+          /*firstName: null,
           lastName: null,
           nickName: null,
           profileImage: null,
-          email: null,
+          email: null,*/
         }
       });
       event.preventDefault();

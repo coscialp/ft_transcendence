@@ -26,7 +26,7 @@ export function Friendlist() {
     })
 
     return () => { mounted = false }
-  }, [cookies, friends])
+  }, [cookies])
 
   function handleDeleteFriends(friendToDelete: any) {
     console.log(friendToDelete)

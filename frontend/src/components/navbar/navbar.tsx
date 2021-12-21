@@ -22,7 +22,7 @@ export function NavBar(props: any) {
         if (me.data === undefined) {
           me = JSON.parse(sessionStorage.getItem("me") || '{}');
         }
-        if (me.data !== undefined) {
+        /*if (me.data !== undefined) {
           axios.request({
             url: `/user/${me.data.username}/friends/request`,
             method: 'get',
@@ -38,7 +38,7 @@ export function NavBar(props: any) {
               setNotification(false);
             }
           })
-        }
+        }*/
       }, 1000);
       return () => clearInterval(interval);
     }, [])

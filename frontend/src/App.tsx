@@ -12,6 +12,7 @@ import { Profile } from './components/profile/profile';
 import { NotFound } from './components/notFound';
 import { Settings } from './components/settings/settings';
 import { Notification } from './components/profile/notification';
+import { NewUser } from './components/login/newUser';
 
 function App() {
 
@@ -22,12 +23,14 @@ function App() {
 					<Route path={"/oauth/redirect"} component={ Register } />
 					<Route exact path={"/signup"} component={ SignUp } />
 					<Route path={"/cookies"} component={ Cookies } />
+					<Route path={"/signIn/new"} component={ NewUser } />
 					<Route exact path={"/home"} component={ Home } />
 					<Route exact path={"/play"} component={ Play } />
 					<Route exact path={"/alerts"} component={ Notification } />
 					<Route path={"/settings"} component={ Settings } />
 
 					<Route path={"/:id/profile"} component={ Profile } />
+
 					<Route component={ NotFound } />
 			</Switch>
 		</Router>

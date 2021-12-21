@@ -19,6 +19,9 @@ type StateType = {
 	channelList: string[],
 	showPopup: boolean,
 	scrollTarget: any,
+	popupState: number,
+	channelName: string,
+	channelPassword: string,
 }
 
 export class MainMenu extends React.Component<any, StateType> {
@@ -32,20 +35,23 @@ export class MainMenu extends React.Component<any, StateType> {
 			channelList: ['General'],
 			showPopup: false,
 			scrollTarget: null,
+			popupState: 0,
+			channelName: "",
+			channelPassword: "",
 		}
 		this.socket = io(`ws://${ip}:5001`, { transports: ['websocket'] });
 
-		this.handleAddChannel = this.handleAddChannel.bind(this);
 		this.handleSendMessage = this.handleSendMessage.bind(this);
 		this.handleGetMessage = this.handleGetMessage.bind(this);
 		this.changeChannel = this.changeChannel.bind(this);
 		this.togglePopup = this.togglePopup.bind(this);
 		this.AddChannelPopup = this.AddChannelPopup.bind(this);
+		this.handleCreateNewChannel = this.handleCreateNewChannel.bind(this);
 	}
 
 	componentDidMount() {
 		this.socket.on('msg_toClient', (msg: any) => {
-			this.state.messages.push({ id: this.state.messages.length, sentAt: msg.sentAt, sender: msg.sender, body: msg.body, avatar: msg.avatar});
+			this.state.messages.push({ id: this.state.messages.length, sentAt: msg.sentAt, sender: msg.sender, body: msg.body, avatar: msg.avatar });
 			this.forceUpdate();
 		});
 	}
@@ -59,15 +65,53 @@ export class MainMenu extends React.Component<any, StateType> {
 		this.setState({ showPopup: !this.state.showPopup });
 	}
 
+	handleCreateNewChannel(e: any) {
+		if (this.state.channelName === "") {
+			window.alert("Channel's name cannot be empty !")
+		}
+		else {
+			if (this.state.channelList.find((name: string) => (name === this.state.channelName))) {
+				window.alert("Channel's name already taken !")
+			}
+			else {
+				this.togglePopup();
+				this.state.channelList.push(this.state.channelName);
+				this.setState({channelName: "", channelPassword: "", popupState: 0});
+			}
+		}
+		e.preventDefault()
+	}
+
 	AddChannelPopup() {
 		return (
 			<div className="Popup inner">
 				<div className="Chan Popup">
-					<div className="AJCbtn" >
-						<button className="AddJoinChan" > <img className="AddJoinImg" alt="" src="img/CreateServer.svg" />Create your channel</button>
-						<button className="AddJoinChan" > <img className="AddJoinImg" alt="" src="img/JoinServer.svg" />Join a channel</button>
-					</div>
-					<button className="Cancelbtn" onClick={this.togglePopup} >Cancel</button>
+					{this.state.popupState === 0 ?
+						<div className="AJCbtn" >
+							<button className="AddJoinChan" onClick={(e) => { this.setState({ popupState: 1 }) }} > <img className="AddJoinImg" alt="" src="img/CreateServer.svg" />Create your channel</button>
+							<button className="AddJoinChan" onClick={(e) => { this.setState({ popupState: 2 }) }} > <img className="AddJoinImg" alt="" src="img/JoinServer.svg" />Join a channel</button>
+						</div>
+						:
+						this.state.popupState === 1 ?
+							<div className="AddChan">
+								<form onSubmit={this.handleCreateNewChannel} >
+									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={this.state.channelName} onChange={(e) => this.setState({ channelName: e.target.value })} />
+									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={this.state.channelPassword} onChange={(e) => this.setState({ channelPassword: e.target.value })} />
+									<input type="submit" className="subbtn" value="Create !" />
+								</form>
+								<button className="Backbtn" onClick={(e) => { this.setState({ popupState: 0 }) }} >Back</button>
+							</div>
+							:
+							<div className="JoinChan">
+								<form onSubmit={this.handleCreateNewChannel} >
+									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={this.state.channelName} onChange={(e) => this.setState({ channelName: e.target.value })} />
+									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={this.state.channelPassword} onChange={(e) => this.setState({ channelPassword: e.target.value })} />
+									<input type="submit" className="subbtn" value="Create !" />
+								</form>
+								<button className="Backbtn" onClick={(e) => { this.setState({ popupState: 0 }) }} >Back</button>
+							</div>
+					}
+					<button className="Cancelbtn" onClick={(e) => { this.togglePopup(); this.setState({ popupState: 0 }) }} >Cancel</button>
 				</div>
 			</div>
 		)
@@ -87,11 +131,6 @@ export class MainMenu extends React.Component<any, StateType> {
 		e.preventDefault();
 	}
 
-	handleAddChannel() {
-		this.state.channelList.push("TEST");
-		this.togglePopup();
-	}
-
 	changeChannel(e: any) {
 		console.log(e.target.innerText);
 		this.setState({ messages: [] });
@@ -104,7 +143,7 @@ export class MainMenu extends React.Component<any, StateType> {
 				<div className="Channel List" >{this.state.channelList.map((channel: any) => (
 					<p key={channel} onClick={this.changeChannel} className="channelName">{channel}</p>
 				))}
-					<button className="addChannel" onClick={this.handleAddChannel}>+</button>
+					<button className="addChannel" onClick={this.togglePopup}>+</button>
 				</div>
 				<div className="Message Container" >
 					{this.state.messages.map((message: any) => (

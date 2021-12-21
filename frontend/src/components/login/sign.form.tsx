@@ -1,6 +1,6 @@
 import './login.css'
 import React from 'react'
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 const ip = window.location.hostname;
 
@@ -30,14 +30,14 @@ export class SignForm extends React.Component<{}, { username: string, password: 
         data: {
           username: this.state.username,
           password: this.state.password,
-          firstName: null,
+          /*firstName: null,
           lastName: null,
           nickName: null,
           profileImage: null,
-          email: null,
+          email: null,*/
         }
       }
-      )
+      ).then((response: AxiosResponse<any, any>) =>  {window.open(`http://${ip}:3000/signIn/new`, '_self')});
       event.preventDefault();
     }
 

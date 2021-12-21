@@ -69,7 +69,7 @@ button.addChannel {
 }
 
 .Chan.Popup {
-    background-color: grey;
+    background-color: #72727252;
     position: fixed;
     width: 30%;
     height: 50%;
@@ -80,6 +80,24 @@ button.addChannel {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+}
+
+button.Cancelbtn {
+    border: 0;
+    background: 0;
+    font-family: 'neon';
+    font-size: 4vw;
+    color: antiquewhite;
+    cursor: pointer;
+}
+
+button.Backbtn {
+    border: 0;
+    background: 0;
+    font-family: 'neon';
+    font-size: 2vw;
+    color: antiquewhite;
+    cursor: pointer;
 }
 
 .Popup.inner {
@@ -98,6 +116,8 @@ button.AddJoinChan {
     background: 0;
     width: 50%;
     cursor: pointer;
+    color: blanchedalmond;
+    font-size: 2vw;
 }
 
 .AJCbtn {
@@ -111,4 +131,22 @@ button.AddJoinChan {
 
 img.AddJoinImg {
     width: 80%;
+}
+
+.AddChan {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 70%;
+}
+
+input.AJCplaceholder {
+    margin-top: 20px;
+    border: 2px solid;
+    height: 40px;
+    width: 80%;
+    background: #0000008a;
+    border-radius: 20px;
+    padding: 10px;
+    color: antiquewhite;
 }
