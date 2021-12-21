@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { Redirect } from 'react-router';
 import { NavBar } from '../navbar/navbar';
@@ -7,37 +6,21 @@ import { Gamemode } from './gamemode';
 import { MainMenu } from './mainMenu';
 import { Friendlist } from './friendlist';
 import './home.css'
-
-const ip = window.location.hostname;
-
-async function isLogged(cookies: any, setUnauthorized: any) {
-
-    await axios.request({
-      url: '/user/me',
-      method: 'get',
-      baseURL: `http://${ip}:5000`,
-      headers: {
-        "Authorization": `Bearer ${cookies.access_token}`,
-      }
-      }).then((response: any) => {
-        sessionStorage.setItem("me", JSON.stringify(response))
-      }).catch(err => {
-        if (err.response.status === 401) {          
-          setUnauthorized(true);
-        }
-    });
-  setUnauthorized(false);
-}
+import { isLogged } from '../../utils/isLogged';
 
 export function Home() {
+  const [cookies] = useCookies();  
   const [unauthorized, setUnauthorized] = useState(false);
-  const [cookies] = useCookies();
 
   useEffect(()=>{
-    isLogged(cookies, setUnauthorized);
+    let mount = true;
+    if (mount) {
+      isLogged(cookies).then((res) => { setUnauthorized(res.unauthorized) });
+    }
+    return (() => { mount = false; });
   }, [cookies])
   
-  if (unauthorized) {
+  if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
   }
 

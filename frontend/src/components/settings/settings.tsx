@@ -1,6 +1,8 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
+import { Redirect } from "react-router";
+import { isLogged } from "../../utils/isLogged";
 import { NavBar } from "../navbar/navbar";
 import './settings.css'
 
@@ -8,9 +10,22 @@ import './settings.css'
 const ip = window.location.hostname;
 
 export function Settings() {
-
-	const [newNick, setNewNick] = useState("");
 	const [cookies] = useCookies();
+	const [unauthorized, setUnauthorized] = useState(false);
+	const [newNick, setNewNick] = useState("");
+
+	useEffect(() => {
+		let mount = true;
+		if (mount) {
+			isLogged(cookies).then((res) => { setUnauthorized(res.unauthorized) });
+		}
+		return (() => { mount = false; });
+	}, [cookies])
+
+	if (!cookies.access_token || unauthorized) {
+		return (<Redirect to="/" />);
+	}
+
 
 	function handleNewNickname(e: any) {
 		if (newNick !== "") {
@@ -47,5 +62,5 @@ export function Settings() {
 						</div>
 					</div>
 				</div>
-		);
+	);
 }

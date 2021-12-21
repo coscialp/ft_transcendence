@@ -1,11 +1,10 @@
 import axios from 'axios';
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router'
+import { ip } from '../../App';
+import { isLogged } from '../../utils/isLogged';
 import './navbar.css'
-
-const ip = window.location.hostname;
-var me = JSON.parse(sessionStorage.getItem("me") || '{}');
 
 export function NavBar(props: any) {
 
@@ -15,34 +14,42 @@ export function NavBar(props: any) {
   const [searchingPop, setSearchingPop] = useState(false);
   const [searchedUsers, setSearchedUsers]: any = useState([]);
   const [notification, setNotification] = useState(false);
+  const [me, setMe]: any = useState({});
 
-  function GetNotifications() {
-    useEffect(() => {
-      const interval = setInterval(() => {
-        if (me.data === undefined) {
-          me = JSON.parse(sessionStorage.getItem("me") || '{}');
+  useEffect(() => {
+    let mount = true;
+    if (mount) {
+      isLogged(cookies).then((res) => { setMe(res.me.data) });
+    }
+    return (() => { mount = false; });
+  }, [cookies])
+
+  const [avatar, setAvatar] = useState(me.data ? me.data.profileImage : '/img/beluga.jpeg');
+
+  useEffect(() => {
+    let mount = true;
+    if (me.username !== undefined) {
+      axios.request({
+        url: `/user/${me.username}/friends/request`,
+        method: 'get',
+        baseURL: `http://${ip}:5000`,
+        headers: {
+          "Authorization": `Bearer ${cookies.access_token}`,
+        },
+      }).then((response: any) => {
+        if (mount) {
+          if (response.data.from.length > 0) {
+            setNotification(true);
+          }
+          else {
+            setNotification(false);
+          }
         }
-        /*if (me.data !== undefined) {
-          axios.request({
-            url: `/user/${me.data.username}/friends/request`,
-            method: 'get',
-            baseURL: `http://${ip}:5000`,
-            headers: {
-              "Authorization": `Bearer ${cookies.access_token}`,
-            },
-          }).then((response: any) => {
-            if (response.data.from.length > 0) {
-              setNotification(true);
-            }
-            else {
-              setNotification(false);
-            }
-          })
-        }*/
-      }, 1000);
-      return () => clearInterval(interval);
-    }, [])
-  }
+      })
+    }
+    return (() => { mount = false; })
+  }, [cookies, notification, me]);
+
 
   function NewNotification() {
     return (
@@ -105,8 +112,9 @@ export function NavBar(props: any) {
     )
   }
 
-  function loadProfilePicture() {
-
+  useEffect(() => {
+    console.log(avatar);
+    let mounted: boolean = true;
     axios.request({
       url: '/user/me/avatar',
       method: 'get',
@@ -114,12 +122,14 @@ export function NavBar(props: any) {
       headers: {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
-    }).then((response: any) => { localStorage.setItem("ProfilePicture", response.data.avatar) })
-  }
+    }).then((response: any) => {
+      if (mounted) {
+        setAvatar(response.data.avatar);
+      }
+    });
+    return (() => { mounted = false })
+  }, [cookies, avatar]);
 
-  if (localStorage.getItem("ProfilePicture") === null) {
-    loadProfilePicture();
-  }
 
   function logout(): void {
     axios.request({
@@ -136,7 +146,6 @@ export function NavBar(props: any) {
 
   return (
     <div className="navBar">
-      {GetNotifications()}
       <div className="gradientRight" ></div>
       <button className="navBtn" onClick={() => { return history.push("/home") }} ><h1 className={props.page === "Home" ? "neonTextOn" : "neonTextOff"}>Home</h1></button>
       <button className="navBtn" onClick={() => { return history.push("/play") }} ><h1 className={props.page === "Play" ? "neonTextOn" : "neonTextOff"}>Play</h1></button>
@@ -146,9 +155,9 @@ export function NavBar(props: any) {
           <input type="text" className="searchBar" placeholder="Search" value={search} onChange={handleInputSearch} />
         </form>
         <details>
-          <summary className="summaryProfile" style={{ backgroundImage: `url(${localStorage.getItem("ProfilePicture")})` }} ></summary>
+          <summary className="summaryProfile" style={{ backgroundImage: `url(${avatar})` }} ></summary>
           <nav className="menu">
-            <button className="menuBtn" onClick={() => { return history.push(`/${me.data.username}/profile`) }} ><span /><span /><span /><span />Profile</button>
+            <button className="menuBtn" onClick={() => { return history.push(`/${me.username}/profile`) }} ><span /><span /><span /><span />Profile</button>
             <button className="menuBtn" onClick={() => { return history.push(`/alerts`) }} ><span /><span /><span /><span />Alerts</button>
             <button className="menuBtn" onClick={() => { return history.push("/settings") }} ><span /><span /><span /><span />Settings</button>
             <button className="menuBtnOut" onClick={logout} ><span /><span /><span /><span />Logout</button>

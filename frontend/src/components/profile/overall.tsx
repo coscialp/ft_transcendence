@@ -1,15 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import { ip } from '../../App';
 import './profile.css'
 
-export function Overall() {
-
-	const me = JSON.parse(sessionStorage.getItem("me") || '{}');
+export function Overall(data: any) {
 	const userProfile = window.location.pathname.split('/')[1];
-	const ip = window.location.hostname;
+	const [user, setUser]: any = useState({});
 	const [cookies] = useCookies();
-	const [user, setUser]: any = useState([]);
+	// const [me, setMe]: any = useState({});
 
 	useEffect(() => {
 		axios.request({
@@ -20,10 +19,23 @@ export function Overall() {
 				"Authorization": `Bearer ${cookies.access_token}`,
 			}
 		}).then((response: any) => {
-			console.log(response)
 			setUser(response.data);
 		})
-	}, [userProfile, ip, cookies]);
+	}, [userProfile, cookies]);
+
+	// useEffect(() => {
+	// 	axios.request({
+	// 		url: `/user/me`,
+	// 		method: 'get',
+	// 		baseURL: `http://${ip}:5000`,
+	// 		headers: {
+	// 			"Authorization": `Bearer ${cookies.access_token}`,
+	// 		}
+	// 	}).then((response: any) => {
+	// 		setMe(response.data);
+	// 	})
+	// }, [cookies]);
+
 
 	function handleAddfriend() {
 		axios.request({
@@ -43,6 +55,7 @@ export function Overall() {
 
 	return (
 		<div className="ImgName" >
+			{console.log(data.me)}
 			<div>
 				<img className="ProfileImage" style={{ backgroundImage: `url(${user.profileImage})` }} alt="" />
 				{user.isLogged ? <div className='userLogged' /> : <div className='userNotLogged' />}
@@ -53,7 +66,7 @@ export function Overall() {
 				Winrate : (insert winrate ratio)%<br />
 				Point Average : (insert KDA ratio)
 			</p>
-			{user.nickName !== me.data.nickName ? <img className="Add friend" src="/img/AddFriend.png" alt="" onClick={handleAddfriend} /> : null}
+			{user.username !== data.me.username ? <img className="Add friend" src="/img/AddFriend.png" alt="" onClick={handleAddfriend} /> : null}
 		</div>
 	)
 }
