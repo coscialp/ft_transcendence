@@ -1,12 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { ip } from "../../App";
 import { NavBar } from "../navbar/navbar";
 import './notifications.css'
 
 export function Notification() {
-
-    const ip = window.location.hostname;
     const [cookies] = useCookies();
     const [fromRequest, setFromRequest]: any = useState([]);
 
@@ -26,7 +25,7 @@ export function Notification() {
         })
 
         return () => {mounted = false}
-    }, [ip, cookies, fromRequest]);
+    }, [cookies, fromRequest]);
 
     function AcceptFriend(request: any) {
         axios.request({

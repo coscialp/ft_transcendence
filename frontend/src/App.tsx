@@ -13,6 +13,8 @@ import { NotFound } from './components/notFound';
 import { Settings } from './components/settings/settings';
 import { Notification } from './components/profile/notification';
 
+export const ip = window.location.hostname;
+
 function App() {
 
 	return (
