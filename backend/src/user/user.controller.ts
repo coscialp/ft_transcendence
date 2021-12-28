@@ -100,4 +100,14 @@ export class UserController {
     async deleteBlackList(@GetUser() user: User, @Body('idToDelete') idToDelete: string): Promise<void> {
         return await this.userService.deleteBlackList(user, idToDelete);
     }
+
+    @Patch('2FA/activate')
+    async activate2FA(@GetUser() user: User): Promise<void> {
+        return await this.userService.activate2FA(user);
+    }
+
+    @Patch('2FA/deactivate')
+    async deactivate2FA(@GetUser() user: User): Promise<void> {
+        return await this.userService.deactivate2FA(user);
+    }
 }

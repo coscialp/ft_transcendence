@@ -59,6 +59,8 @@ export class UsersRepository extends Repository<User> {
       email: email,
       isLogged: false,
       friends: [],
+      blackList: [],
+      twoFactorAuth: false,
     });
 
     try {
