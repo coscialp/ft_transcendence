@@ -101,6 +101,11 @@ export class UserController {
         return await this.userService.deleteBlackList(user, idToDelete);
     }
 
+    @Get('2FA')
+    async get2FA(@GetUser() user: User): Promise<{twoFactorAuth: boolean}> {
+        return await this.userService.get2FA(user);
+    }
+
     @Patch('2FA/activate')
     async activate2FA(@GetUser() user: User): Promise<void> {
         return await this.userService.activate2FA(user);
