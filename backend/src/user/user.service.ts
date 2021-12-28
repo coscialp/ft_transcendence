@@ -244,4 +244,14 @@ export class UserService {
 
     this.userRepository.save(user);
   }
+
+  async activate2FA(user: User): Promise<void> {
+    user.twoFactorAuth = true;
+    this.userRepository.save(user);
+  }
+
+  async deactivate2FA(user: User): Promise<void> {
+    user.twoFactorAuth = false;
+    this.userRepository.save(user);
+  }
 }

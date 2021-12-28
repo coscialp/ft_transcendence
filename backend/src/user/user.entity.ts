@@ -30,6 +30,9 @@ export class User {
     @Column({nullable: true})
     isLogged: boolean | null;
 
+    @Column()
+    twoFactorAuth: boolean;
+
     @OneToMany(type => FriendRequest, request => request.from)
     requestFrom: FriendRequest[];
 

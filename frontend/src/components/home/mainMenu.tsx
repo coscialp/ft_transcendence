@@ -79,11 +79,30 @@ export function MainMenu() {
 		setShowPopup(!showPopup);
 	}
 
+	function handleCreateNewChannel(e: any) {
+		if (channelName === "") {
+			window.alert("Channel's name cannot be empty !")
+		}
+		else {
+			if (channels.find((name: string) => (name === channelName))) {
+				window.alert("Channel's name already taken !")
+			}
+			else {
+				channels.push(channelName);
+				togglePopup();
+				setChannelName('');
+				setChannelPassword('');
+				setPopupState(0);
+			}
+		}
+		e.preventDefault()
+	}
+
 	function AddChannelPopup() {
 		return (
 			<div className="Popup inner">
 				<div className="Chan Popup">
-					{popupState === 0 ?
+					{ popupState === 0 ?
 						<div className="AJCbtn" >
 							<button className="AddJoinChan" onClick={(e) => { setPopupState(1) }}> <img className="AddJoinImg" alt="" src="img/CreateServer.svg" />Create your channel</button>
 							<button className="AddJoinChan" onClick={(e) => { setPopupState(2) }} > <img className="AddJoinImg" alt="" src="img/JoinServer.svg" />Join a channel</button>
@@ -96,7 +115,7 @@ export function MainMenu() {
 									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
 									<input type="submit" className="subbtn" value="Create !" />
 								</form>
-								<button className="Backbtn" onClick={(e) => { setPopupState(0) }}>Back</button>
+								<button className="Backbtn" onClick={(e) => { setChannelName(''); setChannelPassword(''); setPopupState(0) }}>Back</button>
 							</div>
 							:
 							<div className="JoinChan">
@@ -125,24 +144,6 @@ export function MainMenu() {
 		e.preventDefault();
 	}
 
-	function handleCreateNewChannel(e: any) {
-		if (channelName === "") {
-			window.alert("Channel's name cannot be empty !")
-		}
-		else {
-			if (channels.find((name: string) => (name === channelName))) {
-				window.alert("Channel's name already taken !")
-			}
-			else {
-				togglePopup();
-				channels.push(channelName);
-				setChannelName('');
-				setChannelPassword('');
-				setPopupState(0);
-			}
-		}
-		e.preventDefault()
-	}
 
 	function changeChannel(e: any) {
 		console.log(e.target.innerText);
