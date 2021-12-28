@@ -49,6 +49,7 @@ export function MainMenu() {
 
 	const forceUpdate = useForceUpdate();
 
+
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
@@ -92,8 +93,8 @@ export function MainMenu() {
 						popupState === 1 ?
 							<div className="AddChan">
 								<form onSubmit={handleCreateNewChannel} >
-									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => setChannelName(e.target.value)} />
-									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
+									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => {setChannelName(e.target.value)}} />
+									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => (setChannelPassword(e.target.value))} />
 									<input type="submit" className="subbtn" value="Create !" />
 								</form>
 								<button className="Backbtn" onClick={(e) => { setPopupState(0) }}>Back</button>

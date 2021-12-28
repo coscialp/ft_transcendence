@@ -46,6 +46,17 @@ export function Settings() {
 		}
 	}
 
+	function handle2FA() {
+		axios.request({
+			url: '/user/2FA/activate',
+			method: 'patch',
+			baseURL: `http://${ip}:5000`,
+			headers: {
+			  "Authorization": `Bearer ${cookies.access_token}`,
+			},
+		  })
+	}
+
 		return (
 				<div>
 					<NavBar page="Settings" />
@@ -58,7 +69,10 @@ export function Settings() {
 										<button className="changeNickbtn" onClick={handleNewNickname} >Change !</button>
 								</div>
 							</div>
-							Activate 2FA
+							<div className="2FA">
+								2FA
+								<input className="ToggleSwitch" type="checkbox" id="switch" onClick={handle2FA} /><label className="ToggleSLabel" htmlFor="switch">Toggle</label>
+							</div>
 						</div>
 					</div>
 				</div>

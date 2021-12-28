@@ -1,6 +1,6 @@
 import './login.css'
 import React from 'react'
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 const ip = window.location.hostname;
 export class LogForm extends React.Component<{}, { username: string, password: string }> {
@@ -35,7 +35,7 @@ export class LogForm extends React.Component<{}, { username: string, password: s
           profileImage: null,
           email: null,*/
         }
-      });
+      }).then((response: AxiosResponse<any, any>) =>  {window.open(`http://${ip}:3000/cookies?token=${response.data.accessToken}`, '_self')});
       event.preventDefault();
     }
 
