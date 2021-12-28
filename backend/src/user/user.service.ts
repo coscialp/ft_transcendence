@@ -254,4 +254,8 @@ export class UserService {
     user.twoFactorAuth = false;
     this.userRepository.save(user);
   }
+
+  async get2FA(user: User): Promise<{twoFactorAuth: boolean}> {
+    return { twoFactorAuth: user.twoFactorAuth };
+  }
 }
