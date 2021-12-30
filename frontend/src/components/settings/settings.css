@@ -52,44 +52,98 @@ button.changeNickbtn {
     cursor: pointer;
 }
 
-input[type=checkbox].ToggleSwitch {
+.\32 FA {
+    font-size: 4vw;
+    font-family: 'neon';
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+
+input[type=checkbox].ToggleSwitchOFF {
 	height: 0;
 	width: 0;
 	visibility: hidden;
 }
 
-label.ToggleSLabel {
-	cursor: pointer;
-	text-indent: -9999px;
-	width: 200px;
-	height: 100px;
-	background: grey;
-	display: block;
-	border-radius: 100px;
-	position: relative;
+label.ToggleSLabelOFF {
+    cursor: pointer;
+    width: 100px;
+    height: 50px;
+    background: grey;
+    display: block;
+    border-radius: 100px;
+    position: relative;
 }
 
-label.ToggleSLabel:after {
+label.ToggleSLabelOFF:after {
+    content: '';
+    position: absolute;
+    top: 2.5px;
+    left: 5px;
+    width: 45px;
+    height: 45px;
+    background: #fff;
+    border-radius: 90px;
+    transition: 0.3s;
+}
+
+input.ToggleSwitchOFF:checked + label {
+	background: #bada55;
+}
+
+input.ToggleSwitchOFF:checked + label:after {
+	left: calc(100% - 5px);
+	transform: translateX(-100%);
+}
+
+label.ToggleSLabelOFF:active:after {
+	width: calc(100% - 10px);
+}
+
+
+
+
+input[type=checkbox].ToggleSwitchON {
+	height: 0;
+	width: 0;
+	visibility: hidden;
+}
+
+label.ToggleSLabelON {
+	cursor: pointer;
+    width: 100px;
+    height: 50px;
+    background: #bada55;
+    display: block;
+    border-radius: 100px;
+    position: relative;
+}
+
+label.ToggleSLabelON:after {
 	content: '';
 	position: absolute;
-	top: 5px;
-	left: 5px;
-	width: 90px;
-	height: 90px;
+	top: 2.5px;
+	right: 5px;
+	width: 45px;
+	height: 45px;
 	background: #fff;
 	border-radius: 90px;
 	transition: 0.3s;
 }
 
-input.ToggleSwitch:checked + label {
-	background: #bada55;
+input.ToggleSwitchON:checked + label {
+	background: grey;
 }
 
-input.ToggleSwitch:checked + label:after {
-	left: calc(100% - 5px);
-	transform: translateX(-100%);
+input.ToggleSwitchON:checked + label:after {
+	right: calc(100% - 5px);
+	transform: translateX(100%);
 }
 
-label.ToggleSLabel:active:after {
-	width: 130px;
+label.ToggleSLabelON:active:after {
+	width: calc(100% - 10px);
 }

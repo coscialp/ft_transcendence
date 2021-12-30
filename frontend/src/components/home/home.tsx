@@ -7,6 +7,7 @@ import { MainMenu } from './mainMenu';
 import { Friendlist } from './friendlist';
 import './home.css'
 import { isLogged } from '../../utils/isLogged';
+import PrivateMessage from './privateMessage';
 
 export function Home() {
   const [cookies] = useCookies();  
@@ -31,6 +32,7 @@ export function Home() {
           <Gamemode />
           <MainMenu/>
           <Friendlist />
+          <PrivateMessage />
         </div>
       </div>
     );

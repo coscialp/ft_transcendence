@@ -1,0 +1,30 @@
+#slides {
+    width: 300%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    transition-duration: 0.7s;
+}
+
+.single.slide {
+    width: 100%;
+}
+
+button.btn.Next {
+    height: 40px;
+    width: 80px;
+    border: solid 1px;
+    background: 0;
+    color: wheat;
+    border-radius: 10px;
+    margin: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+button.btn.Next:hover {
+    background-color: #ffffff8a;
+    transform: scale(1.1);
+    transition-duration: 0.2s;
+}

@@ -25,12 +25,34 @@ export class UsersRepository extends Repository<User> {
   }
 
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<void> {
-    const { username, password } = authCredentialsDto;
+    const {
+      username,
+      password,
+      firstName,
+      lastName,
+      nickName,
+      profileImage,
+      email,
+    } = authCredentialsDto;
 
     const salt: string = await bcrypt.genSalt();
     const hashedPassword: string = await bcrypt.hash(password, salt);
 
-    const user: User = this.create({ username, password: hashedPassword, profileImage: '/img/beluga.jpeg', isLogged: false});
+    const user: User = this.create({
+      username: username,
+      password: hashedPassword,
+      firstName: firstName,
+      lastName: lastName,
+      nickName: nickName,
+      profileImage: '/img/beluga.jpeg',
+      email: email,
+      isLogged: false,
+      friends: [],
+      blackList: [],
+      twoFactorAuth: false,
+    });
+
+
     try {
       await this.save(user);
     } catch (error) {

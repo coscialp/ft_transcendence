@@ -1,62 +1,90 @@
 import './login.css'
-import React from 'react'
-import axios, { AxiosResponse } from 'axios';
-import { render } from '@testing-library/react';
+import './signup.css'
+import React, { useState } from 'react'
+import axios from 'axios';
 
 const ip = window.location.hostname;
 
-export class SignForm extends React.Component<{}, { username: string, password: string, firstname: string, lastname: string, nickname: string, email: string }> {
-  constructor(props: { username: string, password: string, firstname: string, lastname: string, nickname: string, email: string }) {
-    super(props);
-    this.state = {
-      username: '',
-      password: '',
-      firstname: '',
-      lastname: '',
-      nickname: '',
-      email: '',
-    };
+export function SignForm() {
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
 
-  handleSubmit(event: any) {
+  /*function FirstSlideNext() {
+    if (username !== "" && password !== "") {
+      document.getElementById("slides")!.style.transform = "translateX(-33%)"
+    }
+    else {
+      document.getElementById("InputStyle")!.style.boxShadow = "1px 1px 5px red";
+    }
+  }*/
+
+  function handleSubmit(event: any) {
     console.log("here");
 
-    /*axios.request({
+    axios.request({
       url: '/auth/signup',
       method: 'post',
       baseURL: `http://${ip}:5000`,
       data: {
-        username: this.state.username,
-        password: this.state.password,
-        firstName: this.state.firstname,
-        lastName: this.state.lastname,
-        nickName: this.state.nickname,
+        username: username,
+        password: password,
+        firstName: firstname,
+        lastName: lastname,
+        nickName: nickname,
         profileImage: null,
-        email: this.state.email,
+        email: email,
       }
     }
-    ).then((response: AxiosResponse<any, any>) => { window.open(`http://${ip}:3000/signIn/new`, '_self') });*/
+    ).then((response) => { console.log(response); window.open(`http://${ip}:3000/`, '_self') });
     event.preventDefault();
   }
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
+  return (
+    <div id='slides' >
+
+      <div className='single slide'>
         <div className="logs">
           Username<br />
-          <input type="text" className="InputStyle" placeholder="Enter your Username" value={this.state.username} onChange={(e) => this.setState({ username: e.target.value })} />
+          <input type="text" className="InputStyle" placeholder="Enter your Username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
         </div>
         <div className="logs">
           Password<br />
-          <input type="password" className="InputStyle" placeholder="Enter your Password" value={this.state.password} onChange={(e) => this.setState({ password: e.target.value })} />
+          <input type="password" className="InputStyle" placeholder="Enter your Password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
         </div>
+        <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(-33%)" }} >Next</button>
+      </div>
 
-        <input className="log-button InputStyle" type="submit" value="Sign In" />
-      </form>
-    );
-  }
+      <div className='single slide'>
+        <div className="logs">
+          Firstname<br />
+          <input type="text" className="InputStyle" placeholder="Enter your Firstname" value={firstname} onChange={(e) => { setFirstname(e.target.value) }} />
+        </div>
+        <div className="logs">
+          Lastname<br />
+          <input type="text" className="InputStyle" placeholder="Enter your Lastname" value={lastname} onChange={(e) => { setLastname(e.target.value) }} />
+        </div>
+        <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(0%)" }} >Back</button>
+        <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(-66%)" }} >Next</button>
+      </div>
+
+      <div className='single slide'>
+        <div className="logs">
+          Nickname<br />
+          <input type="text" className="InputStyle" placeholder="Enter your Nickname" value={nickname} onChange={(e) => { setNickname(e.target.value) }} />
+        </div>
+        <div className="logs">
+          Email<br />
+          <input type="text" className="InputStyle" placeholder="Enter your Email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+        </div>
+        <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(-33%)" }} >Back</button>
+        <button className='btn Next' onClick={handleSubmit} >Submit</button>
+      </div>
+
+    </div>
+  );
 }
-
-export default SignForm
