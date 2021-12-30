@@ -1,0 +1,18 @@
+#Message
+{
+    position: absolute;
+    bottom: 0;
+    right: 15%;
+    height:50px;
+    width:250px;
+    background:white;
+}
+
+#OpenMsg
+{
+    position: absolute;
+    bottom: 0;
+    right:15%;
+    height:50px;
+    width:250px;
+}

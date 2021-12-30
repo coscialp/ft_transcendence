@@ -24,8 +24,6 @@ export function SignForm() {
   }*/
 
   function handleSubmit(event: any) {
-    console.log("here");
-
     axios.request({
       url: '/auth/signup',
       method: 'post',
@@ -50,11 +48,11 @@ export function SignForm() {
       <div className='single slide'>
         <div className="logs">
           Username<br />
-          <input type="text" className="InputStyle" placeholder="Enter your Username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
+          <input type="text" className="InputStyle" id="username" onKeyPress={(e) => document.getElementById("password")!.focus()} placeholder="Enter your Username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
         </div>
         <div className="logs">
           Password<br />
-          <input type="password" className="InputStyle" placeholder="Enter your Password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
+          <input type="password" className="InputStyle" id="password" onKeyPress={(e) => {if (e.key === "Enter") document.getElementById("slides")!.style.transform = "translateX(-33%)"}} placeholder="Enter your Password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
         </div>
         <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(-33%)" }} >Next</button>
       </div>
@@ -62,11 +60,11 @@ export function SignForm() {
       <div className='single slide'>
         <div className="logs">
           Firstname<br />
-          <input type="text" className="InputStyle" placeholder="Enter your Firstname" value={firstname} onChange={(e) => { setFirstname(e.target.value) }} />
+          <input type="text" className="InputStyle" id="firstname" onKeyPress={(e) => document.getElementById("lastname")!.focus()} placeholder="Enter your Firstname" value={firstname} onChange={(e) => { setFirstname(e.target.value) }} />
         </div>
         <div className="logs">
           Lastname<br />
-          <input type="text" className="InputStyle" placeholder="Enter your Lastname" value={lastname} onChange={(e) => { setLastname(e.target.value) }} />
+          <input type="text" className="InputStyle" id="lastname" onKeyPress={(e) => {if (e.key === "Enter") document.getElementById("slides")!.style.transform = "translateX(-66%)"}} placeholder="Enter your Lastname" value={lastname} onChange={(e) => { setLastname(e.target.value) }} />
         </div>
         <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(0%)" }} >Back</button>
         <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(-66%)" }} >Next</button>
@@ -75,11 +73,11 @@ export function SignForm() {
       <div className='single slide'>
         <div className="logs">
           Nickname<br />
-          <input type="text" className="InputStyle" placeholder="Enter your Nickname" value={nickname} onChange={(e) => { setNickname(e.target.value) }} />
+          <input type="text" className="InputStyle" onKeyPress={(e) => document.getElementById("email")!.focus()} placeholder="Enter your Nickname" value={nickname} onChange={(e) => { setNickname(e.target.value) }} />
         </div>
         <div className="logs">
           Email<br />
-          <input type="text" className="InputStyle" placeholder="Enter your Email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+          <input type="text" className="InputStyle" id="email" placeholder="Enter your Email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
         </div>
         <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(-33%)" }} >Back</button>
         <button className='btn Next' onClick={handleSubmit} >Submit</button>
