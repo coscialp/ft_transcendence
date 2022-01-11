@@ -91,6 +91,7 @@ p.FriendTitle {
 
 table.menu {
     display: flex;
+    margin-left: 2vw;
     overflow: hidden;
 }
 
