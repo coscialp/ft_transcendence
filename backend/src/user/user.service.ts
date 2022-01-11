@@ -246,16 +246,16 @@ export class UserService {
   }
 
   async activate2FA(user: User): Promise<void> {
-    user.twoFactorAuth = true;
+    user.twoFactorAuth = 1;
     this.userRepository.save(user);
   }
 
   async deactivate2FA(user: User): Promise<void> {
-    user.twoFactorAuth = false;
+    user.twoFactorAuth = 0;
     this.userRepository.save(user);
   }
 
-  async get2FA(user: User): Promise<{twoFactorAuth: boolean}> {
+  async get2FA(user: User): Promise<{twoFactorAuth: number}> {
     return { twoFactorAuth: user.twoFactorAuth };
   }
 }

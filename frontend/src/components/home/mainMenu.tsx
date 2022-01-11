@@ -99,41 +99,6 @@ export function MainMenu() {
 		e.preventDefault()
 	}
 
-	function AddChannelPopup() {
-		return (
-			<div className="Popup inner">
-				<div className="Chan Popup">
-					{ popupState === 0 ?
-						<div className="AJCbtn" >
-							<button className="AddJoinChan" onClick={(e) => { setPopupState(1) }}> <img className="AddJoinImg" alt="" src="img/CreateServer.svg" />Create your channel</button>
-							<button className="AddJoinChan" onClick={(e) => { setPopupState(2) }} > <img className="AddJoinImg" alt="" src="img/JoinServer.svg" />Join a channel</button>
-						</div>
-						:
-						popupState === 1 ?
-							<div className="AddChan">
-								<form onSubmit={handleCreateNewChannel} >
-									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => {setChannelName(e.target.value)}} />
-									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => (setChannelPassword(e.target.value))} />
-									<input type="submit" className="subbtn" value="Create !" />
-								</form>
-								<button className="Backbtn" onClick={(e) => { setChannelName(''); setChannelPassword(''); setPopupState(0) }}>Back</button>
-							</div>
-							:
-							<div className="JoinChan">
-								<form onSubmit={handleCreateNewChannel} >
-									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => setChannelName(e.target.value)} />
-									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
-									<input type="submit" className="subbtn" value="Create !" />
-								</form>
-								<button className="Backbtn" onClick={(e) => { setPopupState(0) }} >Back</button>
-							</div>
-					}
-					<button className="Cancelbtn" onClick={(e) => { togglePopup(); setPopupState(0) }} >Cancel</button>
-				</div>
-			</div>
-		)
-	}
-
 	function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
 		if (messageInput) {
 			console.log(messageInput);
@@ -181,7 +146,36 @@ export function MainMenu() {
 			<form onSubmit={handleSendMessage} >
 				<input type="text" className="MainSendMessage" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
 			</form>
-			{showPopup ? <AddChannelPopup /> : null}
+			{showPopup ? <div className="Popup inner">
+				<div className="Chan Popup">
+					{popupState === 0 ?
+						<div className="AJCbtn" >
+							<button className="AddJoinChan" onClick={(e) => { setPopupState(1) }}> <img className="AddJoinImg" alt="" src="img/CreateServer.svg" />Create your channel</button>
+							<button className="AddJoinChan" onClick={(e) => { setPopupState(2) }} > <img className="AddJoinImg" alt="" src="img/JoinServer.svg" />Join a channel</button>
+						</div>
+						:
+						popupState === 1 ?
+							<div className="AddChan">
+								<form onSubmit={handleCreateNewChannel} >
+									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => { setChannelName(e.target.value) }} />
+									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => (setChannelPassword(e.target.value))} />
+									<input type="submit" className="subbtn" value="Create !" />
+								</form>
+								<button className="Backbtn" onClick={(e) => { setChannelName(''); setChannelPassword(''); setPopupState(0) }}>Back</button>
+							</div>
+							:
+							<div className="JoinChan">
+								<form onSubmit={handleCreateNewChannel} >
+									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => setChannelName(e.target.value)} />
+									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
+									<input type="submit" className="subbtn" value="Create !" />
+								</form>
+								<button className="Backbtn" onClick={(e) => { setPopupState(0) }} >Back</button>
+							</div>
+					}
+					<button className="Cancelbtn" onClick={(e) => { togglePopup(); setPopupState(0) }} >Cancel</button>
+				</div>
+			</div> : null}
 		</div>
 	)
 }

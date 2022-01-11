@@ -49,7 +49,7 @@ export class UsersRepository extends Repository<User> {
       isLogged: false,
       friends: [],
       blackList: [],
-      twoFactorAuth: false,
+      twoFactorAuth: 0,
     });
 
 
@@ -82,7 +82,7 @@ export class UsersRepository extends Repository<User> {
       isLogged: false,
       friends: [],
       blackList: [],
-      twoFactorAuth: false,
+      twoFactorAuth: 0,
     });
 
     try {

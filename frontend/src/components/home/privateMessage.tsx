@@ -28,13 +28,14 @@ function Open_Message()
     
 }
 
-export function PrivateMessage()
+export default function PrivateMessage()
 {
     return (
         <div id="Message" >
-            <ArrowSmUp  id="arrowR" onClick={() => Open_Message()}/>
+            <div id="OpenMsg" onClick={() => Open_Message()}>
+            <ArrowSmUp  id="arrowR" onClick={() => Open_Message()}/>Message
             <ArrowSmUp  id="arrowL" onClick={() => Open_Message()}/>
-            <div id="OpenMsg" onClick={() => Open_Message()}>Message</div>
+            </div>
         </div>
     )
 }
