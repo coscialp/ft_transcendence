@@ -9,8 +9,7 @@ export function Notification() {
     const [cookies] = useCookies();
     const [fromRequest, setFromRequest]: any = useState([]);
 
-    useEffect(() => {
-        let mounted = true;
+    function NotifRequest() {
         axios.request({
             url: `/user/me/friends/request`,
             method: 'get',
@@ -19,13 +18,25 @@ export function Notification() {
                 "Authorization": `Bearer ${cookies.access_token}`,
             },
         }).then((response: any) => {
-            if (mounted) {
                 setFromRequest(response.data.from);
-            }
         })
+    }
 
-        return () => {mounted = false}
-    }, [cookies, fromRequest]);
+    useEffect(() => {
+        let mounted = true;
+
+        if (mounted) { NotifRequest() }
+
+        const interval = setInterval(() => {
+            let mounted = true;
+
+            if (mounted) { NotifRequest() }
+
+            return () => { mounted = false }
+        }, 5000);
+        return () => clearInterval(interval);
+        // eslint-disable-next-line
+    }, [cookies]);
 
     function AcceptFriend(request: any) {
         axios.request({

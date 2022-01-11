@@ -14,6 +14,7 @@ export function Settings() {
 	const [unauthorized, setUnauthorized] = useState(false);
 	const [me, setMe]: any = useState({});
 	const [newNick, setNewNick] = useState("");
+	const [newEmail, setNewEmail] = useState("");
 
 	useEffect(() => {
 		let mount = true;
@@ -43,6 +44,25 @@ export function Settings() {
 			})
 			window.alert("Nickname successfully changed to " + newNick + " !")
 			setNewNick("");
+			e.preventDefault();
+		}
+	}
+
+	function handleNewEmail(e: any) {
+		if (newEmail !== "") {
+			axios.request({
+				url: '/user/me/email',
+				method: 'patch',
+				baseURL: `http://${ip}:5000`,
+				headers: {
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				data: {
+					"email": newEmail,
+				}
+			})
+			window.alert("Email successfully changed to " + newEmail + " !")
+			setNewEmail("");
 			e.preventDefault();
 		}
 	}
@@ -79,6 +99,13 @@ export function Settings() {
 						<div className="change Nick input" >
 							<input type="text" className="changeNickPlaceholder" placeholder="New Nickname..." value={newNick} onChange={(e) => { setNewNick(e.target.value) }} />
 							<button className="changeNickbtn" onClick={handleNewNickname} >Change !</button>
+						</div>
+					</div>
+					<div className="change Nickname">
+						Change your Email !
+						<div className="change Nick input" >
+							<input type="text" className="changeNickPlaceholder" placeholder="New Email..." value={newEmail} onChange={(e) => { setNewEmail(e.target.value) }} />
+							<button className="changeNickbtn" onClick={handleNewEmail} >Change !</button>
 						</div>
 					</div>
 					<div className="2FA">

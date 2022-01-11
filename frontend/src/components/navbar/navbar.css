@@ -1,66 +1,66 @@
 @font-face {
-    font-family: "neon";
-    src: url("../home/font/NeonSans.ttf") format("truetype");
+  font-family: "neon";
+  src: url("../home/font/NeonSans.ttf") format("truetype");
 }
 
 body {
-    margin: 0px;
-    font-family: "Vibur", sans-serif;
+  margin: 0px;
+  font-family: "Vibur", sans-serif;
 }
 
 .navBar {
-    background-color: black;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    place-content: space-between;
+  background-color: black;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  place-content: space-between;
 }
 
 .navBtn {
-    background-color: transparent;
-    border: 0px;
-    height: inherit;
-    width: 5rem;
-    color: aqua;
-    cursor: pointer;
+  background-color: transparent;
+  border: 0px;
+  height: inherit;
+  width: 5rem;
+  color: aqua;
+  cursor: pointer;
 }
 
 .neonTextOn {
-    animation: flicker 1.5s infinite alternate;
+  animation: flicker 1.5s infinite alternate;
   color: #fff;
 }
 
 /* Flickering animation */
 @keyframes flicker {
-    
-    0%, 18%, 22%, 25%, 53%, 57%, 100% {
-  
-        text-shadow:
-        0 0 4px #fff,
-        0 0 11px #fff,
-        0 0 19px #fff,
-        0 0 40px #0fa,
-        0 0 80px #0fa,
-        0 0 90px #0fa,
-        0 0 100px #0fa,
-        0 0 150px #0fa;
-    }
-    
-    20%, 24%, 55% {        
-        text-shadow: none;
-    }    
+
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+
+    text-shadow:
+      0 0 4px #fff,
+      0 0 11px #fff,
+      0 0 19px #fff,
+      0 0 40px #0fa,
+      0 0 80px #0fa,
+      0 0 90px #0fa,
+      0 0 100px #0fa,
+      0 0 150px #0fa;
   }
 
-  .neonTextOff {
-    color: #fff;
+  20%, 24%, 55% {
+    text-shadow: none;
   }
-    
+}
+
+.neonTextOff {
+  color: #fff;
+}
+
 h1 {
-    font-family: neon;
-    font-size: 1.2rem;
-    text-align: center;
-    text-transform: uppercase;
-    margin: 0px;
+  font-family: neon;
+  font-size: 1.2rem;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0px;
 }
 
 /*.navProfile {
@@ -76,11 +76,11 @@ h1 {
 }*/
 
 input.searchBar {
-    border-radius: 15px;
-    padding-left: 10px;
-    height: 1.5rem;
-    border: 0px;
-    margin-left: 20px;
+  border-radius: 15px;
+  padding-left: 10px;
+  height: 1.5rem;
+  border: 0px;
+  margin-left: 20px;
 }
 
 .prof-search {
@@ -94,106 +94,120 @@ input.searchBar {
 
 
 :root {
-    --primColor: rgba(255, 255, 255, 0.2);
-    --secoColor: #555555;
-    --cornerRad: 4px;
-  }
-  body {
-    background-color: var(--primColor);
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-  }
-  details {
-    margin: 10px;
-  }
-  .summaryProfile {
-    text-align: center;
-    width: 40px;
-    height: 40px;
-    background-size: cover;
-    background-position: center;
-    border-radius: 50%;
-    box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #0fa, 0 0 42px #0fa;
-    cursor: pointer;
-    outline: none;
-    transition: transform 200ms ease-in-out 0s;
+  --primColor: rgba(255, 255, 255, 0.2);
+  --secoColor: #555555;
+  --cornerRad: 4px;
 }
+
+body {
+  background-color: var(--primColor);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+}
+
+details {
+  margin: 10px;
+}
+
+.summaryProfile {
+  text-align: center;
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+  box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #0fa, 0 0 42px #0fa;
+  cursor: pointer;
+  outline: none;
+  transition: transform 200ms ease-in-out 0s;
+}
+
 .summaryProfile::before,
 .summaryProfile::after {
-    position: static;
-    top: 0;
-    left: 0;
-  }
-  
-  .summaryProfile:hover {
-    transform: scale(1.1);
-  }
-  .summaryProfile::marker {
-    font-size: 0;
-  }
-  .summaryProfile::-webkit-details-marker {
-    display: none;
-  }
-  details[open] .menu {
-    animation-name: menuAnim;
-  }
-  
-  .menu {
-    width: fit-content;
-    border-radius: var(--cornerRad);
-    background-color: var(--primColor);
-    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2);
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-   animation: closeMenu 300ms ease-in-out forwards;
-    
-  }
-  
-    .menu .menuBtn {
-    cursor: pointer;
-    padding: 12px 24px;
-    border: 0;
-    background: transparent;
-    font-size: inherit;
-    margin: 0 16px;
-    color: aliceblue;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-    text-align: center;
-    transition: 0.2s;
-    overflow: hidden;
+  position: static;
+  top: 0;
+  left: 0;
+}
+
+.summaryProfile:hover {
+  transform: scale(1.1);
+}
+
+.summaryProfile::marker {
+  font-size: 0;
+}
+
+.summaryProfile::-webkit-details-marker {
+  display: none;
+}
+
+details[open] .menu {
+  animation-name: menuAnim;
+}
+
+.menu {
+  width: -moz-fit-content;
+  width: fit-content;
+  border-radius: var(--cornerRad);
+  background-color: rgb(0 0 0 / 78%);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2);
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: closeMenu 300ms ease-in-out forwards;
+}
+
+.menu .menuBtn {
+  cursor: pointer;
+  padding: 12px;
+  border: 0;
+  background: transparent;
+  font-size: inherit;
+  margin: 0 16px;
+  color: aliceblue;
+  border-bottom: 2px solid rgb(255 255 255 / 76%);
+  text-decoration: none;
+  text-align: center;
+  transition: 0.2s;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
 }
 
 .menuBtnOut {
-    cursor: pointer;
-    padding: 12px 24px;
-    border: 0;
-    background: transparent;
-    font-size: inherit;
-    margin: 0 16px;
-    color: aliceblue;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
-    text-decoration: none;
-    text-align: center;
-    transition: 0.2s;
-    overflow: hidden;
+  cursor: pointer;
+  padding: 12px;
+  border: 0;
+  background: transparent;
+  font-size: inherit;
+  margin: 0 16px;
+  display: flex;
+  color: aliceblue;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  text-align: center;
+  transition: 0.2s;
+  overflow: hidden;
+  justify-content: space-around;
 }
 
-  .menu .menuBtn:nth-last-of-type(1) {
-    border-bottom: none;
-  }
-  .menu .menuBtn:hover {
-    filter: brightness(120%);
-    text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
-  }
+.menu .menuBtn:nth-last-of-type(1) {
+  border-bottom: none;
+}
 
-  .menuBtn:hover {
-    color: #000000;
-    background: #2196f3;
-    box-shadow: 0 0 10px #2196f3, 0 0 40px #2196f3, 0 0 80px #2196f3;
-    transition-delay: 1s;
+.menu .menuBtn:hover {
+  filter: brightness(120%);
+  text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
+}
+
+.menuBtn:hover {
+  color: #000000;
+  background: #2196f3;
+  box-shadow: 0 0 10px #2196f3, 0 0 40px #2196f3, 0 0 80px #2196f3;
+  transition-delay: 1s;
 }
 
 .menuBtn span {
@@ -344,27 +358,31 @@ input.searchBar {
   transition-delay: 0.75s;
 }
 
-  @keyframes menuAnim {
-    0% {
-      height: 0;
-    }
-    100% {
-      height: 187.2px;
-    }
+@keyframes menuAnim {
+  0% {
+    height: 0;
   }
-  @keyframes fadeMe {
-    0% {
-      height: 187.2px;
-    }
-    100% {
-      height: 0;
-    }
+
+  100% {
+    height: 187.2px;
   }
-  
-  
-  nav.menu {
-    position: absolute;
-    transform: translateX(-68%);
+}
+
+@keyframes fadeMe {
+  0% {
+    height: 187.2px;
+  }
+
+  100% {
+    height: 0;
+  }
+}
+
+
+nav.menu {
+  position: absolute;
+  transform: translateX(-68%);
+  right: -52px;
 }
 
 .Notification {

@@ -9,9 +9,7 @@ export function Friendlist() {
   const [cookies] = useCookies();
   const [friends, setFriends]: any = useState([]);
 
-
-  useEffect(() => {
-    let mounted = true;
+  function FriendRequest() {
     axios.request({
       url: '/user/me/friends',
       method: 'get',
@@ -20,42 +18,55 @@ export function Friendlist() {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
     }).then((response: any) => {
-      if (mounted) {
         setFriends(response.data.friends)
-      }
     })
+  }
 
-    return () => { mounted = false }
+
+  useEffect(() => {
+    let mounted = true;
+
+    if (mounted) { FriendRequest() }
+    
+    const interval = setInterval(() => {
+      let mounted = true;
+
+      if (mounted) { FriendRequest() }
+
+      return () => { mounted = false }
+    }, 5000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
   }, [cookies])
 
   function handleDeleteFriends(friendToDelete: any) {
     console.log(friendToDelete)
-      axios.request({
-        url: '/user/friends/remove',
-        method: 'delete',
-        baseURL: `http://${ip}:5000`,
-        headers: {
-          "Authorization": `Bearer ${cookies.access_token}`,
-        },
-        data: {
-          'idToDelete': friendToDelete.username
-        }
-      })
+    axios.request({
+      url: '/user/friends/remove',
+      method: 'delete',
+      baseURL: `http://${ip}:5000`,
+      headers: {
+        "Authorization": `Bearer ${cookies.access_token}`,
+      },
+      data: {
+        'idToDelete': friendToDelete.username
+      }
+    })
   }
 
   function handleBlacklist(friendToDelete: any) {
     console.log(friendToDelete)
-      axios.request({
-        url: '/user/blacklist/remove',
-        method: 'delete',
-        baseURL: `http://${ip}:5000`,
-        headers: {
-          "Authorization": `Bearer ${cookies.access_token}`,
-        },
-        data: {
-          'idToDelete': friendToDelete.username
-        }
-      })
+    axios.request({
+      url: '/user/blacklist/remove',
+      method: 'delete',
+      baseURL: `http://${ip}:5000`,
+      headers: {
+        "Authorization": `Bearer ${cookies.access_token}`,
+      },
+      data: {
+        'idToDelete': friendToDelete.username
+      }
+    })
   }
 
 
@@ -63,17 +74,17 @@ export function Friendlist() {
     <div className="FriendElement" >
       <p className="FriendTitle" >Friend List</p>
       <div className="allFriendList">
-      {friends.map((friend: any) => (
-        <details>
-          <summary className="FriendList" key={friend.id}>{friend.username}</summary>
-          <nav className="menu">
-            <button className="menuBtn"  ><span /><span /><span /><span />Send message</button>
-            <button className="menuBtn"  ><span /><span /><span /><span />Invite game</button>
-            <button className="menuBtnOut" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
-            <button className="menuBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
-          </nav>
-        </details>
-      ))}
+        {friends.map((friend: any) => (
+          <details>
+            <summary className="FriendList" key={friend.id}>{friend.username}</summary>
+            <nav className="menu">
+              <button className="menuBtn"  ><span /><span /><span /><span />Send message</button>
+              <button className="menuBtn"  ><span /><span /><span /><span />Invite game</button>
+              <button className="menuBtnOut" onClick={() => { handleDeleteFriends(friend) }}><span /><span /><span /><span />Delete friend</button>
+              <button className="menuBtnOut" onClick={() => { handleDeleteFriends(friend); handleBlacklist(friend) }}><span /><span /><span /><span />Blacklist</button>
+            </nav>
+          </details>
+        ))}
       </div>
     </div>
   )
