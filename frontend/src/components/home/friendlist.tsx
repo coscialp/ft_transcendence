@@ -73,18 +73,17 @@ export function Friendlist() {
   return (
     <div className="FriendElement" >
       <p className="FriendTitle" >Friend List</p>
-      <div className="allFriendList">
-        {friends.map((friend: any) => (
-          <details>
-            <summary className="FriendList" key={friend.id}>{friend.username}</summary>
-            <nav className="menu">
-              <button className="menuBtn"  ><span /><span /><span /><span />Send message</button>
-              <button className="menuBtn"  ><span /><span /><span /><span />Invite game</button>
-              <button className="menuBtnOut" onClick={() => { handleDeleteFriends(friend) }}><span /><span /><span /><span />Delete friend</button>
-              <button className="menuBtnOut" onClick={() => { handleDeleteFriends(friend); handleBlacklist(friend) }}><span /><span /><span /><span />Blacklist</button>
-            </nav>
-          </details>
-        ))}
+      <div className="allFriendList">{friends.map((friend: any) => (
+        <details>
+          <summary className="FriendList" key={friend.id}>{friend.username}</summary>
+          <table className="menu">
+            <button className="menuBtn"  ><span /><span /><span /><span />Send message</button>
+            <button className="menuBtn"  ><span /><span /><span /><span />Invite game</button>
+            <button className="menuBtnOut" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
+            <button className="menuBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
+          </table>
+        </details>
+      ))}
       </div>
     </div>
   )

@@ -1,12 +1,26 @@
 import { ArrowSmUp } from 'heroicons-react'
 import './privateMessage.css'
 
+var privmsg : any = [
+    {
+        test : "Hey twe",
+        user: "brice",
+    },
+    {
+        test : "Salut twe",
+        user: "stef",
+    },
+    {
+        test : "Coucou twe",
+        user: "angela",
+    },  
+]
+
 function Open_Message()
 {
     var Message: any = document.getElementById('Message')
     var arrowR: any = document.getElementById('arrowR')
     var arrowL: any = document.getElementById('arrowL')
-    console.log("here");
     if (Message.style.height === '350px')
     {
         Message.style.transition = 'all .5s ease-in-out'
@@ -28,6 +42,8 @@ function Open_Message()
     
 }
 
+
+
 export default function PrivateMessage()
 {
     return (
@@ -36,6 +52,12 @@ export default function PrivateMessage()
             <ArrowSmUp  id="arrowR" onClick={() => Open_Message()}/>Message
             <ArrowSmUp  id="arrowL" onClick={() => Open_Message()}/>
             </div>
+            {privmsg.map((users: any) => (
+                <div className='privmsg'>
+                    <p className='privmsg_content'>{users.test}</p>
+                    <p className='privmsg_from'>{users.user}</p>
+                </div>
+            ))}
         </div>
     )
 }

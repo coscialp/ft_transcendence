@@ -4,8 +4,9 @@
 }
 
 body {
-  margin: 0px;
-  font-family: "Vibur", sans-serif;
+    margin: 0px;
+    font-family: "Vibur", sans-serif;
+    overflow:hidden;
 }
 
 .navBar {
