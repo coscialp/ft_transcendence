@@ -1,62 +1,88 @@
 import './login.css'
-import React from 'react'
-import axios, { AxiosResponse } from 'axios';
+import './signup.css'
+import React, { useState } from 'react'
+import axios from 'axios';
 
 const ip = window.location.hostname;
 
-export class SignForm extends React.Component<{}, { username: string, password: string }> {
-    constructor(props: {username: string, password: string}) {
-      super(props);
-      this.state = {username: '', password: ''};
-  
-      this.handleChangeUser = this.handleChangeUser.bind(this);
-      this.handleChangePass = this.handleChangePass.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
-    }
-  
-    handleChangeUser(event: any) {
-      this.setState({username: event.target.value});
-    }
+export function SignForm() {
 
-    handleChangePass(event: any) {
-        this.setState({password: event.target.value});
-      }
-  
-    handleSubmit(event: any) {
-      axios.request({
-        url: '/auth/signup',
-        method: 'post',
-        baseURL: `http://${ip}:5000`,
-        data: {
-          username: this.state.username,
-          password: this.state.password,
-          /*firstName: null,
-          lastName: null,
-          nickName: null,
-          profileImage: null,
-          email: null,*/
-        }
-      }
-      ).then((response: AxiosResponse<any, any>) =>  {window.open(`http://${ip}:3000/signIn/new`, '_self')});
-      event.preventDefault();
-    }
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
 
-    render() {
-      return (
-        <form onSubmit={this.handleSubmit}>
-          <div className="logs">
-				Username<br/>
-				<input type="text" className="InputStyle" placeholder="Enter your Username" value={this.state.username} onChange={this.handleChangeUser} />
-			</div>
-			<div className="logs">
-				Password<br/>
-				<input type="password" className="InputStyle" placeholder="Enter your Password" value={this.state.password} onChange={this.handleChangePass} />
-			</div>
-			
-            <input className="log-button InputStyle" type="submit" value="Sign In" />
-        </form>
-      );
+  /*function FirstSlideNext() {
+    if (username !== "" && password !== "") {
+      document.getElementById("slides")!.style.transform = "translateX(-33%)"
     }
+    else {
+      document.getElementById("InputStyle")!.style.boxShadow = "1px 1px 5px red";
+    }
+  }*/
+
+  function handleSubmit(event: any) {
+    axios.request({
+      url: '/auth/signup',
+      method: 'post',
+      baseURL: `http://${ip}:5000`,
+      data: {
+        username: username,
+        password: password,
+        firstName: firstname,
+        lastName: lastname,
+        nickName: nickname,
+        profileImage: null,
+        email: email,
+      }
+    }
+    ).then((response) => { console.log(response); window.open(`http://${ip}:3000/`, '_self') });
+    event.preventDefault();
   }
 
-export default SignForm
+  return (
+    <div id='slides' >
+
+      <div className='single slide'>
+        <div className="logs">
+          Username<br />
+          <input type="text" className="InputStyle" id="username" onKeyPress={(e) => document.getElementById("password")!.focus()} placeholder="Enter your Username" value={username} onChange={(e) => { setUsername(e.target.value) }} />
+        </div>
+        <div className="logs">
+          Password<br />
+          <input type="password" className="InputStyle" id="password" onKeyPress={(e) => {if (e.key === "Enter") document.getElementById("slides")!.style.transform = "translateX(-33%)"}} placeholder="Enter your Password" value={password} onChange={(e) => { setPassword(e.target.value) }} />
+        </div>
+        <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(-33%)" }} >Next</button>
+      </div>
+
+      <div className='single slide'>
+        <div className="logs">
+          Firstname<br />
+          <input type="text" className="InputStyle" id="firstname" onKeyPress={(e) => document.getElementById("lastname")!.focus()} placeholder="Enter your Firstname" value={firstname} onChange={(e) => { setFirstname(e.target.value) }} />
+        </div>
+        <div className="logs">
+          Lastname<br />
+          <input type="text" className="InputStyle" id="lastname" onKeyPress={(e) => {if (e.key === "Enter") document.getElementById("slides")!.style.transform = "translateX(-66%)"}} placeholder="Enter your Lastname" value={lastname} onChange={(e) => { setLastname(e.target.value) }} />
+        </div>
+        <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(0%)" }} >Back</button>
+        <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(-66%)" }} >Next</button>
+      </div>
+
+      <div className='single slide'>
+        <div className="logs">
+          Nickname<br />
+          <input type="text" className="InputStyle" onKeyPress={(e) => document.getElementById("email")!.focus()} placeholder="Enter your Nickname" value={nickname} onChange={(e) => { setNickname(e.target.value) }} />
+        </div>
+        <div className="logs">
+          Email<br />
+          <input type="text" className="InputStyle" id="email" placeholder="Enter your Email" value={email} onChange={(e) => { setEmail(e.target.value) }} />
+        </div>
+        <button className='btn Next' onClick={(e) => { document.getElementById("slides")!.style.transform = "translateX(-33%)" }} >Back</button>
+        <button className='btn Next' onClick={handleSubmit} >Submit</button>
+      </div>
+
+    </div>
+  );
+}

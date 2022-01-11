@@ -1,0 +1,26 @@
+#Message {
+    position: absolute;
+    bottom: 0;
+    right: 3%;
+    height: 50px;
+    width: 25%;
+    border-radius: 10px 10px 0 0;
+    background: grey;
+    /* display: flex; */
+    /* flex-direction: row; */
+    /* align-items: center; */
+    /* justify-content: space-between; */
+}
+
+#OpenMsg {
+    position: sticky;
+    bottom: 0;
+    background-color: #454545;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    border-radius: 10px 10px 0 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
