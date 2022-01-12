@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
-import { useHistory } from 'react-router'
+import { useHistory } from 'react-router';
 import { ip } from '../../App';
 import { isLogged } from '../../utils/isLogged';
 import { Bell, Cog, UserCircle, Logout} from 'heroicons-react';
