@@ -57,14 +57,14 @@ export function Friendlist() {
   function handleBlacklist(friendToDelete: any) {
     console.log(friendToDelete)
     axios.request({
-      url: '/user/blacklist/remove',
-      method: 'delete',
+      url: '/user/blacklist/add',
+      method: 'patch',
       baseURL: `http://${ip}:5000`,
       headers: {
         "Authorization": `Bearer ${cookies.access_token}`,
       },
       data: {
-        'idToDelete': friendToDelete.username
+        'newBlackListId': friendToDelete.username
       }
     })
   }
@@ -73,16 +73,15 @@ export function Friendlist() {
   return (
     <div className="FriendElement" >
       <p className="FriendTitle" >Friend List</p>
-      <div className="allFriendList">
-        {friends.map((friend: any) => (
-        <details>
-          <summary className="FriendList" key={friend.id}>{friend.username}</summary>
-          <table className="menu">
+      <div className="allFriendList">{friends.map((friend: any) => (
+        <details key={friend.id}>
+          <summary className="FriendList">{friend.username}</summary>
+          <nav className="menu">
             <button className="menuBtn"  ><span /><span /><span /><span />Send message</button>
             <button className="menuBtn"  ><span /><span /><span /><span />Invite game</button>
             <button className="menuBtnOut" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
             <button className="menuBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
-          </table>
+          </nav>
         </details>
       ))}
       </div>
