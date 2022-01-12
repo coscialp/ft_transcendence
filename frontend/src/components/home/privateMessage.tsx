@@ -1,18 +1,25 @@
 import { ArrowSmUp } from 'heroicons-react'
 import './privateMessage.css'
+import './mainMenu.css'
 
 var privmsg : any = [
     {
-        test : "Hey twe",
-        user: "brice",
+        body : "Hey twe",
+        sender: "brice",
+        id: "fwefewgergr",
+        avatar:"./Beluga.jpeg"
     },
     {
-        test : "Salut twe",
-        user: "stef",
+        body : "Salut twe",
+        sender: "stef",
+        id: "fwefewgergrd",
+        avatar:"./Beluga.jpeg"
     },
     {
-        test : "Coucou twe",
-        user: "angela",
+        body : "Coucou twe",
+        sender: "angela",
+        id: "fwefewgergrfewf",
+        avatar:"./Beluga.jpeg"
     },  
 ]
 
@@ -52,11 +59,21 @@ export default function PrivateMessage()
             <ArrowSmUp  id="arrowR" onClick={() => Open_Message()}/>Message
             <ArrowSmUp  id="arrowL" onClick={() => Open_Message()}/>
             </div>
-            {privmsg.map((users: any) => (
-                <div className='privmsg'>
-                    <p className='privmsg_content'>{users.test}</p>
-                    <p className='privmsg_from'>{users.user}</p>
-                </div>
+            {   privmsg.map((message: any) => (
+               <article key={message.id} id='message-container'>
+               <div>
+                   <img id="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
+               </div>
+               <div id="message-body" >
+                   <header id='message-header'>
+                       <h4 id='message-sender'>{message.sender}</h4>
+                       <span id='message-time'>
+                           {new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
+                       </span>
+                   </header>
+                   <p id='message-text'>{message.body}</p>
+               </div>
+           </article>
             ))}
         </div>
     )
