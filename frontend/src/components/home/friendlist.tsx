@@ -76,7 +76,7 @@ export function Friendlist() {
       <div className="allFriendList">{friends.map((friend: any) => (
         <details key={friend.id}>
           <summary className="FriendList">{friend.username}</summary>
-          <nav className="menu">
+          <nav className="menuFriendList">
             <button className="menuBtn"  ><span /><span /><span /><span />Send message</button>
             <button className="menuBtn"  ><span /><span /><span /><span />Invite game</button>
             <button className="menuBtnOut" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
