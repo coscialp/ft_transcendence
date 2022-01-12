@@ -90,8 +90,8 @@ p.FriendTitle {
 }
 
 table.menu {
+    position: relative;
     display: flex;
-    margin-left: 2vw;
     overflow: hidden;
 }
 

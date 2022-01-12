@@ -147,8 +147,6 @@ details[open] .menu {
 }
 
 .menu {
-  width: -moz-fit-content;
-  width: fit-content;
   border-radius: var(--cornerRad);
   background-color: rgb(0 0 0 / 78%);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2);

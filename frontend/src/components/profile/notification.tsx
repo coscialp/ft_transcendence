@@ -51,6 +51,7 @@ export function Notification() {
             }
         }).then((response: any) => {
             console.log("Friend accepted")
+            NotifRequest();
         })
     }
 
@@ -67,6 +68,7 @@ export function Notification() {
             }
         }).then((response: any) => {
             console.log("Friend request declined")
+            NotifRequest();
         })
     }
 
