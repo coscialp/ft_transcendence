@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
@@ -6,32 +7,85 @@ import { NavBar } from "../navbar/navbar";
 import { Achivements } from "./achivements";
 import { History } from "./history";
 import { Overall } from "./overall";
+import { ip } from '../../App';
 import './profile.css'
+
+type User = {
+	id: string,
+	username: string,
+	password: string | null,
+	firstName: string,
+	lastName: string,
+	nickName: string,
+	isLogged: boolean,
+	profileImage: string,
+	email: string,
+}
 
 export function Profile() {
 	const [unauthorized, setUnauthorized] = useState(false);
 	const [cookies] = useCookies();
 	const [me, setMe]: any = useState({});
-
-	useEffect(()=>{
+	const userProfile = window.location.pathname.split('/')[1];
+	const [user, setUser]: any = useState({});
+	const [blackList, setBlackList] = useState<User[]>([]);
+	useEffect(() => {
 		let mount = true;
 		if (mount) {
-		  isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+			isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
 		}
 		return (() => { mount = false; });
-	  }, [cookies])
-	  
-	  if (!cookies.access_token || unauthorized) {
+	}, [cookies])
+
+
+	useEffect(() => {
+		axios.request({
+			url: `/user/${userProfile}`,
+			method: 'get',
+			baseURL: `http://${ip}:5000`,
+			headers: {
+				"Authorization": `Bearer ${cookies.access_token}`,
+			}
+		}).then((response: any) => {
+			console.log(response)
+			setUser(response.data);
+		})
+	}, [userProfile, cookies]);
+
+	useEffect(() => {
+		let mount = true;
+
+
+		axios.request({
+			url: `/user/${userProfile}/blacklist`,
+			method: 'get',
+			baseURL: `http://${ip}:5000`,
+			headers: {
+				"Authorization": `Bearer ${cookies.access_token}`,
+			},
+		}).then((response: any) => {
+			console.log(response)
+			if (mount) { setBlackList(response.data.blackList) }
+		})
+		return (() => { mount = false; });
+	}, [cookies, userProfile])
+
+	if (!cookies.access_token || unauthorized) {
 		return (<Redirect to="/" />);
-	  }
+	}
+
 	return (
 		<div>
 			<NavBar page="Profile" />
 			<div className="ProfileElement">
 				<div className="ProfileMain">
-					<Overall me={me} />
-					<History />
-					<Achivements />
+					{blackList.find((user) => user.username === me.username) ? <div className="Blocked" ><img className="ProfileImage" style={{ backgroundImage: `url(${user.profileImage})` }} alt="" /> {user.username} has blocked you !</div> :
+					<div>
+						<Overall me={me} user={user} />
+						<History />
+						<Achivements />
+					</div>
+					}
 				</div>
 			</div>
 		</div>

@@ -223,8 +223,8 @@ export class UserService {
   async addBlackList(user: User, newBlackListId: string): Promise<void> {
     const newBlackList = await this.getUserById(newBlackListId);
 
-    user.friends = (await this.getFriends(user.id, user)).friends;
-    user.friends.push(newBlackList);
+    user.blackList = (await this.getBlackList(user.id, user)).blackList;
+    user.blackList.push(newBlackList);
 
     this.userRepository.save(user);
   }
