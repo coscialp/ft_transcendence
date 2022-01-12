@@ -37,6 +37,11 @@ img.ProfileImage {
     border-radius: 100%;
 }
 
+img.ProfileImage:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
 .History {
     width: 40%;
     height: 10%;
@@ -72,7 +77,10 @@ p.Score {
     top: 25%;
     left: 48%;
     border-radius: 20px;
+    display: flex;
     background-color: rgb(147 63 63 / 39%);
+    flex-direction: column;
+    align-items: center;
 }
 
 p.ProfileName {
@@ -95,6 +103,48 @@ img.Add.friend {
     background-color: #535353eb;
     border-radius: 50%;
     margin: 0;
+}
+
+.Achievements_contents {
+    width: 100%;
+    height: 20%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size:1.5vh;
+}
+
+.Progress_Bar {
+    display: flex;
+    height: 15%;
+    width: 80%;
+    border: solid 1px black;
+    flex-direction: row;
+    border-radius:15px;
+}
+.Progress_Bar_Filler {
+    padding-right: 4px;
+    height: 100%;
+    background: white;
+    border-radius: inherit;
+    text-align: end;
+    color: black;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#Achievement_font
+{
+    font-family:'neon';
+    font-size:1.8vh;
+}
+
+.logo {
+    height:1vh;
+    width:1vh;
 }
 
 @media screen and (orientation: portrait) {
@@ -149,5 +199,47 @@ img.Add.friend {
         padding: 10px;
         border-radius: 20px;
         background-color: rgb(147 63 63 / 39%);
+    }
+    .Achievements_contents {
+        width: 100%;
+        height: 20%;
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 1vh;
+    }
+    
+    .Progress_Bar {
+        display: flex;
+        height: 15%;
+        width: 80%;
+        border: solid 1px black;
+        flex-direction: row;
+        border-radius:15px;
+    }
+    .Progress_Bar_Filler {
+        padding-right: 4px;
+        height: 100%;
+        background: white;
+        border-radius: inherit;
+        text-align: end;
+        color: black;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-end;
+        font-size:1.5vw;
+    }
+    
+    #Achievement_font
+    {
+        font-family:'neon';
+        font-size:0;
+        margin-bottom:-5px;
+    }
+    .logo {
+        height:10px;
+        width:10px;
     }
 }

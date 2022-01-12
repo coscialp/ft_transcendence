@@ -102,7 +102,7 @@ export class UserController {
     }
 
     @Get('2FA/active')
-    async get2FA(@GetUser() user: User): Promise<{twoFactorAuth: boolean}> {
+    async get2FA(@GetUser() user: User): Promise<{twoFactorAuth: number}> {
         return await this.userService.get2FA(user);
     }
 

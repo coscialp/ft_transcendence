@@ -4,6 +4,7 @@ import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router'
 import { ip } from '../../App';
 import { isLogged } from '../../utils/isLogged';
+import { Bell, Cog, UserCircle, Logout} from 'heroicons-react';
 import './navbar.css'
 
 export function NavBar(props: any) {
@@ -27,27 +28,30 @@ export function NavBar(props: any) {
   const [avatar, setAvatar] = useState(me.data ? me.data.profileImage : '/img/beluga.jpeg');
 
   useEffect(() => {
-    let mount = true;
-    if (me.username !== undefined) {
-      axios.request({
-        url: `/user/${me.username}/friends/request`,
-        method: 'get',
-        baseURL: `http://${ip}:5000`,
-        headers: {
-          "Authorization": `Bearer ${cookies.access_token}`,
-        },
-      }).then((response: any) => {
-        if (mount) {
-          if (response.data.from.length > 0) {
-            setNotification(true);
+    const interval = setInterval(() => {
+      let mount = true;
+      if (me.username !== undefined) {
+        axios.request({
+          url: `/user/${me.username}/friends/request`,
+          method: 'get',
+          baseURL: `http://${ip}:5000`,
+          headers: {
+            "Authorization": `Bearer ${cookies.access_token}`,
+          },
+        }).then((response: any) => {
+          if (mount) {
+            if (response.data.from.length > 0) {
+              setNotification(true);
+            }
+            else {
+              setNotification(false);
+            }
           }
-          else {
-            setNotification(false);
-          }
-        }
-      })
-    }
-    return (() => { mount = false; })
+        })
+      }
+      return () => { mount = false }
+    }, 5000);
+    return () => clearInterval(interval);
   }, [cookies, notification, me]);
 
 
@@ -157,10 +161,10 @@ export function NavBar(props: any) {
         <details>
           <summary className="summaryProfile" style={{ backgroundImage: `url(${avatar})` }} ></summary>
           <nav className="menu">
-            <button className="menuBtn" onClick={() => { return history.push(`/${me.username}/profile`) }} ><span /><span /><span /><span />Profile</button>
-            <button className="menuBtn" onClick={() => { return history.push(`/alerts`) }} ><span /><span /><span /><span />Alerts</button>
-            <button className="menuBtn" onClick={() => { return history.push("/settings") }} ><span /><span /><span /><span />Settings</button>
-            <button className="menuBtnOut" onClick={logout} ><span /><span /><span /><span />Logout</button>
+            <button className="menuBtn" onClick={() => { return history.push(`/${me.username}/profile`) }} ><span /><span /><span /><span /><UserCircle /></button>
+            <button className="menuBtn" onClick={() => { return history.push(`/alerts`) }} ><span /><span /><span /><span /><Bell /></button>
+            <button className="menuBtn" onClick={() => { return history.push("/settings") }} ><span /><span /><span /><span /><Cog /></button>
+            <button className="menuBtnOut" onClick={logout} ><span /><span /><span /><span /><Logout /></button>
           </nav>
         </details>
       </div>

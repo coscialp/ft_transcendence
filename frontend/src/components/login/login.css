@@ -13,6 +13,7 @@ div#log-box {
     font-size: 2em;
     text-align: center;
     padding-top: 10px;
+    overflow: hidden;
 }
 
 .logs {

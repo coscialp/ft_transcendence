@@ -12,7 +12,7 @@ import { Profile } from './components/profile/profile';
 import { NotFound } from './components/notFound';
 import { Settings } from './components/settings/settings';
 import { Notification } from './components/profile/notification';
-import { NewUser } from './components/login/newUser';
+import { TwoFA } from './components/login/TwoFA';
 
 export const ip = window.location.hostname;
 
@@ -25,7 +25,7 @@ function App() {
 					<Route path={"/oauth/redirect"} component={ Register } />
 					<Route exact path={"/signup"} component={ SignUp } />
 					<Route path={"/cookies"} component={ Cookies } />
-					<Route path={"/signIn/new"} component={ NewUser } />
+					<Route path={"/2fa"} component={ TwoFA } />
 					<Route exact path={"/home"} component={ Home } />
 					<Route exact path={"/play"} component={ Play } />
 					<Route exact path={"/alerts"} component={ Notification } />
