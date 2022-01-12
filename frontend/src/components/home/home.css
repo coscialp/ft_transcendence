@@ -89,10 +89,14 @@ p.FriendTitle {
     cursor:pointer;
 }
 
-table.menu {
+nav.menu {
     position: relative;
     display: flex;
     overflow: hidden;
+}
+nav.menu {
+    transform: translateX(-68%);
+    left: 68%;
 }
 
 .allFriendList {

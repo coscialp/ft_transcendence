@@ -53,7 +53,7 @@ export default function PrivateMessage()
             <ArrowSmUp  id="arrowL" onClick={() => Open_Message()}/>
             </div>
             {privmsg.map((users: any) => (
-                <div className='privmsg'>
+                <div className='privmsg' key={users.test}>
                     <p className='privmsg_content'>{users.test}</p>
                     <p className='privmsg_from'>{users.user}</p>
                 </div>
