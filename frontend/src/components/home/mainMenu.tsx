@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { io, Socket } from "socket.io-client";
@@ -90,6 +91,18 @@ export function MainMenu() {
 			}
 			else {
 				channels.push(channelName);
+				axios.request({
+					url: '/channel/create',
+					method: 'post',
+					baseURL: `http://${ip}:5000`,
+					headers: {
+					  "Authorization": `Bearer ${cookies.access_token}`,
+					},
+					data: {
+						'name': channelName,
+						'password': channelPassword,
+					}
+				  })
 				togglePopup();
 				setChannelName('');
 				setChannelPassword('');

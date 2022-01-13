@@ -115,4 +115,9 @@ export class UserController {
     async deactivate2FA(@GetUser() user: User): Promise<void> {
         return await this.userService.deactivate2FA(user);
     }
+
+    // @Get(':id/achievements/')
+    // async getAchievements(@Param('id') id: string, @GetUser() user: User): Promise<{achievements: Achievement[]}> {
+    //     return await this.userService.getAchievements(id, user);
+    // }
 }

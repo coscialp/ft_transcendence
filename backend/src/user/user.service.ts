@@ -94,10 +94,12 @@ export class UserService {
   }
 
   async getFriends(id: string, user: User): Promise<{ friends: User[] }> {
-    const currentUser = await this.getUserById(id, user);
+    const currentUser: User = await this.getUserById(id, user);
 
-    const allUser = await this.userRepository.find({ relations: ['friends'] });
-    const friends = allUser.find((user) => {
+    const allUser: User[] = await this.userRepository.find({
+      relations: ['friends'],
+    });
+    const friends: User[] = allUser.find((user) => {
       return user.username === currentUser.username;
     }).friends;
 
@@ -223,8 +225,8 @@ export class UserService {
   async addBlackList(user: User, newBlackListId: string): Promise<void> {
     const newBlackList = await this.getUserById(newBlackListId);
 
-    user.friends = (await this.getFriends(user.id, user)).friends;
-    user.friends.push(newBlackList);
+    user.blackList = (await this.getBlackList(user.id, user)).blackList;
+    user.blackList.push(newBlackList);
 
     this.userRepository.save(user);
   }
@@ -255,7 +257,16 @@ export class UserService {
     this.userRepository.save(user);
   }
 
-  async get2FA(user: User): Promise<{twoFactorAuth: number}> {
+  async get2FA(user: User): Promise<{ twoFactorAuth: number }> {
     return { twoFactorAuth: user.twoFactorAuth };
   }
+
+  // async getAchievements(
+  //   id: string,
+  //   user: User,
+  // ): Promise<{ achievements: Achievement[] }> {
+  //   const { authentifier, friendship, guardian, climber, persevering, hater } = await this.getUserById(id, user);
+
+  //   return { achievements: [authentifier, friendship, guardian, climber, persevering, hater] };
+  // }
 }

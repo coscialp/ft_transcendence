@@ -81,6 +81,9 @@ export class UsersRepository extends Repository<User> {
       email: email,
       isLogged: false,
       friends: [],
+      // channels: [],
+      // channelsAdmin: [],
+      // channelsConnected: [],
       blackList: [],
       twoFactorAuth: 0,
     });

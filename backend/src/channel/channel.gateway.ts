@@ -6,6 +6,7 @@ import {
   MessageBody,
   ConnectedSocket,
   OnGatewayConnection,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
@@ -13,7 +14,7 @@ import { ChannelService } from './channel.service';
 import { User } from 'src/user/user.entity';
 
 @WebSocketGateway(5001, { transports: ['websocket'] })
-export class ChannelGateway implements OnGatewayInit, OnGatewayConnection {
+export class ChannelGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChannelGateway');
 
