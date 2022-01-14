@@ -78,15 +78,13 @@ export function Profile() {
 		<div>
 			<NavBar page="Profile" />
 			<div className="ProfileElement">
-				<div className="ProfileMain">
-					{blackList.find((user) => user.username === me.username) ? <div className="Blocked" ><img className="ProfileImage" style={{ backgroundImage: `url(${user.profileImage})` }} alt="" /> {user.username} has blocked you !</div> :
-					<div>
+					{blackList.find((user) => user.username === me.username) ? <div className="Blocked ProfileMain" ><img className="ProfileImage" style={{ backgroundImage: `url(${user.profileImage})` }} alt="" /> {user.username} has blocked you !</div> :
+					<div className="ProfileMain">
 						<Overall me={me} user={user} />
 						<History />
 						<Achivements />
 					</div>
 					}
-				</div>
 			</div>
 		</div>
 	);

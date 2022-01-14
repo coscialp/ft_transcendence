@@ -81,3 +81,59 @@ p#message-text {
     word-break: break-all;
     color: white;
 }
+
+
+#returnprivmsg {
+    position: relative;
+    height: 350px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.message-send {
+    width: 70%;
+    text-align: end;
+    border-radius: 10px;
+    align-self: end;
+    margin-right: 20px;
+}
+
+
+
+.message-received
+{
+    width:70%;
+    margin-left: 3vh;
+    text-align: start;
+    border-radius: 10px;
+}
+
+.message-send-background
+{
+    background-color:blue;
+    border-radius: 15px;
+    padding: 3px 5px 3px 5px;
+    display: inline-table;
+}
+
+.message-received-background
+{
+    background-color:grey;
+    border-radius: 15px;
+    background-clip: content;
+    padding: 3px 5px 3px 5px;
+    display: inline-table;
+}
+
+.private-message-img
+{
+    height: 2vh;
+    width: 2vh;
+    position:absolute;
+    margin-left: -2.5vh;
+    background-size: cover;
+    background-position: center;
+    border-radius: 100%;
+}
