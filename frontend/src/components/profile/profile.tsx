@@ -54,8 +54,7 @@ export function Profile() {
 
 	useEffect(() => {
 		let mount = true;
-
-
+	
 		axios.request({
 			url: `/user/${userProfile}/blacklist`,
 			method: 'get',
@@ -73,7 +72,7 @@ export function Profile() {
 	if (!cookies.access_token || unauthorized) {
 		return (<Redirect to="/" />);
 	}
-
+ 
 	return (
 		<div>
 			<NavBar page="Profile" />

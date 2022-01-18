@@ -37,10 +37,14 @@ img.ProfileImage {
     border-radius: 100%;
 }
 
+.profile-imgpencil {
+    transition: transform 200ms;
+}
+
 .profile-imgpencil:hover {
     cursor: pointer;
     transform: scale(1.1);
-    transition-duration: 0.2s;
+    transition: transform 200ms;
 }
 
 .profile-imgpencil:hover img.ProfileImage {

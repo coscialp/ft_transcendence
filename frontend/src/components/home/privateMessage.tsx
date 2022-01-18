@@ -56,8 +56,6 @@ function message_select(sender: string, setter: React.Dispatch<any>) {
 export default function PrivateMessage() {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
     console.log(isConvOpen);
-    var pad = 25;
-    var padding = {top:'25px'};
     return (
         <div id="Message" >
             <div id="OpenMsg" onClick={() => Open_Message()}>
@@ -84,8 +82,8 @@ export default function PrivateMessage() {
                     <Backspace />
                     <p className='message-send'><span className='message-send-background'>salut</span></p>
                     <p className='message-received'><img className="private-message-img" style={{ backgroundImage: `url(/img/beluga.jpeg)` }} alt="" /><span className='message-received-background'>salut a toi le collegue comment va tu salut a toi je pense que ca ne fonctionne pas si bien que ca coucou twe coucou twe</span></p>
-                    <p className='message-send' style={padding} ><span className='message-send-background'>salut a toi le collegue comment va tu salut a toi je pense que ca ne fonctionne pas si bien que ca coucou twe coucou twe</span></p>
-                    <p className='message-received'style={padding}><span className='message-received-background'>salut</span></p>
+                    <p className='message-send'  ><span className='message-send-background'>salut a toi le collegue comment va tu salut a toi je pense que ca ne fonctionne pas si bien que ca coucou twe coucou twe</span></p>
+                    <p className='message-received'><span className='message-received-background'>salut</span></p>
                 </div>}
         </div>
     )
