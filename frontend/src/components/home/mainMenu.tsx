@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie";
 import { io, Socket } from "socket.io-client";
 import { isLogged } from "../../utils/isLogged";
 import { useHistory } from "react-router";
-import { DotsVertical, UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff,  } from "heroicons-react";
+import { DotsVertical, UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, } from "heroicons-react";
 const ip = window.location.hostname;
 
 type MessageType = {
@@ -146,16 +146,14 @@ export function MainMenu() {
 							<p className='message-text'>{message.body}</p>
 						</div>
 						<div className="UserParams" >
-							<div className="DotsParams">
 							<DotsVertical className="DotsVert" />
+							<div className="scrollingMenu container">
+								<UserCircle className="chatUserParam" />
+								<Challenge className="chatUserParam" />
+								<ChevronDoubleUp className="chatUserParam" />
+								<VolumeOff className="chatUserParam" />
+								<Trash className="chatUserParam" />
 							</div>
-						<div className="scrollingMenu container">
-        					<UserCircle className="chatUserParam" />
-        					<Challenge className="chatUserParam" />
-        					<ChevronDoubleUp className="chatUserParam" />
-        					<VolumeOff className="chatUserParam" />
-        					<Trash className="chatUserParam" />
-      					</div > 
 						</div>
 					</article>
 				))}
@@ -173,7 +171,7 @@ export function MainMenu() {
 						</div>
 						:
 						popupState === 1 ?
-						<div className="AddChan">
+							<div className="AddChan">
 								<form onSubmit={handleCreateNewChannel} >
 									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => { setChannelName(e.target.value) }} />
 									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => (setChannelPassword(e.target.value))} />
