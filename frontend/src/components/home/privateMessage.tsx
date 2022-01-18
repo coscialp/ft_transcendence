@@ -81,7 +81,7 @@ export default function PrivateMessage() {
                     <Backspace />
                     <p className='message-send'><span className='message-send-background'>salut</span></p>
                     <p className='message-received'><img className="private-message-img" style={{ backgroundImage: `url(/img/beluga.jpeg)` }} alt="" /><span className='message-received-background'>salut a toi le collegue comment va tu salut a toi je pense que ca ne fonctionne pas si bien que ca coucou twe coucou twe</span></p>
-                    <p className='message-send' ><span className='message-send-background'>salut a toi le collegue comment va tu salut a toi je pense que ca ne fonctionne pas si bien que ca coucou twe coucou twe</span></p>
+                    <p className='message-send'  ><span className='message-send-background'>salut a toi le collegue comment va tu salut a toi je pense que ca ne fonctionne pas si bien que ca coucou twe coucou twe</span></p>
                     <p className='message-received'><span className='message-received-background'>salut</span></p>
                 </div>}
         </div>

@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie";
 import { io, Socket } from "socket.io-client";
 import { isLogged } from "../../utils/isLogged";
 import { useHistory } from "react-router";
-
+import { DotsVertical, UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff,  } from "heroicons-react";
 const ip = window.location.hostname;
 
 type MessageType = {
@@ -145,11 +145,18 @@ export function MainMenu() {
 							</header>
 							<p className='message-text'>{message.body}</p>
 						</div>
-						<details>
-							<summary className="test">
-
-							</summary>
-						</details>
+						<div className="UserParams" >
+							<div className="DotsParams">
+							<DotsVertical className="DotsVert" />
+							</div>
+						<div className="scrollingMenu container">
+        					<UserCircle className="chatUserParam" />
+        					<Challenge className="chatUserParam" />
+        					<ChevronDoubleUp className="chatUserParam" />
+        					<VolumeOff className="chatUserParam" />
+        					<Trash className="chatUserParam" />
+      					</div > 
+						</div>
 					</article>
 				))}
 				<div ref={scrollTarget} />

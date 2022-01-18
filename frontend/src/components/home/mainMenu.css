@@ -15,27 +15,31 @@ article.message-container:hover {
     border-radius: 10px;
 }
 
-article.message-container:hover svg.message-params {
+article.message-container:hover .DotsVert {
     display: block;
 }
 
-svg.message-params {
-    position: relative;
-    top: 20px;
+.DotsVert {
     cursor: pointer;
-    margin-left: auto;
+    position: absolute;
+    height:3vh;
+    width:3vh;
+    right: 45px;
+    margin-top: 2vh;
     display: none;
+    transition: transform 330ms;
 }
 
-summary.test {
-    list-style-image: url(./DotsVertical.svg);
-    transform: scale(4);
-    filter: invert(1);
-    cursor: pointer;
-    position: relative;
-    top: 20px;
-    margin-left: auto;
+.DotsVert:hover 
+{
+    transform:rotate(90deg);
+    transition: transform 330ms ;
 }
+
+.UserParams:hover .scrollingMenu.container {
+    display: block;
+}
+
 
 .message-body {
     display: flex;
@@ -182,4 +186,53 @@ input.AJCplaceholder {
     border-radius: 20px;
     padding: 10px;
     color: antiquewhite;
+}
+
+
+.UserParams {
+    position: absolute;
+    right: -175px;
+}
+
+.DotsParams {
+    position: absolute;
+    right: 150px;
+    width: 100%;
+    height: 100%;
+}
+
+.scrollingMenu.container {
+    position: relative;
+    top: 0;
+    left: 0;
+    background-color: #363636;
+    width: -moz-fit-content;
+    width: fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    border-radius: 10px;
+    align-content: center;
+    display: none;
+}
+
+.chatUserParam {
+    margin: 5px;
+    background: 0;
+    border: 0;
+    width: 100%;
+    color: antiquewhite;
+    cursor: pointer;
+}
+
+.chatUserParam:hover {
+    background-color: #212121fa;
+    color: antiquewhite;
+}
+
+.chatUserParam:hover .DotsVert {
+    transform: rotate(90deg);
 }
