@@ -146,7 +146,9 @@ export function MainMenu() {
 							<p className='message-text'>{message.body}</p>
 						</div>
 						<div className="UserParams" >
+							<div className="DotsParams" >
 							<DotsVertical className="DotsVert" />
+							</div>
 							<div className="scrollingMenu container">
 								<UserCircle className="chatUserParam" />
 								<Challenge className="chatUserParam" />
