@@ -8,6 +8,7 @@ article.message-container {
     margin-right: 10px;
     padding-bottom: 5px;
     border-bottom: 1px solid grey;
+    justify-content: space-between;
 }
 
 article.message-container:hover {
@@ -17,6 +18,10 @@ article.message-container:hover {
 
 article.message-container:hover .DotsVert {
     display: block;
+}
+
+.img-content {
+    display: flex;
 }
 
 .DotsVert {
@@ -29,15 +34,6 @@ article.message-container:hover .DotsVert {
     display: none;
     transition: transform 330ms;
 }
-
-.DotsVert:hover 
-{
-    transform:rotate(90deg);
-    transition: transform 330ms ;
-}
-
-
-
 
 .message-body {
     display: flex;
@@ -237,3 +233,55 @@ input.AJCplaceholder {
     background-color: #212121fa;
     color: antiquewhite;
 }
+
+.dropbtn {
+    font-size: 16px;
+    border: none;
+}
+
+.dropbtn {
+    font-size: 16px;
+    border: none;
+    display: none;
+}
+
+article.message-container:hover .dropbtn {
+    display: block;
+}
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    top: 13px;
+}
+  
+.dropdown-content {
+    transform: scale(0);
+    border-radius: 10px;
+    position: absolute;
+    background-color: #363636;
+    min-width: 50px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    right: 0;
+}
+  
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+.dropbtn:hover 
+{
+    transform:rotate(180deg);
+    transition: transform 330ms ;
+}
+  
+.dropdown:hover .dropdown-content {    transform: scale(1);
+    transition: transform 300ms;}
+
+

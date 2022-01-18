@@ -3,7 +3,7 @@ import { useCookies } from "react-cookie";
 import { io, Socket } from "socket.io-client";
 import { isLogged } from "../../utils/isLogged";
 import { useHistory } from "react-router";
-import { DotsVertical, UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, } from "heroicons-react";
+import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
 const ip = window.location.hostname;
 
 type MessageType = {
@@ -133,9 +133,8 @@ export function MainMenu() {
 			<div className="Message Container" >
 				{messages.map((message: any) => (
 					<article key={message.id} className='message-container'>
-						<div>
+						<div className="img-content" >
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
-						</div>
 						<div className="message-body" >
 							<header className='message-header'>
 								<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
@@ -145,11 +144,10 @@ export function MainMenu() {
 							</header>
 							<p className='message-text'>{message.body}</p>
 						</div>
-						<div className="UserParams" >
-							<div className="DotsParams" >
-							<DotsVertical className="DotsVert" />
-							</div>
-							<div className="scrollingMenu container">
+						</div>
+						<div className="dropdown" >
+							<Cog className="dropbtn" />
+							<div className="dropdown-content">
 								<UserCircle className="chatUserParam" />
 								<Challenge className="chatUserParam" />
 								<ChevronDoubleUp className="chatUserParam" />
@@ -159,7 +157,6 @@ export function MainMenu() {
 						</div>
 					</article>
 				))}
-				<div ref={scrollTarget} />
 			</div>
 			<form onSubmit={handleSendMessage} >
 				<input type="text" className="MainSendMessage" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
