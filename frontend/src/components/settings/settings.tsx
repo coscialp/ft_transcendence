@@ -109,11 +109,10 @@ export function Settings() {
 						</div>
 					</div>
 					<div className="2FA">
-						Enable the 2FA
 						{me.twoFactorAuth ?
-						<><input className="ToggleSwitchON" type="checkbox" id="switch" onClick={handle2FA} /><label className="ToggleSLabelON" htmlFor="switch"></label></>
+						<>Disable the 2FA<input className="ToggleSwitchON" type="checkbox" id="switch" onClick={handle2FA} /><label className="ToggleSLabelON" htmlFor="switch"></label></>
 						:
-						<><input className="ToggleSwitchOFF" type="checkbox" id="switch" onClick={handle2FA} /><label className="ToggleSLabelOFF" htmlFor="switch"></label></>
+						<>Enable the 2FA<input className="ToggleSwitchOFF" type="checkbox" id="switch" onClick={handle2FA} /><label className="ToggleSLabelOFF" htmlFor="switch"></label></>
 						}
 					</div>
 				</div>

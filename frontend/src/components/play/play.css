@@ -1,0 +1,30 @@
+.scrollingMenu.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #363636;
+    width: -moz-fit-content;
+    width: fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    border-radius: 10px;
+    align-content: center;
+}
+
+.chatUserParam {
+    margin: 5px;
+    background: 0;
+    border: 0;
+    width: 100%;
+    color: antiquewhite;
+    cursor: pointer;
+}
+
+.chatUserParam:hover {
+    background-color: #212121fa;
+    color: antiquewhite;
+}
