@@ -10,12 +10,40 @@ article.message-container {
     border-bottom: 1px solid grey;
 }
 
+article.message-container:hover {
+    background-color: #ffffff4a;
+    border-radius: 10px;
+}
+
+article.message-container:hover svg.message-params {
+    display: block;
+}
+
+svg.message-params {
+    position: relative;
+    top: 20px;
+    cursor: pointer;
+    margin-left: auto;
+    display: none;
+}
+
+summary.test {
+    list-style-image: url(./DotsVertical.svg);
+    transform: scale(4);
+    filter: invert(1);
+    cursor: pointer;
+    position: relative;
+    top: 20px;
+    margin-left: auto;
+}
+
 .message-body {
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: flex-start;
     margin-left: 10px;
+    max-width: 80%;
 }
 
 header.message-header {
@@ -29,6 +57,11 @@ header.message-header {
 h4.message-sender {
     margin: 0;
     font-size: 2.2vh;
+}
+
+h4.message-sender:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 span.message-time {
@@ -49,7 +82,7 @@ p.message-text {
     margin: 0;
     font-size: 3vh;
     text-align: left;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 p.channelName {
