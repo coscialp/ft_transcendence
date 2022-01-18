@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { io, Socket } from "socket.io-client";
 import { isLogged } from "../../utils/isLogged";
+import { useHistory } from "react-router";
 
 const ip = window.location.hostname;
 
@@ -32,6 +33,7 @@ function useForceUpdate() {
 }
 
 export function MainMenu() {
+	let history = useHistory();
 	const [cookies] = useCookies();
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
@@ -116,6 +118,11 @@ export function MainMenu() {
 		e.preventDefault();
 	}
 
+	function handleRedirectToProfile(toGo: string) {
+		return history.push(`/${toGo}/profile`)
+	}
+
+
 	return (
 		<div className="MainElement" >
 			<div className="Channel List" >{channels.map((channel: any) => (
@@ -131,13 +138,18 @@ export function MainMenu() {
 						</div>
 						<div className="message-body" >
 							<header className='message-header'>
-								<h4 className='message-sender'>{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
+								<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
 								<span className='message-time'>
 									{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
 								</span>
 							</header>
 							<p className='message-text'>{message.body}</p>
 						</div>
+						<details>
+							<summary className="test">
+
+							</summary>
+						</details>
 					</article>
 				))}
 				<div ref={scrollTarget} />
@@ -154,7 +166,7 @@ export function MainMenu() {
 						</div>
 						:
 						popupState === 1 ?
-							<div className="AddChan">
+						<div className="AddChan">
 								<form onSubmit={handleCreateNewChannel} >
 									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => { setChannelName(e.target.value) }} />
 									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => (setChannelPassword(e.target.value))} />
@@ -178,3 +190,4 @@ export function MainMenu() {
 		</div>
 	)
 }
+//<DotsVertical className="message-params" />
