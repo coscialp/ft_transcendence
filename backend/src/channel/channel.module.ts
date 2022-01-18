@@ -6,11 +6,13 @@ import { ChannelsRepository } from './channels.repository';
 import { ChannelService } from './channel.service';
 import { MessagesRepository } from './messages.repository';
 import { ChannelController } from './channel.controller';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
     imports: [
         AuthModule,
         TypeOrmModule.forFeature([ChannelsRepository, MessagesRepository]),
+        UserModule,
     ],
     providers: [ChannelGateway, ChannelService],
     controllers: [ChannelController],

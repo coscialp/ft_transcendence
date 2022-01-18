@@ -38,7 +38,7 @@ export function MainMenu() {
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
 	// eslint-disable-next-line
-	const [channels, setChannels] = useState<string[]>(['General']);
+	const [channels, setChannels] = useState<string[]>([]);
 	const [channelName, setChannelName] = useState<string>('');
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
@@ -66,7 +66,7 @@ export function MainMenu() {
 			if (socket) {
 				socket.on('msg_toClient', (msg: any) => {
 					console.log(`msg: ${msg}`);
-					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender, body: msg.body, avatar: msg.avatar });
+					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
 				})
 			}
@@ -116,7 +116,7 @@ export function MainMenu() {
 		if (messageInput) {
 			console.log(messageInput);
 			if (socket) {
-				socket.emit('msg_toServer', { sentAt: Date(), body: messageInput });
+				socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
 			}
 			setMessageInput('');
 		}
@@ -126,6 +126,9 @@ export function MainMenu() {
 
 	function changeChannel(e: any) {
 		console.log(e.target.innerText);
+		if (socket) {
+			socket.emit('change_channel', {channelName: e.target.innerText});
+		}
 		setMessages([]);
 		e.preventDefault();
 	}

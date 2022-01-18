@@ -6,6 +6,8 @@ import { GetUserFilterDto } from './dto/user-filter.dto';
 import { FriendRequestRepository } from './friend-request.repository';
 import { FriendRequestDto } from './dto/friend-request.dto';
 import { FriendRequest } from './friend-request.entity';
+import { Channel } from 'src/channel/channel.entity';
+import { Message } from 'src/channel/message.entity';
 
 @Injectable()
 export class UserService {
@@ -261,12 +263,59 @@ export class UserService {
     return { twoFactorAuth: user.twoFactorAuth };
   }
 
-  // async getAchievements(
-  //   id: string,
-  //   user: User,
-  // ): Promise<{ achievements: Achievement[] }> {
-  //   const { authentifier, friendship, guardian, climber, persevering, hater } = await this.getUserById(id, user);
+  async getChannelsCreator(user: User): Promise<{ channels: Channel[] }> {
+    const allCreator = await this.userRepository.find({
+      relations: ['channels'],
+    });
 
-  //   return { achievements: [authentifier, friendship, guardian, climber, persevering, hater] };
-  // }
+    const channels = allCreator.find(
+      (u) => u.username === user.username,
+    ).channels;
+
+    return { channels };
+  }
+
+  async getChannelsAdmin(user: User): Promise<{ channelsAdmin: Channel[] }> {
+    const allCreator = await this.userRepository.find({
+      relations: ['channelsAdmin'],
+    });
+
+    console.log(allCreator);
+
+    const channelsAdmin = allCreator.find(
+      (u) => u.username === user.username,
+    ).channelsAdmin;
+
+    return { channelsAdmin };
+  }
+
+  async getChannelsConnected(user: User): Promise<{ channelsConnected: Channel[] }> {
+    const allCreator = await this.userRepository.find({
+      relations: ['channelsConnected'],
+    });
+
+    const channelsConnected = allCreator.find(
+      (u) => u.username === user.username,
+    ).channelsConnected;
+
+    return { channelsConnected };
+  }
+
+  async getMessages(id: string, user: User): Promise<{messagesSend: Message[], messagesReceive: Message[]}> {
+    const currentUser = await this.getUserById(id, user);
+
+    const allMessages = await this.userRepository.find({
+      relations: ['messagesSend', 'messagesReceive']
+    });
+
+    const messagesSend = allMessages.find((message) => {
+      return user.username === currentUser.username;
+    }).messagesSend;
+
+    const messagesReceive = allMessages.find((message) => {
+      return user.username === currentUser.username;
+    }).messagesReceive;
+
+    return {messagesSend, messagesReceive};
+  }
 }

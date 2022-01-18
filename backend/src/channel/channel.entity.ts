@@ -13,17 +13,17 @@ export class Channel {
     @Column()
     password: string;
 
-    // @ManyToOne(type => User, user => user.channels, {nullable: true})
-    // creator: User | null;
+    @ManyToOne(type => User, user => user.channels, {nullable: true})
+    creator: User | null;
 
     @OneToMany(type => Message, message => message.receiver)
     messages: Message[];
     
-    // @ManyToMany(type => User, user => user.channelsAdmin)
-    // @JoinTable()
-    // admin: User[];
+    @ManyToMany(type => User, user => user.channelsAdmin)
+    @JoinTable()
+    admin: User[];
 
-    // @ManyToMany(type => User, user => user.channelsConnected, {cascade: false})
-    // @JoinTable()
-    // userConnected: User[]
+    @ManyToMany(type => User, user => user.channelsConnected, {cascade: false})
+    @JoinTable()
+    userConnected: User[];
 }

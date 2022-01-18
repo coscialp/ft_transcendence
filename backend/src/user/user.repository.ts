@@ -69,7 +69,10 @@ export class UsersRepository extends Repository<User> {
       nickName,
       profileImage,
       email,
+      admin,
     } = authCredentialsDto;
+
+    
 
     const user: User = this.create({
       username: username,
@@ -80,6 +83,7 @@ export class UsersRepository extends Repository<User> {
       profileImage: profileImage,
       email: email,
       isLogged: false,
+      isAdmin: admin,
       friends: [],
       // channels: [],
       // channelsAdmin: [],

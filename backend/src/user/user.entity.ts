@@ -29,8 +29,11 @@ export class User {
     @Column({nullable: true})
     email?: string | null;
 
-    @Column({nullable: true, default: false})
+    @Column({nullable: false, default: false})
     isLogged: boolean;
+
+    @Column({default: false})
+    isAdmin: boolean;
 
     @Column({nullable: false, default: 0})
     twoFactorAuth: number;
@@ -58,16 +61,14 @@ export class User {
     @OneToMany(type => Message, message => message.receiver)
     messagesReceive: Message[];
 
-    // @OneToMany(type => Channel, channel => channel.creator)
-    // channels: Channel[];
+    @OneToMany(type => Channel, channel => channel.creator)
+    channels: Channel[];
 
-    // @ManyToMany(type => Channel, channel => channel.admin)
-    // @JoinTable()
-    // channelsAdmin: Channel[];
+    @ManyToMany(type => Channel, channel => channel.admin)
+    channelsAdmin: Channel[];
 
-    // @ManyToMany(type => Channel, channel => channel.userConnected)
-    // @JoinTable()
-    // channelsConnected: Channel[];
+    @ManyToMany(type => Channel, channel => channel.userConnected)
+    channelsConnected: Channel[];
 
     @ManyToMany(type => User, user => user.friends, {cascade: false})
     @JoinTable()
