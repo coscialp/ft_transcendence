@@ -3,7 +3,6 @@ import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
 import { isLogged } from "../../utils/isLogged";
 import { NavBar } from "../navbar/navbar";
-import { UserCircle, Trash, VolumeOff, ChevronDoubleUp, Play as Challenge } from "heroicons-react";
 import './play.css'
 
 export function Play() {
@@ -25,13 +24,6 @@ export function Play() {
   return (
     <div>
       <NavBar page="Play" />
-      <div className="scrollingMenu container">
-        <UserCircle className="chatUserParam" />
-        <Challenge className="chatUserParam" />
-        <ChevronDoubleUp className="chatUserParam" />
-        <VolumeOff className="chatUserParam" />
-        <Trash className="chatUserParam" />
-      </div>
     </div>
   )
 }
