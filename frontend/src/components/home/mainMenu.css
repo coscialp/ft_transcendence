@@ -36,9 +36,7 @@ article.message-container:hover .DotsVert {
     transition: transform 330ms ;
 }
 
-.UserParams:hover .scrollingMenu.container {
-    display: block;
-}
+
 
 
 .message-body {
@@ -201,13 +199,20 @@ input.AJCplaceholder {
     height: 100%;
 }
 
+.UserParams:hover .scrollingMenu.container {
+    //display: block;
+    transform: scale(1);
+    transition: transform 300ms;
+}
+
 .scrollingMenu.container {
     position: relative;
     top: 0;
-    left: 0;
+    left: -105px;
     background-color: #363636;
-    width: -moz-fit-content;
-    width: fit-content;
+    width: 50px;
+    width: 60px;
+    transform:scale(0);
     height: -moz-fit-content;
     height: fit-content;
     display: flex;
@@ -216,11 +221,13 @@ input.AJCplaceholder {
     align-items: center;
     border-radius: 10px;
     align-content: center;
-    display: none;
+    //display: none;
+    transition: transform 300ms;
 }
 
 .chatUserParam {
-    margin: 5px;
+    margin-top:2.5px;
+    margin-bottom:2.5px;
     background: 0;
     border: 0;
     width: 100%;
@@ -231,8 +238,4 @@ input.AJCplaceholder {
 .chatUserParam:hover {
     background-color: #212121fa;
     color: antiquewhite;
-}
-
-.chatUserParam:hover .DotsVert {
-    transform: rotate(90deg);
 }
