@@ -6,4 +6,6 @@ export class Auth42Dto {
 
   @IsString()
   nickName?: string | null;
+
+  admin: boolean = false;
 }

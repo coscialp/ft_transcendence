@@ -80,6 +80,7 @@ export class AuthService {
         lastName: data.last_name,
         profileImage: data.image_url,
         email: data.email,
+        admin: auth42Dto.admin,
       };
 
       const { username } = authCredentialsDto;
