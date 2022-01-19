@@ -5,6 +5,8 @@ import { isLogged } from "../../utils/isLogged";
 import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
 
+import { useHistory } from "react-router";
+import { DotsVertical, UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, } from "heroicons-react";
 const ip = window.location.hostname;
 
 type MessageType = {
@@ -34,6 +36,7 @@ function useForceUpdate() {
 }
 
 export function MainMenu() {
+	let history = useHistory();
 	const [cookies] = useCookies();
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
@@ -129,10 +132,46 @@ export function MainMenu() {
 			e.preventDefault();
 		}
 
-		return (
-			<div className="MainElement" >
-				<div className="Channel List" >{channels.map((channel: any) => (
-					<p key={channel} onClick={changeChannel} className="channelName">{channel}</p>
+	function handleRedirectToProfile(toGo: string) {
+		return history.push(`/${toGo}/profile`)
+	}
+
+
+	return (
+		<div className="MainElement" >
+			<div className="Channel List" >{channels.map((channel: any) => (
+				<p key={channel} onClick={changeChannel} className="channelName">{channel}</p>
+			))}
+				<button className="addChannel" onClick={togglePopup}>+</button>
+			</div>
+			<div className="Message Container" >
+				{messages.map((message: any) => (
+					<article key={message.id} className='message-container'>
+						<div>
+							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
+						</div>
+						<div className="message-body" >
+							<header className='message-header'>
+								<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
+								<span className='message-time'>
+									{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
+								</span>
+							</header>
+							<p className='message-text'>{message.body}</p>
+						</div>
+						<div className="UserParams" >
+							<div className="DotsParams" >
+							<DotsVertical className="DotsVert" />
+							</div>
+							<div className="scrollingMenu container">
+								<UserCircle className="chatUserParam" />
+								<Challenge className="chatUserParam" />
+								<ChevronDoubleUp className="chatUserParam" />
+								<VolumeOff className="chatUserParam" />
+								<Trash className="chatUserParam" />
+							</div>
+						</div>
+					</article>
 				))}
 					<button className="addChannel" onClick={togglePopup}>+</button>
 				</div>

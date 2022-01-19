@@ -25,6 +25,7 @@ body {
   font-size: 18px;
   font-family: "Vibur", sans-serif;
   background-color: #010a01;
+  overflow: hidden;
 }  
 
 h1.neonTextNF, h2.neonTextNF {

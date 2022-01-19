@@ -5,7 +5,8 @@
     height: 50px;
     width: 20%;
     border-radius: 10px 10px 0 0;
-    background: grey;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
     /* display: flex; */
     /* flex-direction: row; */
     /* align-items: center; */
@@ -23,4 +24,116 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+}
+
+article#message-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    margin-top: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid grey;
+}
+
+#message-body {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    margin-left: 10px;
+}
+
+header#message-header {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+h4#message-sender {
+    margin: 0;
+    font-size: 1.3vh;
+    color: white;
+}
+
+span#message-time {
+    color: grey;
+    font-size: 1vh;
+    margin-left: 5px;
+}
+
+img#message-image {
+    height: 4vh;
+    width: 4vh;
+    background-size: cover;
+    background-position: center;
+    border-radius: 100%;
+}
+
+p#message-text {
+    margin: 0;
+    font-size: 1.8vh;
+    text-align: left;
+    word-break: break-all;
+    color: white;
+}
+
+
+#returnprivmsg {
+    position: relative;
+    height: 350px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.message-send {
+    width: 70%;
+    text-align: end;
+    border-radius: 10px;
+    align-self: end;
+    margin-right: 20px;
+}
+
+
+
+.message-received
+{
+    width:70%;
+    margin-left: 3vh;
+    text-align: start;
+    border-radius: 10px;
+}
+
+.message-send-background
+{
+    background-color:blue;
+    border-radius: 15px;
+    padding: 3px 5px 3px 5px;
+    display: inline-table;
+}
+
+.message-received-background
+{
+    background-color:grey;
+    border-radius: 15px;
+    background-clip: content;
+    padding: 3px 5px 3px 5px;
+    display: inline-table;
+}
+
+.private-message-img
+{
+    height: 2vh;
+    width: 2vh;
+    position:absolute;
+    margin-left: -2.5vh;
+    background-size: cover;
+    background-position: center;
+    border-radius: 100%;
 }

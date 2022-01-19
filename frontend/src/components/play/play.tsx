@@ -3,6 +3,7 @@ import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
 import { isLogged } from "../../utils/isLogged";
 import { NavBar } from "../navbar/navbar";
+import './play.css'
 
 export function Play() {
   const [cookies] = useCookies();
