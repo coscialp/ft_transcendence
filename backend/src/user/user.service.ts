@@ -316,6 +316,6 @@ export class UserService {
       return user.username === currentUser.username;
     }).messagesReceive;
 
-    return {messagesSend, messagesReceive};
+    return { messagesSend, messagesReceive };
   }
 }

@@ -16,6 +16,7 @@ export class ChannelController {
     @Body('name') name: string,
     @Body('password') password: string,
   ): Promise<void> {
+    console.log(`name: ${name}`);
       return this.channelService.createChannel(user, name, password);
   }
 
