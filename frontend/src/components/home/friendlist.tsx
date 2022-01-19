@@ -51,7 +51,7 @@ export function Friendlist() {
       data: {
         'idToDelete': friendToDelete.username
       }
-    })
+    }).then(response => FriendRequest())
   }
 
   function handleBlacklist(friendToDelete: any) {
@@ -66,7 +66,7 @@ export function Friendlist() {
       data: {
         'newBlackListId': friendToDelete.username
       }
-    })
+    }).then(response => FriendRequest())
   }
 
 

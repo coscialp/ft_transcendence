@@ -37,9 +37,32 @@ img.ProfileImage {
     border-radius: 100%;
 }
 
-img.ProfileImage:hover {
+.profile-imgpencil {
+    transition: transform 200ms;
+}
+
+.profile-imgpencil:hover {
     cursor: pointer;
-    opacity: 0.5;
+    transform: scale(1.1);
+    transition: transform 200ms;
+}
+
+.profile-imgpencil:hover img.ProfileImage {
+    filter: brightness(0.5);
+}
+
+.profile-imgpencil:hover svg.profile-pencil {
+    display: block;
+}
+
+svg.profile-pencil {
+    position: absolute;
+    top: calc(15vw / 2 - 12px);
+    right: 0;
+    left: calc(50% - 12px);
+    bottom: 0;
+    transform: scale(2);
+    display: none;
 }
 
 .History {
@@ -100,9 +123,12 @@ img.Add.friend {
 .userNotLogged {
     width: 2vw;
     height: 2vw;
-    background-color: #535353eb;
+    background-color: #535353;
     border-radius: 50%;
     margin: 0;
+    position: absolute;
+    right: 5vw;
+    top: 13vw;
 }
 
 .Achievements_contents {
@@ -158,6 +184,12 @@ img.Add.friend {
     background-color: black;
     border-radius: 20px;
     border: 2px solid red;
+}
+.user.management {
+    cursor: pointer;
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 @media screen and (orientation: portrait) {

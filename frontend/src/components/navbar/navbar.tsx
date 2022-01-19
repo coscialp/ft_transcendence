@@ -106,7 +106,7 @@ export function NavBar(props: any) {
     return (
       <div className="searching list" >
         {searchedUsers.map((users: any) => (
-          <div className="list" key={users.username} onClick={(e) => { history.push(`/${users.username}/profile`) }} >
+          <div className="list" key={users.username} onClick={(e) => { history.push(`/${users.username}/profile`); setSearch("") }} >
             <div className="Nick list" > {users.nickName}
               <div className="User list"> {users.username} </div>
             </div>

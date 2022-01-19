@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { io, Socket } from "socket.io-client";
 import { isLogged } from "../../utils/isLogged";
-
+import { useHistory } from "react-router";
+import { DotsVertical, UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, } from "heroicons-react";
 const ip = window.location.hostname;
 
 type MessageType = {
@@ -32,6 +33,7 @@ function useForceUpdate() {
 }
 
 export function MainMenu() {
+	let history = useHistory();
 	const [cookies] = useCookies();
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
@@ -116,6 +118,11 @@ export function MainMenu() {
 		e.preventDefault();
 	}
 
+	function handleRedirectToProfile(toGo: string) {
+		return history.push(`/${toGo}/profile`)
+	}
+
+
 	return (
 		<div className="MainElement" >
 			<div className="Channel List" >{channels.map((channel: any) => (
@@ -131,12 +138,24 @@ export function MainMenu() {
 						</div>
 						<div className="message-body" >
 							<header className='message-header'>
-								<h4 className='message-sender'>{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
+								<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
 								<span className='message-time'>
 									{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
 								</span>
 							</header>
 							<p className='message-text'>{message.body}</p>
+						</div>
+						<div className="UserParams" >
+							<div className="DotsParams" >
+							<DotsVertical className="DotsVert" />
+							</div>
+							<div className="scrollingMenu container">
+								<UserCircle className="chatUserParam" />
+								<Challenge className="chatUserParam" />
+								<ChevronDoubleUp className="chatUserParam" />
+								<VolumeOff className="chatUserParam" />
+								<Trash className="chatUserParam" />
+							</div>
 						</div>
 					</article>
 				))}
@@ -178,3 +197,4 @@ export function MainMenu() {
 		</div>
 	)
 }
+//<DotsVertical className="message-params" />

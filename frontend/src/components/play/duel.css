@@ -8,7 +8,7 @@
     display:flex;
     flex-direction: column;
     
-    box-shadow: rgb(207 29 61 / 30%) 0px 54px 55px, rgb(230 33 67 / 24%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
+    box-shadow: rgb(12 73 181 / 54%) 0px 54px 55px, rgb(5 72 177 / 38%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
 .duelElement:hover > .duelTitle {
@@ -93,3 +93,160 @@ input.duelSearchBar {
     border-radius: 3px;
   }
   
+  .duelPopUp {
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    top: 35%;
+    bottom: 35%;
+    margin: auto;
+    background: rgba(0, 0, 0);
+    border-radius: 25px;
+    overflow: hidden;
+  }
+
+  .duelPage {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 15;
+    background: transparent;
+    backdrop-filter: blur(4px);
+  }
+
+/*       ANIMATION Cancel       */
+
+.cancel-container{
+  position: relative;
+  margin-left: 15vw;
+  margin-top: 9vh; 
+}
+
+span.cancel-cross {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: -15%;
+  cursor: pointer; 
+  margin-left: 12.5px;
+}
+
+.leftright{
+  height: 4px;
+  width: 50px;
+  position: absolute;
+  margin-top: 24px;
+  background-color: #F4A259;
+  border-radius: 2px;
+  transform: rotate(45deg);
+  transition: all .3s ease-in;
+}
+
+.rightleft{
+  height: 4px;
+  width: 50px;
+  position: absolute;
+  margin-top: 24px;
+  background-color: #F4A259;
+  border-radius: 2px;
+  transform: rotate(-45deg);
+  transition: all .3s ease-in;
+}
+
+label.cancel{
+  color: aliceblue;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all .3s ease-in;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.cancel{
+  margin: 60px 0 0 0px;
+  position: absolute;
+  left: 0;
+  margin-left: -12.5px;
+}
+
+span.cancel-cross:hover .leftright{
+  transform: rotate(-45deg);
+  background-color: #F25C66;
+}
+span.cancel-cross:hover .rightleft{
+  transform: rotate(45deg);
+  background-color: #F25C66;
+}
+span.cancel-cross:hover label.cancel{
+  opacity: 1;
+}
+
+
+
+/*       ANIMATION Waiting       */
+
+.lds-ellipsis {
+  display: inline-block;
+  position: fixed;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-ellipsis div {
+  position: absolute;
+  top: 45%;
+  width: 9%;
+  height: 10%;
+  border-radius: 90%;
+  background: aliceblue;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+
+.lds-ellipsis div:nth-child(1) {
+  left: 50%;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(2) {
+  left: 50%;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(3) {
+  left: 70%;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+
+.lds-ellipsis div:nth-child(4) {
+  left: 90%;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+

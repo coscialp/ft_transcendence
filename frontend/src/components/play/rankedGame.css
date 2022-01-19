@@ -7,8 +7,19 @@
     border-radius: 15px;
     display:flex;
     flex-direction: column;
-    
-    box-shadow: rgb(207 29 61 / 30%) 0px 54px 55px, rgb(230 33 67 / 24%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
+}
+
+.rankedElement:before {
+    content: '';
+    position:fixed;
+    top: 36%;
+    left: 15%;
+    width:58vh;
+    height: 21vw;
+    background: linear-gradient(rgb(207 29 61 / 30%), rgb(12 73 181 / 54%));
+    filter:blur(25px);
+    transform: translateY(30px) rotate(-90deg) scale(0.9);
+    z-index: -10;
 }
 
 .rankedElement:hover {
