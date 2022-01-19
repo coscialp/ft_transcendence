@@ -12,6 +12,7 @@ export function Duel() {
     const [search, setSearch] = useState("");
     const [searchedUsers, setSearchedUsers]: any = useState([]);
     const [searchingPop, setSearchingPop] = useState(false);
+    const [popUp, setPopUp] = useState(false);
 
     function handleInputSearch(e: any) {
       setSearch(e.target.value)
@@ -53,12 +54,21 @@ export function Duel() {
       }
       e.preventDefault()
     }
+
+    function PopUpDuel() {
+      console.log('lllll');
+      return (
+        <div>
+          <p>PopUp</p>
+        </div>
+      )
+    }
   
     function SearchingList() {
       return (
         <div className="duelSearching list" >
           {searchedUsers.map((users: any) => (
-            <div className="duelList" key={users.username} onClick={(e) => { history.push(`/${users.username}/profile`) }} >
+            <div className="duelList" key={users.username} onClick={(e) => { setPopUp(true); PopUpDuel() }} >
               <div className="duelNick list" > {users.nickName}
                 <div className="duelUser list"> {users.username} </div>
               </div>

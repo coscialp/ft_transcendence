@@ -11,8 +11,12 @@
     box-shadow: rgb(207 29 61 / 30%) 0px 54px 55px, rgb(230 33 67 / 24%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
-.duelElement:hover {
+.duelElement:hover > .duelTitle {
     text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
+}
+
+.neonTextOff {
+  color: #fff;
 }
 
 .playBtn {
@@ -62,6 +66,7 @@ input.duelSearchBar {
     border-radius: 10px;
     border: 2px solid;
   }
+
   
   div.duelNick.list {
     display: flex;
@@ -71,6 +76,8 @@ input.duelSearchBar {
     height: 35px;
     justify-content: center;
     cursor: pointer;
+    font-family: "Vibur", sans-serif;
+    color: black;
   }
   
   .duelUser.list {
@@ -80,7 +87,7 @@ input.duelSearchBar {
     margin-left: 10px;
   }
   
-  .duellist .duelNick.list:hover {
+  .duelList .duelNick.list:hover {
     background-color: rgba(0, 0, 0, 0.4);
     filter: brightness(200%);
     border-radius: 3px;
