@@ -1,5 +1,5 @@
 import axios from "axios"
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory } from 'react-router';
 import { useCookies } from "react-cookie";
 import "./duel.css";
