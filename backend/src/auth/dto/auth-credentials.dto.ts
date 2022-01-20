@@ -30,4 +30,6 @@ export class AuthCredentialsDto {
 
   // @IsString()
   email?: string | null;
+
+  admin: boolean = false;
 }

@@ -1,0 +1,10 @@
+.PlayMain {
+    color: aliceblue;
+    display: flex;
+    justify-content: space-around;
+    height: 86vh;
+    text-align: center;
+    padding-bottom: 7vh;
+    flex-direction: row;
+    align-items: center;
+}
