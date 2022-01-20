@@ -6,7 +6,7 @@ import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
 
 import { useHistory } from "react-router";
-import { DotsVertical, UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, } from "heroicons-react";
+import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
 const ip = window.location.hostname;
 
 type MessageType = {
@@ -40,6 +40,7 @@ export function MainMenu() {
 	const [cookies] = useCookies();
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
+	const [current_channel, setCurrent_Channel] = useState<string>('');
 	// eslint-disable-next-line
 	const [channels, setChannels] = useState<string[]>([]);
 	const [channelName, setChannelName] = useState<string>('');
@@ -69,7 +70,8 @@ export function MainMenu() {
 		let mount = true;
 		if (mount) {
 			if (socket) {
-				socket.on('msg_toClient', (msg: any) => {
+				
+				socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
 					console.log(`msg: ${msg}`);
 					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
@@ -116,6 +118,7 @@ export function MainMenu() {
 				console.log(messageInput);
 				if (socket) {
 					socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
+					console.log(`msg_toClient/${current_channel}`);
 				}
 				setMessageInput('');
 			}
@@ -127,6 +130,7 @@ export function MainMenu() {
 			console.log(e.target.innerText);
 			if (socket) {
 				socket.emit('change_channel', { channelName: e.target.innerText });
+				setCurrent_Channel(e.target.innerText);
 			}
 			setMessages([]);
 			e.preventDefault();
@@ -147,25 +151,24 @@ export function MainMenu() {
 			<div className="Message Container" >
 				{messages.map((message: any) => (
 					<article key={message.id} className='message-container'>
-						<div>
+						<div className="img-content" >
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
-						</div>
-						<div className="message-body" >
-							<header className='message-header'>
-								<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
-								<span className='message-time'>
-									{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
-								</span>
-							</header>
-							<p className='message-text'>{message.body}</p>
-						</div>
-						<div className="UserParams" >
-							<div className="DotsParams" >
-							<DotsVertical className="DotsVert" />
+							<div className="message-body" >
+								<header className='message-header'>
+									<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
+									<span className='message-time'>
+										{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
+									</span>
+								</header>
+								<p className='message-text'>{message.body}</p>
 							</div>
-							<div className="scrollingMenu container">
-								<UserCircle className="chatUserParam" />
+						</div>
+						<div className="dropdown" >
+							<Cog className="dropbtn" />
+							<div className="dropdown-content">
+								<UserCircle className="chatUserParam" onClick={(e) => {return history.push(`/${message.sender}/profile`)}} />
 								<Challenge className="chatUserParam" />
+								{console.log(me)}
 								<ChevronDoubleUp className="chatUserParam" />
 								<VolumeOff className="chatUserParam" />
 								<Trash className="chatUserParam" />
@@ -173,30 +176,10 @@ export function MainMenu() {
 						</div>
 					</article>
 				))}
-					<button className="addChannel" onClick={togglePopup}>+</button>
-				</div>
-				<div className="Message Container" >
-					{messages.map((message: any) => (
-						<article key={message.id} className='message-container'>
-							<div>
-								<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
-							</div>
-							<div className="message-body" >
-								<header className='message-header'>
-									<h4 className='message-sender'>{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
-									<span className='message-time'>
-										{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
-									</span>
-								</header>
-								<p className='message-text'>{message.body}</p>
-							</div>
-						</article>
-					))}
-					<div ref={scrollTarget} />
-				</div>
-				<form onSubmit={handleSendMessage} >
-					<input type="text" className="MainSendMessage" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
-				</form>
+			</div>
+			<form onSubmit={handleSendMessage} >
+				<input type="text" className="MainSendMessage" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
+			</form>
 				{showPopup ? <div className="Popup inner">
 					<div className="Chan Popup">
 						{popupState === 0 ?
