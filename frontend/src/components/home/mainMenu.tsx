@@ -155,7 +155,7 @@ export function MainMenu() {
         					<ChevronDoubleUp className="chatUserParam" />
         					<VolumeOff className="chatUserParam" />
         					<Trash className="chatUserParam" />
-      					</div > 
+      					</div >
 						</div>
 					</article>
 				))}

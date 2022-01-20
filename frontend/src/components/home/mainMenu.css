@@ -16,12 +16,12 @@ article.message-container:hover {
 }
 
 article.message-container:hover .DotsVert {
-    display: block;
+    display: inline;
 }
 
 .DotsVert {
     cursor: pointer;
-    position: absolute;
+    position: relative;
     height:3vh;
     width:3vh;
     right: 45px;
@@ -200,7 +200,6 @@ input.AJCplaceholder {
 }
 
 .UserParams:hover .scrollingMenu.container {
-    //display: block;
     transform: scale(1);
     transition: transform 300ms;
 }
@@ -221,7 +220,6 @@ input.AJCplaceholder {
     align-items: center;
     border-radius: 10px;
     align-content: center;
-    //display: none;
     transition: transform 300ms;
 }
 
