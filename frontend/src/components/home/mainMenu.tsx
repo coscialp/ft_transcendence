@@ -222,7 +222,7 @@ export function MainMenu() {
 								<form onSubmit={handleJoinChannel} >
 									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => setChannelName(e.target.value)} />
 									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
-									<input type="submit" className="subbtn" value="Create !" />
+									<input type="submit" className="subbtn" value="Join !" />
 								</form>
 								<button className="Backbtn" onClick={(e) => { setPopupState(0) }} >Back</button>
 							</div>

@@ -126,3 +126,49 @@ input.privateMessageInput {
     margin-top: 20px;
     padding-left: 10px;
 }
+
+input.DM-searchBar {
+    border-radius: 15px;
+    padding-left: 10px;
+    height: 1.5rem;
+    border: 0px;
+    margin-left: 20px;
+  }
+
+.DM-searching-list {
+    padding-top: 15px;
+    position: absolute;
+    background-color: #929292c2;
+    width: 155px;
+    height: fit-content;
+    max-height: 200px;
+    top: 19px;
+    right: 59px;
+    z-index: 1;
+    text-align: center;
+    border-radius: 10px;
+    border: 2px solid;
+  }
+  
+  div.DM-Nick-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0;
+    height: 35px;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .DM-User-list {
+    font-weight: normal;
+    color: #3a3a3a;
+    font-size: 0.8em;
+    margin-left: 10px;
+  }
+  
+  .DM-list .DM-Nick-list:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+    filter: brightness(200%);
+    border-radius: 3px;
+  }
