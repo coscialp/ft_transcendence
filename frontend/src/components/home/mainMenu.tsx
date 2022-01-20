@@ -40,6 +40,7 @@ export function MainMenu() {
 	const [cookies] = useCookies();
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
+	const [current_channel, setCurrent_Channel] = useState<string>('');
 	// eslint-disable-next-line
 	const [channels, setChannels] = useState<string[]>([]);
 	const [channelName, setChannelName] = useState<string>('');
@@ -69,7 +70,8 @@ export function MainMenu() {
 		let mount = true;
 		if (mount) {
 			if (socket) {
-				socket.on('msg_toClient', (msg: any) => {
+				
+				socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
 					console.log(`msg: ${msg}`);
 					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
@@ -116,6 +118,7 @@ export function MainMenu() {
 				console.log(messageInput);
 				if (socket) {
 					socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
+					console.log(`msg_toClient/${current_channel}`);
 				}
 				setMessageInput('');
 			}
@@ -127,6 +130,7 @@ export function MainMenu() {
 			console.log(e.target.innerText);
 			if (socket) {
 				socket.emit('change_channel', { channelName: e.target.innerText });
+				setCurrent_Channel(e.target.innerText);
 			}
 			setMessages([]);
 			e.preventDefault();
