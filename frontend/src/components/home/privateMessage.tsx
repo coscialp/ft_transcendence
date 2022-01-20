@@ -55,9 +55,21 @@ function message_select(sender: string, setter: React.Dispatch<any>) {
 
 export default function PrivateMessage() {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
+    const [messageInput, setMessageInput] = useState("");
+
+    function handleSendMessage(e: any) {
+        privmsg.push({
+            body: messageInput,
+            sender: "brice",
+            id: "fwefewgergr",
+            avatar: "./Beluga.jpeg"
+        })
+        e.preventDefault();
+    }
+
     return (
         <div id="Message" >
-            <div id="OpenMsg" onClick={() => Open_Message()}>
+            <div id="OpenMsg" onClick={() => {Open_Message(); setisConvOpen(false)}}>
                 <ArrowSmUp id="arrowR" onClick={() => Open_Message()} />Message
                 <ArrowSmUp id="arrowL" onClick={() => Open_Message()} />
             </div>
@@ -77,13 +89,23 @@ export default function PrivateMessage() {
                             <p id='message-text'>{message.body}</p>
                         </div>
                     </article>
-                )) : <div id='returnprivmsg'>
-                    <Backspace />
-                    <p className='message-send'><span className='message-send-background'>salut</span></p>
-                    <p className='message-received'><img className="private-message-img" style={{ backgroundImage: `url(/img/beluga.jpeg)` }} alt="" /><span className='message-received-background'>salut a toi le collegue comment va tu salut a toi je pense que ca ne fonctionne pas si bien que ca coucou twe coucou twe</span></p>
-                    <p className='message-send'  ><span className='message-send-background'>salut a toi le collegue comment va tu salut a toi je pense que ca ne fonctionne pas si bien que ca coucou twe coucou twe</span></p>
-                    <p className='message-received'><span className='message-received-background'>salut</span></p>
-                </div>}
+                )) :
+                    <div>
+                        <section className='discussion' >
+                            <Backspace onClick={e => { setisConvOpen(false) }} />
+                            {
+                                privmsg.map((messages: any) => (
+                                    messages.sender === "brice" ?
+                                        <div className="bubble sender"> {messages.body} </div> :
+                                        <div className="bubble recipient"> {messages.body} </div>
+                                ))
+                            }
+                        </section>
+                        <form onSubmit={handleSendMessage} >
+                            <input type="text" className="privateMessageInput" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
+                        </form>
+                    </div>
+            }
         </div>
     )
 }

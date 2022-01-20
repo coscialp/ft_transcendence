@@ -44,7 +44,7 @@ export function Overall(data: any) {
 		<div className="ImgName" >
 			{(data.user.username === data.me.username) ?
 				<div className='profile-imgpencil'>
-					<img className="ProfileImage" style={{ backgroundImage: `url(${data.user.profileImage})` }} alt=""></img>
+					<img className="ProfileImage" style={{ backgroundImage: `url(${data.user.profileImage})` }} alt="" onClick={e => { return history.push(`/settings`) }} ></img>
 					<Pencil className='profile-pencil' onClick={e => { return history.push(`/settings`) }} />
 				</div> :
 				<div className='profile-img'>
