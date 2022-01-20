@@ -51,21 +51,18 @@ export class ChannelGateway
         receiver,
         channel: this.activeChannel.get(user),
       };
+
       this.channelService.createMessage(user, response);
       for (let [users, channel] of this.activeChannel)
       {
-        if (user.nickName === users.nickName)
+        if (user.username === users.username)
         {
           user_channel = channel;
         }
       }
 
       if (user_channel) {
-        console.log(user_channel.creator)
-        console.log(user_channel.admin)
         this.server.emit(`msg_toClient/${user_channel.name}`, response);
-      } else {
-        this.server.emit('msg_toClient', response);
       }
     } catch (error) {
       this.logger.error(error);
