@@ -12,6 +12,7 @@ import { Channel } from './channel.entity';
 import { UserController } from 'src/user/user.controller';
 import { MessagesDto } from './dto/messages.dto';
 import { MessagesRepository } from './messages.repository';
+import { UsersRepository } from 'src/user/user.repository';
 
 @Injectable()
 @UseGuards(AuthGuard())
@@ -20,7 +21,7 @@ export class ChannelService {
     private readonly authService: AuthService,
     private readonly userService: UserService,
     @InjectRepository(ChannelsRepository) private readonly channelsRepository: ChannelsRepository,
-    @InjectRepository(MessagesRepository) private readonly messagesRepository: MessagesRepository
+    @InjectRepository(MessagesRepository) private readonly messagesRepository: MessagesRepository,
     ) {}
 
   async getUserFromSocket(socket: Socket): Promise<User> {
@@ -54,5 +55,13 @@ export class ChannelService {
 
   async createMessage(user: User, message: MessagesDto): Promise<void> {
     return this.messagesRepository.createMessage(user, message, this.userService);
+  }
+
+  async joinChannel(user: User, name: string, password: string): Promise<void> {
+    const channel = await this.getOneChannel(name);
+
+    user.channelsConnected = (await this.userService.getChannelsConnected(user)).channelsConnected;
+
+    user.channelsConnected.push(channel);
   }
 }

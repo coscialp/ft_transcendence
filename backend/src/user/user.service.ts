@@ -308,11 +308,11 @@ export class UserService {
       relations: ['messagesSend', 'messagesReceive']
     });
 
-    const messagesSend = allMessages.find((message) => {
+    const messagesSend = allMessages.find((user) => {
       return user.username === currentUser.username;
     }).messagesSend;
 
-    const messagesReceive = allMessages.find((message) => {
+    const messagesReceive = allMessages.find((user) => {
       return user.username === currentUser.username;
     }).messagesReceive;
 

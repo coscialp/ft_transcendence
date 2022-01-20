@@ -43,4 +43,21 @@ export class ChannelsRepository extends Repository<Channel> {
             console.log(e.code);
         }
     }
+
+    async joinChannel(user: User, channel: Channel, userService: UserService) {
+        const allChannel = await this.find({relations: ['usersConnected']});
+
+        channel.userConnected = allChannel.find((c) => c.name === channel.name).userConnected;
+        channel.userConnected.push(user);
+
+        user.channelsConnected = (await userService.getChannelsConnected(user)).channelsConnected;
+        user.channelsConnected.push(channel);
+
+        try {
+            this.save(channel)
+            this.usersRepository.save(user);
+        } catch (e) {
+            console.log(e.code);
+        }
+    }
 }

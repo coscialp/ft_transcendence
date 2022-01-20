@@ -22,12 +22,12 @@ export class ChannelGateway
 {
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChannelGateway');
-  private activeChannel: Map<User, Channel>;
+  private activeChannel: Map<string, Channel>;
   constructor(
     private channelService: ChannelService,
     private userService: UserService,
   ) {
-    this.activeChannel = new Map<User, Channel>();
+    this.activeChannel = new Map<string, Channel>();
   }
 
   @SubscribeMessage('msg_toServer')
@@ -36,7 +36,6 @@ export class ChannelGateway
     @ConnectedSocket() socket: Socket,
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
-    var   user_channel: Channel;
     try {
       let receiver: User;
 
@@ -49,20 +48,14 @@ export class ChannelGateway
         sender: user,
         body: message.body,
         receiver,
-        channel: this.activeChannel.get(user),
+        channel: this.activeChannel.get(user.username),
       };
 
       this.channelService.createMessage(user, response);
-      for (let [users, channel] of this.activeChannel)
-      {
-        if (user.username === users.username)
-        {
-          user_channel = channel;
-        }
-      }
 
-      if (user_channel) {
-        this.server.emit(`msg_toClient/${user_channel.name}`, response);
+
+      if (response.channel) {
+        this.server.emit(`msg_toClient/${response.channel.name}`, response);
       }
     } catch (error) {
       this.logger.error(error);
@@ -77,7 +70,7 @@ export class ChannelGateway
     const user: User = await this.channelService.getUserFromSocket(socket);
     this.logger.log(data.channelName);
     this.activeChannel.set(
-      user,
+      user.username,
       await this.channelService.getOneChannel(data.channelName),
     );
     this.logger.log(`channel: ${this.activeChannel}`);
