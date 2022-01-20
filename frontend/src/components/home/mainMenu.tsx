@@ -135,21 +135,22 @@ export function MainMenu() {
 					<article key={message.id} className='message-container'>
 						<div className="img-content" >
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
-						<div className="message-body" >
-							<header className='message-header'>
-								<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
-								<span className='message-time'>
-									{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
-								</span>
-							</header>
-							<p className='message-text'>{message.body}</p>
-						</div>
+							<div className="message-body" >
+								<header className='message-header'>
+									<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
+									<span className='message-time'>
+										{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
+									</span>
+								</header>
+								<p className='message-text'>{message.body}</p>
+							</div>
 						</div>
 						<div className="dropdown" >
 							<Cog className="dropbtn" />
 							<div className="dropdown-content">
-								<UserCircle className="chatUserParam" />
+								<UserCircle className="chatUserParam" onClick={(e) => {return history.push(`/${message.sender}/profile`)}} />
 								<Challenge className="chatUserParam" />
+								{console.log(me)}
 								<ChevronDoubleUp className="chatUserParam" />
 								<VolumeOff className="chatUserParam" />
 								<Trash className="chatUserParam" />

@@ -83,57 +83,46 @@ p#message-text {
 }
 
 
-#returnprivmsg {
-    position: relative;
-    height: 350px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+.discussion {
+    height: 289px;
+    overflow-x: hidden;
     overflow-y: scroll;
+    margin: 0 auto;
+    display: flex;
+    flex-flow: column wrap;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 
-.message-send {
-    width: 70%;
-    text-align: end;
+.discussion > .bubble {
+	border-radius: 1em;
+	padding: 0.25em 0.75em;
+	margin: 0.0625em;
+	max-width: 50%;
+}
+
+.discussion > .bubble.sender {
+	align-self: flex-end;
+	background-color: cornflowerblue;
+	color: #fff;
+}
+.discussion > .bubble.recipient {
+	align-self: flex-start;
+	background-color: #606060;
+}
+
+input.privateMessageInput {
+    position: absolute;
+    bottom: 1em;
+    background-color: rgba(0,0,0, 0.3);
+    left: 2.5%;
+    height: 2em;
     border-radius: 10px;
-    align-self: end;
-    margin-right: 20px;
-}
-
-
-
-.message-received
-{
-    width:70%;
-    margin-left: 3vh;
-    text-align: start;
-    border-radius: 10px;
-}
-
-.message-send-background
-{
-    background-color:blue;
-    border-radius: 15px;
-    padding: 3px 5px 3px 5px;
-    display: inline-table;
-}
-
-.message-received-background
-{
-    background-color:grey;
-    border-radius: 15px;
-    background-clip: content;
-    padding: 3px 5px 3px 5px;
-    display: inline-table;
-}
-
-.private-message-img
-{
-    height: 2vh;
-    width: 2vh;
-    position:absolute;
-    margin-left: -2.5vh;
-    background-size: cover;
-    background-position: center;
-    border-radius: 100%;
+    border-color: white;
+    color: white;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+    padding-left: 10px;
 }
