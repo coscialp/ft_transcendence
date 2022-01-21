@@ -13,7 +13,7 @@ import { FriendRequestRepository } from './friend-request.repository';
     TypeOrmModule.forFeature([UsersRepository, FriendRequestRepository]),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
-      secret: 'topsecret51',
+      secret: `${process.env.SECRET_KEY}`,
       signOptions: {
         expiresIn: 3600,
       },

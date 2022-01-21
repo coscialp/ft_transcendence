@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
-import { useHistory } from 'react-router'
+import { useHistory } from 'react-router';
 import { ip } from '../../App';
 import { isLogged } from '../../utils/isLogged';
 import { Bell, Cog, UserCircle, Logout} from 'heroicons-react';
@@ -106,7 +106,7 @@ export function NavBar(props: any) {
     return (
       <div className="searching list" >
         {searchedUsers.map((users: any) => (
-          <div className="list" key={users.username} onClick={(e) => { history.push(`/${users.username}/profile`) }} >
+          <div className="list" key={users.username} onClick={(e) => { history.push(`/${users.username}/profile`); setSearch("") }} >
             <div className="Nick list" > {users.nickName}
               <div className="User list"> {users.username} </div>
             </div>

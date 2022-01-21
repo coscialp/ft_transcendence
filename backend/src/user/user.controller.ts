@@ -5,6 +5,8 @@ import { User } from './user.entity';
 import { GetUserFilterDto } from './dto/user-filter.dto';
 import { UserService } from './user.service';
 import { FriendRequest } from './friend-request.entity';
+import { Channel } from 'src/channel/channel.entity';
+import { Message } from 'src/channel/message.entity';
 
 @Controller('user')
 @UseGuards(AuthGuard())
@@ -114,5 +116,25 @@ export class UserController {
     @Patch('2FA/deactivate')
     async deactivate2FA(@GetUser() user: User): Promise<void> {
         return await this.userService.deactivate2FA(user);
+    }
+
+    @Get('channels/creator')
+    async getChannelsCreator(@GetUser() user: User): Promise<{channels: Channel[]}> {
+        return await this.userService.getChannelsCreator(user);
+    }
+
+    @Get('channels/admin')
+    async getChannelsAdmin(@GetUser() user: User): Promise<{channelsAdmin: Channel[]}> {
+        return await this.userService.getChannelsAdmin(user);
+    }
+
+    @Get('channels/connected')
+    async getChannelsConnected(@GetUser() user: User): Promise<{channelsConnected: Channel[]}> {
+        return await this.userService.getChannelsConnected(user);
+    }
+
+    @Get('messages/:id')
+    async getMessages(@Param('id') id: string, @GetUser() user: User): Promise<{messagesSend: Message[], messagesReceive: Message[]}> {
+        return this.userService.getMessages(id, user);
     }
 }
