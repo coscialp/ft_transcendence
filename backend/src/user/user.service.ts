@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './user.repository';
 import { User } from './user.entity';
@@ -317,5 +317,34 @@ export class UserService {
     }).messagesReceive;
 
     return { messagesSend, messagesReceive };
+  }
+
+  async promoteAdmin(id: string, user: User) {
+    if (user.isAdmin) {
+      const newAdmin = await this.getUserById(id);
+
+      newAdmin.isAdmin = true;
+
+      try {
+        this.userRepository.save(newAdmin);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      throw new UnauthorizedException('You are not admin');
+    }
+  }
+
+  async demoteAdmin(user: User) {
+    if (user.isAdmin) {
+        user.isAdmin = false;
+      try {
+        this.userRepository.save(user);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      throw new UnauthorizedException('You are not admin');
+    }
   }
 }

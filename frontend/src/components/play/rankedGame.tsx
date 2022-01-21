@@ -1,11 +1,11 @@
-import axios from "axios"
-import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+// import axios from "axios"
+// import { useEffect, useState } from "react";
+// import { useCookies } from "react-cookie";
 import "./rankedGame.css";
 import { PlayOutline } from 'heroicons-react';
 
 export function Ranked() {
-    const [cookies] = useCookies();
+    // const [cookies] = useCookies();
   
 
   

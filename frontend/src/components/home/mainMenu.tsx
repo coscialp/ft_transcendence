@@ -40,6 +40,7 @@ export function MainMenu() {
 	const [cookies] = useCookies();
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
+	const [current_channel, setCurrent_Channel] = useState<string>('');
 	// eslint-disable-next-line
 	const [channels, setChannels] = useState<string[]>([]);
 	const [channelName, setChannelName] = useState<string>('');
@@ -69,7 +70,8 @@ export function MainMenu() {
 		let mount = true;
 		if (mount) {
 			if (socket) {
-				socket.on('msg_toClient', (msg: any) => {
+
+				socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
 					console.log(`msg: ${msg}`);
 					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
@@ -99,7 +101,7 @@ export function MainMenu() {
 					name: channelName,
 					password: channelPassword,
 				}
-				requestApi.post('channel/create', {body: data, contentType: 'application/json'});
+				requestApi.post('channel/create', { body: data, contentType: 'application/json' });
 
 				channels.push(channelName);
 				togglePopup();
@@ -111,26 +113,48 @@ export function MainMenu() {
 		e.preventDefault()
 	}
 
-		function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
-			if (messageInput) {
-				console.log(messageInput);
-				if (socket) {
-					socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
-				}
-				setMessageInput('');
-			}
-			e.preventDefault();
+	function handleJoinChannel(e: any) {
+		if (channelName === "") {
+			window.alert("Channel's name cannot be empty !")
 		}
+		else {
+			const data = {
+				name: channelName,
+				password: channelPassword,
+			}
+			requestApi.post('channel/create', { body: data, contentType: 'application/json' });
 
+			channels.push(channelName);
+			togglePopup();
+			setChannelName('');
+			setChannelPassword('');
+			setPopupState(0);
+		}
+		e.preventDefault()
+	}
 
-		function changeChannel(e: any) {
-			console.log(e.target.innerText);
+	function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
+		if (messageInput) {
+			console.log(messageInput);
 			if (socket) {
-				socket.emit('change_channel', { channelName: e.target.innerText });
+				socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
+				console.log(`msg_toClient/${current_channel}`);
 			}
-			setMessages([]);
-			e.preventDefault();
+			setMessageInput('');
 		}
+		e.preventDefault();
+	}
+
+
+	function changeChannel(e: any) {
+		console.log(e.target.innerText);
+		if (socket) {
+			socket.emit('change_channel', { channelName: e.target.innerText });
+			setCurrent_Channel(e.target.innerText);
+		}
+		setMessages([]);
+		e.preventDefault();
+	}
 
 	function handleRedirectToProfile(toGo: string) {
 		return history.push(`/${toGo}/profile`)
@@ -162,7 +186,7 @@ export function MainMenu() {
 						<div className="dropdown" >
 							<Cog className="dropbtn" />
 							<div className="dropdown-content">
-								<UserCircle className="chatUserParam" onClick={(e) => {return history.push(`/${message.sender}/profile`)}} />
+								<UserCircle className="chatUserParam" onClick={(e) => { return history.push(`/${message.sender}/profile`) }} />
 								<Challenge className="chatUserParam" />
 								{console.log(me)}
 								<ChevronDoubleUp className="chatUserParam" />
@@ -183,36 +207,36 @@ export function MainMenu() {
 			<form onSubmit={handleSendMessage} >
 				<input type="text" className="MainSendMessage" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
 			</form>
-				{showPopup ? <div className="Popup inner">
-					<div className="Chan Popup">
-						{popupState === 0 ?
-							<div className="AJCbtn" >
-								<button className="AddJoinChan" onClick={(e) => { setPopupState(1) }}> <img className="AddJoinImg" alt="" src="img/CreateServer.svg" />Create your channel</button>
-								<button className="AddJoinChan" onClick={(e) => { setPopupState(2) }} > <img className="AddJoinImg" alt="" src="img/JoinServer.svg" />Join a channel</button>
+			{showPopup ? <div className="Popup inner">
+				<div className="Chan Popup">
+					{popupState === 0 ?
+						<div className="AJCbtn" >
+							<button className="AddJoinChan" onClick={(e) => { setPopupState(1) }}> <img className="AddJoinImg" alt="" src="img/CreateServer.svg" />Create your channel</button>
+							<button className="AddJoinChan" onClick={(e) => { setPopupState(2) }} > <img className="AddJoinImg" alt="" src="img/JoinServer.svg" />Join a channel</button>
+						</div>
+						:
+						popupState === 1 ?
+							<div className="AddChan">
+								<form onSubmit={handleCreateNewChannel} >
+									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => { setChannelName(e.target.value) }} />
+									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => (setChannelPassword(e.target.value))} />
+									<input type="submit" className="subbtn" value="Create !" />
+								</form>
+								<button className="Backbtn" onClick={(e) => { setChannelName(''); setChannelPassword(''); setPopupState(0) }}>Back</button>
 							</div>
 							:
-							popupState === 1 ?
-								<div className="AddChan">
-									<form onSubmit={handleCreateNewChannel} >
-										<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => { setChannelName(e.target.value) }} />
-										<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => (setChannelPassword(e.target.value))} />
-										<input type="submit" className="subbtn" value="Create !" />
-									</form>
-									<button className="Backbtn" onClick={(e) => { setChannelName(''); setChannelPassword(''); setPopupState(0) }}>Back</button>
-								</div>
-								:
-								<div className="JoinChan">
-									<form onSubmit={handleCreateNewChannel} >
-										<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => setChannelName(e.target.value)} />
-										<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
-										<input type="submit" className="subbtn" value="Create !" />
-									</form>
-									<button className="Backbtn" onClick={(e) => { setPopupState(0) }} >Back</button>
-								</div>
-						}
-						<button className="Cancelbtn" onClick={(e) => { togglePopup(); setPopupState(0) }} >Cancel</button>
-					</div>
-				</div> : null}
-			</div>
-		)
-	}
+							<div className="JoinChan">
+								<form onSubmit={handleJoinChannel} >
+									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => setChannelName(e.target.value)} />
+									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
+									<input type="submit" className="subbtn" value="Join !" />
+								</form>
+								<button className="Backbtn" onClick={(e) => { setPopupState(0) }} >Back</button>
+							</div>
+					}
+					<button className="Cancelbtn" onClick={(e) => { togglePopup(); setPopupState(0) }} >Cancel</button>
+				</div>
+			</div> : null}
+		</div>
+	)
+}

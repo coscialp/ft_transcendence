@@ -19,10 +19,12 @@ export class GameGateway
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('GameGateway');
     private usersInQueue: User[];
+    private MatchInProgress: [User, User][];
     constructor(
     private readonly gameService: GameService,
     ) {
         this.usersInQueue = [];
+        this.MatchInProgress = [];
     }
 
     @SubscribeMessage('matchmaking')
@@ -38,8 +40,9 @@ export class GameGateway
             if (user.username !== u.username) {
                 console.log(`startgame/${user.username}`);
                 console.log(`startgame/${u.username}`);
-                this.server.emit(`startgame/${user.username}`, 'start');
-                this.server.emit(`startgame/${u.username}`, 'start');
+                this.server.emit(`startgame/${user.username}`, 'Player1');
+                this.server.emit(`startgame/${u.username}`, 'Player2');
+                this.MatchInProgress.push([user, u]);
                 this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
                 this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
             }
@@ -47,13 +50,7 @@ export class GameGateway
         console.log(this.usersInQueue);
         console.log('-------------------------------------------------------------------------')
     }
-  
-    @SubscribeMessage('msg_toServer')
-    async handleMessage(
-        @MessageBody() message: any,
-        @ConnectedSocket() socket: Socket,
-    ): Promise<void> {
-    }
+
     afterInit(server: Server) {
         this.logger.log('Init');
     }

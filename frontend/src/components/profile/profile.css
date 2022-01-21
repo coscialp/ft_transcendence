@@ -179,12 +179,18 @@ img.Add.friend {
     align-items: center;
     height: 40%;
     justify-content: space-evenly;
-    margin: 25% 10% 0;
+    margin: 10% 0;
     font-size: 2em;
     background-color: black;
     border-radius: 20px;
     border: 2px solid red;
 }
+
+.Blocked > img.ProfileImage {
+    height: 15vh;
+    width: 15vh;
+}
+
 .user.management {
     cursor: pointer;
     width: fit-content;

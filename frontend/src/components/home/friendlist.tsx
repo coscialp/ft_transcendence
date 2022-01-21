@@ -77,10 +77,11 @@ export function Friendlist() {
         <details key={friend.id}>
           <summary className="FriendList">{friend.username}</summary>
           <nav className="menuFriendList">
-            <button className="menuBtn"  ><span /><span /><span /><span />Send message</button>
-            <button className="menuBtn"  ><span /><span /><span /><span />Invite game</button>
-            <button className="menuBtnOut" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
-            <button className="menuBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
+            <button className="friendBtn"  ><span /><span /><span /><span />Send message</button>
+            <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>
+            <button className="friendBtn"  ><span /><span /><span /><span />Chat</button>
+            <button className="friendBtnOut friendBorder" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
+            <button className="friendBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
           </nav>
         </details>
       ))}

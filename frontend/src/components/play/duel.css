@@ -116,6 +116,34 @@ input.duelSearchBar {
     backdrop-filter: blur(4px);
   }
 
+  .box {
+    position: relative;
+    width: 40%;
+    margin: auto;
+    margin-top: 30%;
+    background: rgba(255,255,255,0.2);
+    padding: 35px;
+    border: 2px solid #fff;
+    border-radius: 20px/50px;
+    background-clip: padding-box;
+    text-align: center;
+  }
+  
+  .button-box {
+    font-size: 1em;
+    padding: 10px;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+    border: 2px solid linear-gradient(0.25turn, rgb(207 29 61 / 30%), rgb(12 73 181 / 54%));;
+    border-radius: 20px/50px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+  }
+  .button-box:hover {
+    background: linear-gradient(0.25turn, rgb(207 29 61 / 30%), rgb(12 73 181 / 54%));
+  }
+
 /*       ANIMATION Cancel       */
 
 .cancel-container{
@@ -249,4 +277,8 @@ span.cancel-cross:hover label.cancel{
   }
 }
 
-
+.test{
+  height:100vw;
+  width:100vw;
+  position:absolute;
+}

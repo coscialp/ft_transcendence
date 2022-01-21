@@ -1,10 +1,11 @@
-import axios from "axios"
+// import axios from "axios"
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import "./normalGame.css";
 import { PlayOutline } from 'heroicons-react';
-import { io, Socket } from "socket.io-client";
 import { isLogged } from "../../utils/isLogged";
+import { GameManager } from "./playerSettings";
+import { useHistory } from "react-router";
 
 type User = {
 	id: string,
@@ -20,38 +21,39 @@ type User = {
 
 const ip = window.location.hostname;
 
-
-
 export function Normal() {
+    
     const [cookies] = useCookies();
-    const [socket, setSocket] = useState<Socket>();
+    let history = useHistory();
+    const [player, setPlayer] = useState<GameManager>();
     const [me, setMe] = useState<User>();
-
+    
     useEffect(() => {
       let mount = true;
       if (mount) {
         isLogged(cookies).then((res) => { setMe(res.me.data); });
-        setSocket(io(`ws://${ip}:5002`, { transports: ['websocket'] }));
+        setPlayer(new GameManager());
       }
       return (() => { mount = false; });
     }, [cookies]);
-
+  
     useEffect(() => {
       let mount = true;
       if (mount) {
-        if (socket) {
+        if (player?.Socket) {
           console.log(`startgame/${me?.username}`);
-          socket.on(`startgame/${me?.username}`, (msg: any) => {
-            console.log('bug');
+          player.Socket.on(`startgame/${me?.username}`, (msg: any) => {
+            player.ID = msg;
+            localStorage.setItem('playerID', player.ID);
+            return history.push(`/game`)
           })
         }
       }
       return (() => { mount = false; });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [socket, cookies, me]);
+    }, [player, cookies, me]);
     function play(): void {
-        if (socket)
-          socket.emit('matchmaking', '');
+        if (player?.Socket)
+          player.Socket.emit('matchmaking', '');
       }
     return (
       <div className="normalElement" >
@@ -60,4 +62,4 @@ export function Normal() {
         <p> Game played : 20 (12W/8L)</p>
       </div>
     )
-  }
+}

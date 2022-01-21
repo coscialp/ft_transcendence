@@ -10,7 +10,7 @@ import { Overall } from "./overall";
 import { ip } from '../../App';
 import './profile.css'
 
-type User = {
+export type User = {
 	id: string,
 	username: string,
 	password: string | null,
@@ -18,6 +18,7 @@ type User = {
 	lastName: string,
 	nickName: string,
 	isLogged: boolean,
+	isAdmin: boolean,
 	profileImage: string,
 	email: string,
 }

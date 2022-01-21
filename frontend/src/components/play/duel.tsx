@@ -1,12 +1,12 @@
 import axios from "axios"
-import { useEffect, useState } from "react";
-import { useHistory } from 'react-router';
+import { useState } from "react";
+// import { useHistory } from 'react-router';
 import { useCookies } from "react-cookie";
 import "./duel.css";
 import { ip } from '../../App';
 
 export function Duel() {
-    let history = useHistory();
+    // let history = useHistory();
     const [cookies] = useCookies();
     const [search, setSearch] = useState("");
     const [searchedUsers, setSearchedUsers]: any = useState([]);
@@ -111,6 +111,9 @@ export function Duel() {
                 <label className="cancel">cancel</label>
               </span>
                 <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+              </div>
+              <div className="box">
+	              <button className="button-box" onClick={e => {}}>Go game</button>
               </div>
             </div>
           </div>

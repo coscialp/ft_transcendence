@@ -36,7 +36,7 @@ export class ChannelGateway
     @ConnectedSocket() socket: Socket,
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
-    this.logger.log(message);
+    var   user_channel: Channel;
     try {
       let receiver: User;
 
@@ -44,7 +44,6 @@ export class ChannelGateway
         receiver = await this.userService.getUserById(message.receiver);
       }
 
-      this.logger.log(this.activeChannel);
       const response: MessagesDto = {
         sentAt: message.sentAt,
         sender: user,
@@ -52,11 +51,18 @@ export class ChannelGateway
         receiver,
         channel: this.activeChannel.get(user),
       };
+
       this.channelService.createMessage(user, response);
-      if (response.channel) {
-        this.server.in(response.channel.id).emit('msg_toClient', response);
-      } else {
-        this.server.emit('msg_toClient', response);
+      for (let [users, channel] of this.activeChannel)
+      {
+        if (user.username === users.username)
+        {
+          user_channel = channel;
+        }
+      }
+
+      if (user_channel) {
+        this.server.emit(`msg_toClient/${user_channel.name}`, response);
       }
     } catch (error) {
       this.logger.error(error);

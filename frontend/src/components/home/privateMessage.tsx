@@ -24,7 +24,7 @@ var privmsg: any = [
     },
 ]
 
-function Open_Message() {
+export function Open_Message() {
     var Message: any = document.getElementById('Message')
     var arrowR: any = document.getElementById('arrowR')
     var arrowL: any = document.getElementById('arrowL')
