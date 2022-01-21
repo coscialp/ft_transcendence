@@ -8,3 +8,18 @@
     flex-direction: row;
     align-items: center;
 }
+
+@media screen and (orientation: portrait) {
+
+    .PlayMain {
+        color: aliceblue;
+        display: flex;
+        justify-content: space-around;
+        height: 86vh;
+        text-align: center;
+        padding-bottom: 7vh;
+        flex-direction: column;
+        align-items: center;
+    }
+  
+}

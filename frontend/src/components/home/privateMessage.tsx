@@ -31,6 +31,7 @@ export function Open_Message() {
     if (Message.style.height === '400px') {
         Message.style.transition = 'all .5s ease-in-out'
         Message.style.height = '50px'
+        Message.style.overflowY = 'hidden'
         arrowR.style.transition = 'transform 0.5s ease-in-out'
         arrowR.style.transform = 'rotate(0deg)'
         arrowL.style.transition = 'transform 0.5s ease-in-out'
@@ -39,6 +40,7 @@ export function Open_Message() {
     else {
         Message.style.transition = 'all .5s ease-in-out'
         Message.style.height = '400px'
+        Message.style.overflowY = 'scroll'
         arrowR.style.transition = 'transform 0.5s ease-in-out'
         arrowR.style.transform = 'rotate(180deg)'
         arrowL.style.transition = 'transform 0.5s ease-in-out'
@@ -73,22 +75,26 @@ export default function PrivateMessage() {
                 <ArrowSmUp id="arrowR" onClick={() => Open_Message()} />Message
                 <ArrowSmUp id="arrowL" onClick={() => Open_Message()} />
             </div>
+            <div className="scrollMessageContainer">
             {
-                isConvOpen === false ? privmsg.map((message: any) => (
+                isConvOpen === false ? privmsg.map((message: any) => ( 
                     <article key={message.id} id='message-container' onClick={(e) => message_select(message.sender, setisConvOpen)}>
-                        <div>
-                            <img id="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
-                        </div>
-                        <div id="message-body" >
-                            <header id='message-header'>
-                                <h4 id='message-sender'>{message.sender}</h4>
-                                <span id='message-time'>
-                                    {new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
-                                </span>
-                            </header>
-                            <p id='message-text'>{message.body}</p>
-                        </div>
+                        
+                            <div>
+                                <img id="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
+                            </div>
+                            <div id="message-body" >
+                                <header id='message-header'>
+                                    <h4 id='message-sender'>{message.sender}</h4>
+                                    <span id='message-time'>
+                                        {new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
+                                    </span>
+                                </header>
+                                <p id='message-text'>{message.body}</p>
+                            </div>
+                        
                     </article>
+                    
                 )) :
                     <div>
                         <section className='discussion' >
@@ -106,6 +112,7 @@ export default function PrivateMessage() {
                         </form>
                     </div>
             }
+            </div>
         </div>
     )
 }
