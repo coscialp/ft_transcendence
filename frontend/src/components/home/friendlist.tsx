@@ -1,9 +1,9 @@
 import axios from "axios"
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { ip } from "../../App";
 import './home.css'
-
-const ip = window.location.hostname;
+import { Open_Message } from "./privateMessage";
 
 export function Friendlist() {
   const [cookies] = useCookies();
@@ -74,12 +74,12 @@ export function Friendlist() {
     <div className="FriendElement" >
       <p className="FriendTitle" >Friend List</p>
       <div className="allFriendList">{friends.map((friend: any) => (
-        <details key={friend.id}>
+        <details key={friend.id} id={friend.id} >
           <summary className="FriendList">{friend.username}</summary>
           <nav className="menuFriendList">
             <button className="friendBtn"  ><span /><span /><span /><span />Send message</button>
             <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>
-            <button className="friendBtn"  ><span /><span /><span /><span />Chat</button>
+            <button className="friendBtn" onClick={e => {document.getElementById(friend.id)?.removeAttribute("open") ; Open_Message()}} ><span /><span /><span /><span />Chat</button>
             <button className="friendBtnOut friendBorder" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
             <button className="friendBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
           </nav>

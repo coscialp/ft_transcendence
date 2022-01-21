@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { ReactElement, useEffect } from "react";
 import { useCookies } from "react-cookie";
+import { ip } from "../../App";
 
-const ip = window.location.hostname;
 
 export function Cookies(props: any): ReactElement {
   const [cookies, setCookie] = useCookies(["access_token"]);

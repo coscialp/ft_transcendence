@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
+import { ip } from "../../App";
 import { isLogged } from "../../utils/isLogged";
 import { DoubleAuth } from "./double.auth";
-
-const ip = window.location.hostname;
 
 export function TwoFA() {
 
