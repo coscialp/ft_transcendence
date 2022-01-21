@@ -1,7 +1,10 @@
 import { ArrowSmUp, Backspace } from 'heroicons-react'
 import './privateMessage.css'
 import './mainMenu.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { io, Socket } from 'socket.io-client'
+import { ip } from '../../App'
+import { MessageType } from '../../utils/message.type'
 
 var privmsg: any = [
     {
@@ -23,6 +26,12 @@ var privmsg: any = [
         avatar: "./Beluga.jpeg"
     },
 ]
+
+function useForceUpdate() {
+    // eslint-disable-next-line
+    const [value, setValue] = useState(0);
+    return () => setValue(value => ++value);
+}
 
 export function Open_Message() {
     var Message: any = document.getElementById('Message')
@@ -58,20 +67,48 @@ function message_select(sender: string, setter: React.Dispatch<any>) {
 export default function PrivateMessage() {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
     const [messageInput, setMessageInput] = useState("");
+    const [socket, setSocket] = useState<Socket>();
+    const [messages, setMessages] = useState<MessageType[]>([]);
 
-    function handleSendMessage(e: any) {
-        privmsg.push({
-            body: messageInput,
-            sender: "brice",
-            id: "fwefewgergr",
-            avatar: "./Beluga.jpeg"
-        })
+    const forceUpdate = useForceUpdate();
+
+    useEffect(() => {
+        let mount = true;
+        if (mount) {
+            setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
+        }
+        return (() => { mount = false; });
+    }, []);
+
+    /*useEffect(() => {
+        let mount = true;
+        if (mount) {
+            if (socket) {
+                socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
+                    messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage });
+                    forceUpdate();
+                })
+            }
+        }
+        return (() => { mount = false; });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket, cookies, messages]);*/
+
+    function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
+        /*if (messageInput) {
+            console.log(messageInput);
+            if (socket) {
+                socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
+                console.log(`msg_toClient/${current_channel}`);
+            }
+            setMessageInput('');
+        }*/
         e.preventDefault();
     }
 
     return (
         <div id="Message" >
-            <div id="OpenMsg" onClick={() => {Open_Message(); setisConvOpen(false)}}>
+            <div id="OpenMsg" onClick={() => { Open_Message(); setisConvOpen(false) }}>
                 <ArrowSmUp id="arrowR" onClick={() => Open_Message()} />Message
                 <ArrowSmUp id="arrowL" onClick={() => Open_Message()} />
             </div>

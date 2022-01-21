@@ -1,8 +1,7 @@
 import './login.css'
 import React from 'react'
 import axios, { AxiosResponse } from 'axios';
-
-const ip = window.location.hostname;
+import { ip } from '../../App';
 
 export class RegisterForm extends React.Component<{}, { username: string, password: string }> {
   constructor(props: {username: string, password: string}) {
