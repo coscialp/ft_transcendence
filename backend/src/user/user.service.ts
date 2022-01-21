@@ -1,4 +1,9 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './user.repository';
 import { User } from './user.entity';
@@ -30,17 +35,19 @@ export class UserService {
   }
 
   async getUserById(id: string, user?: User): Promise<User> {
-    const username = id;
     if (id === 'me') {
-      return user;
-    } else {
-      let found: User = this.isUUID(id)
-        ? await this.userRepository.findOne(id)
-        : await this.userRepository.findOne({ username });
-      if (!found) throw new NotFoundException(`User ${id} not found`);
-
-      return found;
+      id = user.id;
     }
+    let found: User = this.isUUID(id)
+      ? (await this.getUser({ search: undefined })).find(
+          (user) => user.id === id,
+        )
+      : (await this.getUser({ search: undefined })).find(
+          (user) => user.username === id,
+        );
+    if (!found) throw new NotFoundException(`User ${id} not found`);
+
+    return found;
   }
 
   async getUsername(id: string, user: User): Promise<{ username: string }> {
@@ -173,8 +180,6 @@ export class UserService {
 
     const { from } = await this.getFriendsRequest(user.id, user);
 
-    console.log(from);
-
     if (
       from.find((u) => {
         return u.id === fromId;
@@ -280,8 +285,6 @@ export class UserService {
       relations: ['channelsAdmin'],
     });
 
-    console.log(allCreator);
-
     const channelsAdmin = allCreator.find(
       (u) => u.username === user.username,
     ).channelsAdmin;
@@ -289,7 +292,9 @@ export class UserService {
     return { channelsAdmin };
   }
 
-  async getChannelsConnected(user: User): Promise<{ channelsConnected: Channel[] }> {
+  async getChannelsConnected(
+    user: User,
+  ): Promise<{ channelsConnected: Channel[] }> {
     const allCreator = await this.userRepository.find({
       relations: ['channelsConnected'],
     });
@@ -301,11 +306,14 @@ export class UserService {
     return { channelsConnected };
   }
 
-  async getMessages(id: string, user: User): Promise<{messagesSend: Message[], messagesReceive: Message[]}> {
+  async getMessages(
+    id: string,
+    user: User,
+  ): Promise<{ messagesSend: Message[]; messagesReceive: Message[] }> {
     const currentUser = await this.getUserById(id, user);
 
     const allMessages = await this.userRepository.find({
-      relations: ['messagesSend', 'messagesReceive']
+      relations: ['messagesSend', 'messagesReceive'],
     });
 
     const messagesSend = allMessages.find((user) => {
@@ -317,5 +325,34 @@ export class UserService {
     }).messagesReceive;
 
     return { messagesSend, messagesReceive };
+  }
+
+  async promoteAdmin(id: string, user: User) {
+    if (user.isAdmin) {
+      const newAdmin = await this.getUserById(id);
+
+      newAdmin.isAdmin = true;
+
+      try {
+        this.userRepository.save(newAdmin);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      throw new UnauthorizedException('You are not admin');
+    }
+  }
+
+  async demoteAdmin(user: User) {
+    if (user.isAdmin) {
+        user.isAdmin = false;
+      try {
+        this.userRepository.save(user);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      throw new UnauthorizedException('You are not admin');
+    }
   }
 }

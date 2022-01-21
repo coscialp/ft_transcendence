@@ -53,7 +53,6 @@ export class ChannelGateway
 
       this.channelService.createMessage(user, response);
 
-
       if (response.channel) {
         this.server.emit(`msg_toClient/${response.channel.name}`, response);
       }
@@ -68,12 +67,10 @@ export class ChannelGateway
     @ConnectedSocket() socket: Socket,
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
-    this.logger.log(data.channelName);
     this.activeChannel.set(
       user.username,
       await this.channelService.getOneChannel(data.channelName),
     );
-    this.logger.log(`channel: ${this.activeChannel}`);
   }
 
   afterInit(server: Server) {

@@ -16,9 +16,6 @@ export class FriendRequestRepository extends Repository<FriendRequest> {
         const { requestFrom } = allUser.find((user) => { return user.id === from.id; });
         const { requestTo } = allUser.find((user) => { return user.id === to.id; });
         
-        console.log(requestTo);
-        console.log(requestFrom);
-
         from.requestFrom = requestFrom;
         to.requestTo = requestTo;
 

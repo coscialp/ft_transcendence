@@ -56,14 +56,19 @@ export function MainMenu() {
 
 	const forceUpdate = useForceUpdate();
 
-
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
 			isLogged(cookies).then((res) => { setMe(res.me.data); });
 			setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
+			requestApi.get('user/channels/connected').then((response) => {
+				response.channelsConnected.map((chan: any) => 
+					channels.push(chan.name)
+				)
+			})
 		}
 		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cookies]);
 
 	useEffect(() => {
@@ -104,6 +109,11 @@ export function MainMenu() {
 				requestApi.post('channel/create', { body: data, contentType: 'application/json' });
 
 				channels.push(channelName);
+				if (socket) {
+					socket.emit('change_channel', { channelName: channelName });
+					setCurrent_Channel(channelName);
+				}
+				setMessages([]);
 				togglePopup();
 				setChannelName('');
 				setChannelPassword('');
@@ -122,9 +132,14 @@ export function MainMenu() {
 				name: channelName,
 				password: channelPassword,
 			}
-			requestApi.post('channel/create', { body: data, contentType: 'application/json' });
+			requestApi.patch('channel/join', { body: data, contentType: 'application/json' });
 
 			channels.push(channelName);
+			if (socket) {
+				socket.emit('change_channel', { channelName: channelName });
+				setCurrent_Channel(channelName);
+			}
+			setMessages([]);
 			togglePopup();
 			setChannelName('');
 			setChannelPassword('');
@@ -145,6 +160,22 @@ export function MainMenu() {
 		e.preventDefault();
 	}
 
+
+	useEffect(() => {
+		let mount = true;
+		if (mount) {
+			if (current_channel) {
+				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
+					response.messages.map((msg: any) =>
+						messages.push({ id: messages.length, sentAt: msg.date, sender: msg.sender.username, body: msg.content, avatar: msg.sender.profileImage })
+					);
+					forceUpdate();
+				})
+			}
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cookies, messages, current_channel]);
 
 	function changeChannel(e: any) {
 		console.log(e.target.innerText);
@@ -169,7 +200,9 @@ export function MainMenu() {
 				<button className="addChannel" onClick={togglePopup}>+</button>
 			</div>
 			<div className="Message Container" >
-				{messages.map((message: any) => (
+				{console.log(messages)}
+				{messages.map((message: any) =>
+				(
 					<article key={message.id} className='message-container'>
 						<div className="img-content" >
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
@@ -188,7 +221,6 @@ export function MainMenu() {
 							<div className="dropdown-content">
 								<UserCircle className="chatUserParam" onClick={(e) => { return history.push(`/${message.sender}/profile`) }} />
 								<Challenge className="chatUserParam" />
-								{console.log(me)}
 								<ChevronDoubleUp className="chatUserParam" />
 								<VolumeOff className="chatUserParam" />
 								<Trash className="chatUserParam" />

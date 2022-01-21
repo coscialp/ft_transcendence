@@ -137,4 +137,14 @@ export class UserController {
     async getMessages(@Param('id') id: string, @GetUser() user: User): Promise<{messagesSend: Message[], messagesReceive: Message[]}> {
         return this.userService.getMessages(id, user);
     }
+
+    @Patch('admin/add/:id')
+    async promoteAdmin(@Param('id') id: string, @GetUser() user: User) {
+        return await this.userService.promoteAdmin(id, user);
+    }
+
+    @Patch('admin/remove/')
+    async demoteAdmin(@GetUser() user: User) {
+        return await this.userService.demoteAdmin(user);
+    }
 }
