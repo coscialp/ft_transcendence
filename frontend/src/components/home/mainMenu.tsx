@@ -7,6 +7,8 @@ import './mainMenu.css'
 
 import { useHistory } from "react-router";
 import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
+import { User } from "../../utils/user.type";
+import { useForceUpdate } from "../../utils/forceUpdate";
 const ip = window.location.hostname;
 
 type MessageType = {
@@ -17,38 +19,17 @@ type MessageType = {
 	avatar: string;
 }
 
-type User = {
-	id: string,
-	username: string,
-	password: string | null,
-	firstName: string,
-	lastName: string,
-	nickName: string,
-	isLogged: boolean,
-	profileImage: string,
-	email: string,
-}
-
-function useForceUpdate() {
-	// eslint-disable-next-line
-	const [value, setValue] = useState(0);
-	return () => setValue(value => ++value);
-}
-
 export function MainMenu() {
 	let history = useHistory();
 	const [cookies] = useCookies();
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
 	const [current_channel, setCurrent_Channel] = useState<string>('');
-	// eslint-disable-next-line
-	const [channels, setChannels] = useState<string[]>([]);
+	const [channels] = useState<string[]>([]);
 	const [channelName, setChannelName] = useState<string>('');
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
-	// eslint-disable-next-line
-	const [scrollTarget, setScrollTarget] = useState();
 	const [me, setMe] = useState<User>();
 	const [socket, setSocket] = useState<Socket>();
 

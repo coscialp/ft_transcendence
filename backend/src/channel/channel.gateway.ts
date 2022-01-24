@@ -73,6 +73,27 @@ export class ChannelGateway
     );
   }
 
+  @SubscribeMessage('private_message')
+  async handlePrivMessage(
+    @MessageBody () data: any,
+    @ConnectedSocket() socket: Socket,
+  ): Promise<void> {
+    const user: User = await this.channelService.getUserFromSocket(socket);
+
+
+    const response: MessagesDto = {
+      sentAt: data.sentAt,
+      sender: user,
+      body: data.body,
+      receiver: await this.userService.getUserById(data.receiver),
+      channel: null,
+    };
+
+    this.channelService.createMessage(user, response);
+
+    this.server.emit(`private_message/${data.receiver.username}`, response);
+  }
+
   afterInit(server: Server) {
     this.logger.log('Init');
   }
