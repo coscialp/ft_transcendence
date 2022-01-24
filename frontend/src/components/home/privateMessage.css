@@ -1,9 +1,9 @@
 #Message {
     position: absolute;
     bottom: 0;
-    right: 5%;
+    right: 5vw;
     height: 50px;
-    width: 20%;
+    width: 20vw;
     border-radius: 10px 10px 0 0;
     background-color: rgba(0, 0, 0, 0.7);
     color: white;
@@ -12,6 +12,20 @@
     /* align-items: center; */
     /* justify-content: space-between; */
 }
+
+
+
+#Message::-webkit-scrollbar-thumb {
+    background-color: wheat;
+    border-radius: 50px;
+    }
+    
+#Message::-webkit-scrollbar {
+    /* display: none; */
+    background-color: rgb(128 128 128 / 42%);
+    border-radius: 50px;
+    width: 5px;
+    }
 
 #OpenMsg {
     position: sticky;
@@ -29,7 +43,6 @@
 article#message-container {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
     align-items: flex-start;
     margin-top: 5px;
     margin-left: 5px;
@@ -41,7 +54,6 @@ article#message-container {
 #message-body {
     display: flex;
     flex-direction: column;
-    flex-wrap: nowrap;
     align-items: flex-start;
     margin-left: 10px;
 }
@@ -49,26 +61,25 @@ article#message-container {
 header#message-header {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
     align-items: center;
     padding-bottom: 10px;
 }
 
 h4#message-sender {
     margin: 0;
-    font-size: 1.3vh;
+    font-size: 15px;
     color: white;
 }
 
 span#message-time {
     color: grey;
-    font-size: 1vh;
+    font-size: 8px;
     margin-left: 5px;
 }
 
 img#message-image {
-    height: 4vh;
-    width: 4vh;
+    height: 40px;
+    width: 40px;
     background-size: cover;
     background-position: center;
     border-radius: 100%;
@@ -76,7 +87,7 @@ img#message-image {
 
 p#message-text {
     margin: 0;
-    font-size: 1.8vh;
+    font-size: 12px;
     text-align: left;
     word-break: break-all;
     color: white;
@@ -93,6 +104,18 @@ p#message-text {
     flex-direction: column;
     flex-wrap: nowrap;
 }
+
+.discussion::-webkit-scrollbar-thumb {
+    background-color: wheat;
+    border-radius: 50px;
+    }
+    
+.discussion::-webkit-scrollbar {
+    /* display: none; */
+    background-color: rgb(128 128 128 / 42%);
+    border-radius: 50px;
+    width: 5px;
+    }
 
 .discussion > .bubble {
 	border-radius: 1em;

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { io, Socket } from "socket.io-client";
-import { isLogged } from "../../utils/isLogged";
 import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
 
@@ -9,15 +8,8 @@ import { useHistory } from "react-router";
 import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
 import { User } from "../../utils/user.type";
 import { useForceUpdate } from "../../utils/forceUpdate";
-const ip = window.location.hostname;
-
-type MessageType = {
-	id: number;
-	sentAt: string;
-	sender: string;
-	body: string;
-	avatar: string;
-}
+import { ip } from "../../App";
+import { MessageType } from "../../utils/message.type";
 
 export function MainMenu() {
 	let history = useHistory();
@@ -40,7 +32,6 @@ export function MainMenu() {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			isLogged(cookies).then((res) => { setMe(res.me.data); });
 			setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
 			requestApi.get('user/channels/connected').then((response) => {
 				response.channelsConnected.map((chan: any) => 
@@ -189,7 +180,7 @@ export function MainMenu() {
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
 							<div className="message-body" >
 								<header className='message-header'>
-									<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
+									<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(data.me && message.sender === data.me.username) ? 'You' : message.sender}</h4>
 									<span className='message-time'>
 										{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
 									</span>
@@ -235,7 +226,7 @@ export function MainMenu() {
 								<form onSubmit={handleJoinChannel} >
 									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => setChannelName(e.target.value)} />
 									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
-									<input type="submit" className="subbtn" value="Create !" />
+									<input type="submit" className="subbtn" value="Join !" />
 								</form>
 								<button className="Backbtn" onClick={(e) => { setPopupState(0) }} >Back</button>
 							</div>

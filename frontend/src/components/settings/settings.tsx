@@ -2,12 +2,10 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
+import { ip } from "../../App";
 import { isLogged } from "../../utils/isLogged";
 import { NavBar } from "../navbar/navbar";
 import './settings.css'
-
-
-const ip = window.location.hostname;
 
 export function Settings() {
 	const [cookies] = useCookies();

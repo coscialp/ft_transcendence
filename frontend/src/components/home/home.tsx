@@ -8,15 +8,17 @@ import { Friendlist } from './friendlist';
 import './home.css'
 import { isLogged } from '../../utils/isLogged';
 import PrivateMessage from './privateMessage';
+import { User } from '../../utils/user.type';
 
 export function Home() {
   const [cookies] = useCookies();
   const [unauthorized, setUnauthorized] = useState(false);
+  const [me, setMe] = useState<User>();
 
   useEffect(() => {
     let mount = true;
     if (mount) {
-      isLogged(cookies).then((res) => { setUnauthorized(res.unauthorized) });
+      isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
     }
     return (() => { mount = false; });
   }, [cookies])
@@ -30,7 +32,7 @@ export function Home() {
       <NavBar page="Home" />
       <div className="HomeMain" >
         <Gamemode />
-        <MainMenu />
+        <MainMenu me={me} />
         <Friendlist />
       </div>
       <PrivateMessage />

@@ -26,8 +26,81 @@
     box-shadow: rgb(207 29 61 / 30%) 0px 54px 55px, rgb(230 33 67 / 24%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
-.GMElement:hover {
+
+.GMElement:hover, .gamemodeList:hover, .comingSoonMode:hover {
     text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
+}
+
+.GMBody {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    overflow-x: scroll;
+}
+
+
+.GMBody::-webkit-scrollbar-thumb {
+background-color: wheat;
+border-radius: 50px;
+}
+
+.GMBody::-webkit-scrollbar {
+/* display: none; */
+background-color: rgb(128 128 128 / 42%);
+border-radius: 50px;
+width: 5px;
+}
+
+.gamemodeList:not(hover) {
+    text-shadow: none;
+}
+
+.rules {
+    text-shadow: none;
+}
+
+.comingSoonMode:not(hover) {
+    text-shadow: none;
+}
+
+p.GMTitle {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+    border-color: rgb(251 76 103);
+}
+
+.gamemodeList {
+    margin-top: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-right: 2px solid;
+    border-color: rgb(251 76 103);
+    cursor:pointer;
+}
+
+nav.menuGamemode {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    transform: translateX(-68%);
+    left: 68%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.menuGamemode {
+    display:flex;
+    margin-top: -1vh;
+    z-index: 1000;
+    border-radius: var(--cornerRad);
+    background-color: rgb(0 0 0 / 25%);
+    border-radius: 15px;
+    box-shadow: 0 4px 12px 0 rgb(0 0 0 / 20%);
+    flex-direction: column;
+}
+
+.gamemodeBorder {
+    border-bottom: 2px solid rgb(255 255 255 / 76%);
 }
 
 .MainElement {
@@ -89,30 +162,194 @@ p.FriendTitle {
     cursor:pointer;
 }
 
-nav.menuFriendList {
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    transform: translateX(-68%);
-    left: 68%;
-}
-
-button.menuBtn {
+.friendBtn {
     cursor: pointer;
+    padding: 12px;
     border: 0;
-    border-bottom: 2px solid white;
-    margin: 8px;
     background: transparent;
     font-size: inherit;
+    margin: 0 16px;
     color: aliceblue;
+    border-bottom: 2px solid rgb(255 255 255 / 76%);
     text-decoration: none;
     text-align: center;
     transition: 0.2s;
-    overflow: hidden;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+}
+
+.friendBtn:nth-last-of-type(1) {
+    border-bottom: none;
+  }
+
+.friendBtn:hover {
+    filter: brightness(120%);
+    text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
+  }
+
+.friendBtn:hover {
+    color: #000000;
+    background: #2196f3;
+    box-shadow: 0 0 10px #2196f3, 0 0 40px #2196f3, 0 0 80px #2196f3;
+    transition-delay: 1s;
+  }
+
+.friendBtn span {
+    position: absolute;
+    display: block;
+  }
+
+.friendBtn span:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #2196f3);
+  }
+  
+.friendBtn:hover span:nth-child(1) {
+    left: 100%;
+    transition: 1s;
+  }
+  
+  
+.friendBtn span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #2196f3);
+  }
+  
+.friendBtn:hover span:nth-child(3) {
+    right: 100%;
+    transition: 1s;
+    transition-delay: 0.5s;
+  }
+  
+.friendBtn span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #2196f3);
+  }
+  
+.friendBtn:hover span:nth-child(2) {
+    top: 100%;
+    transition: 1s;
+    transition-delay: 0.25s;
+  }
+    
+.friendBtn span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #2196f3);
+  }
+  
+.friendBtn:hover span:nth-child(4) {
+    bottom: 100%;
+    transition: 1s;
+    transition-delay: 0.75s;
+  }
+
+.friendBtnOut {
+    cursor: pointer;
+    padding: 12px;
+    border: 0;
+    background: transparent;
+    font-size: inherit;
+    margin: 0 16px;
+    display: flex;
+    color: aliceblue;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    text-align: center;
+    transition: 0.2s;
+    justify-content: space-around;
+  }
+
+.friendBorder {
+    border-bottom: 2px solid rgb(255 255 255 / 76%);
+}
+
+.friendBtnOut:hover {
+    color: #000000;
+    background: #cf1a3a;
+    box-shadow: 0 0 10px #cf1a3a, 0 0 40px #cf1a3a, 0 0 80px #cf1a3a;
+    transition-delay: 1s;
+  }
+  
+.friendBtnOut span {
+    position: absolute;
+    display: block;
+  }
+  
+.friendBtnOut span:nth-child(1) {
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #cf1a3a);
+  }
+  
+.friendBtnOut:hover span:nth-child(1) {
+    left: 100%;
+    transition: 1s;
+  }
+  
+.friendBtnOut span:nth-child(3) {
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(270deg, transparent, #cf1a3a);
+  }
+  
+.friendBtnOut:hover span:nth-child(3) {
+    right: 100%;
+    transition: 1s;
+    transition-delay: 0.5s;
+  }
+  
+.friendBtnOut span:nth-child(2) {
+    top: -100%;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #cf1a3a);
+  }
+  
+.friendBtnOut:hover span:nth-child(2) {
+    top: 100%;
+    transition: 1s;
+    transition-delay: 0.25s;
+  }
+  
+.friendBtnOut span:nth-child(4) {
+    bottom: -100%;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(360deg, transparent, #cf1a3a);
+  }
+  
+.friendBtnOut:hover span:nth-child(4) {
+    bottom: 100%;
+    transition: 1s;
+    transition-delay: 0.75s;
+  }
+
+nav.menuFriendList {
+    position: relative;
+    display: flex;
+    transform: translateX(-68%);
+    overflow: hidden;
+    left: 68%;
 }
 
 .menuFriendList {
@@ -120,7 +357,8 @@ button.menuBtn {
     margin-top: -1vh;
     z-index: 1000;
     border-radius: var(--cornerRad);
-    background-color: rgb(0 0 0 / 78%);
+    background-color: rgb(0 0 0 / 25%);
+    border-radius: 15px;
     box-shadow: 0 4px 12px 0 rgb(0 0 0 / 20%);
     flex-direction: column;
 }
@@ -129,7 +367,8 @@ button.menuBtn {
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    overflow-x: hidden;
+    overflow-x: scroll;
+    
 }
 
 .allFriendList::-webkit-scrollbar-thumb {
@@ -142,14 +381,6 @@ button.menuBtn {
     background-color: rgb(128 128 128 / 42%);
     border-radius: 50px;
     width: 5px;
-}
-
-
-p.GMTitle {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid;
-    border-color: rgb(251 76 103);
 }
 
 .gradientRight {

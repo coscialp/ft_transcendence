@@ -1,8 +1,8 @@
 import './login.css'
 import React from 'react'
 import axios, { AxiosResponse } from 'axios';
+import { ip } from '../../App';
 
-const ip = window.location.hostname;
 export class LogForm extends React.Component<{}, { username: string, password: string }> {
     constructor(props: any) {
       super(props);

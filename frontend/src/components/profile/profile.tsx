@@ -9,18 +9,7 @@ import { History } from "./history";
 import { Overall } from "./overall";
 import { ip } from '../../App';
 import './profile.css'
-
-type User = {
-	id: string,
-	username: string,
-	password: string | null,
-	firstName: string,
-	lastName: string,
-	nickName: string,
-	isLogged: boolean,
-	profileImage: string,
-	email: string,
-}
+import { User } from "../../utils/user.type";
 
 export function Profile() {
 	const [unauthorized, setUnauthorized] = useState(false);
@@ -29,6 +18,7 @@ export function Profile() {
 	const userProfile = window.location.pathname.split('/')[1];
 	const [user, setUser]: any = useState({});
 	const [blackList, setBlackList] = useState<User[]>([]);
+	
 	useEffect(() => {
 		let mount = true;
 		if (mount) {

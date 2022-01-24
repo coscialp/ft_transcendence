@@ -138,12 +138,12 @@ export class UserController {
         return this.userService.getMessages(id, user);
     }
 
-    @Patch('admin/add/:id')
+    @Patch('/admin/promote/:id')
     async promoteAdmin(@Param('id') id: string, @GetUser() user: User) {
         return await this.userService.promoteAdmin(id, user);
     }
 
-    @Patch('admin/remove/')
+    @Patch('/admin/demote')
     async demoteAdmin(@GetUser() user: User) {
         return await this.userService.demoteAdmin(user);
     }
