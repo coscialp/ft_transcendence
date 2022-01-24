@@ -11,7 +11,7 @@ import { useForceUpdate } from "../../utils/forceUpdate";
 import { ip } from "../../App";
 import { MessageType } from "../../utils/message.type";
 
-export function MainMenu() {
+export function MainMenu(data: any) {
 	let history = useHistory();
 	const [cookies] = useCookies();
 	const [messages, setMessages] = useState<MessageType[]>([]);
