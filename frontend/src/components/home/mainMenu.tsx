@@ -1,33 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { io, Socket } from "socket.io-client";
-import { isLogged } from "../../utils/isLogged";
 import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
 
 import { useHistory } from "react-router";
 import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
-const ip = window.location.hostname;
-
-type MessageType = {
-	id: number;
-	sentAt: string;
-	sender: string;
-	body: string;
-	avatar: string;
-}
-
-type User = {
-	id: string,
-	username: string,
-	password: string | null,
-	firstName: string,
-	lastName: string,
-	nickName: string,
-	isLogged: boolean,
-	profileImage: string,
-	email: string,
-}
+import { MessageType } from "../../utils/message.type";
+import { ip } from "../../App";
 
 function useForceUpdate() {
 	// eslint-disable-next-line
@@ -35,7 +15,7 @@ function useForceUpdate() {
 	return () => setValue(value => ++value);
 }
 
-export function MainMenu() {
+export function MainMenu(data: any) {
 	let history = useHistory();
 	const [cookies] = useCookies();
 	const [messages, setMessages] = useState<MessageType[]>([]);
@@ -49,7 +29,6 @@ export function MainMenu() {
 	const [showPopup, setShowPopup] = useState<boolean>(false);
 	// eslint-disable-next-line
 	const [scrollTarget, setScrollTarget] = useState();
-	const [me, setMe] = useState<User>();
 	const [socket, setSocket] = useState<Socket>();
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
@@ -60,7 +39,6 @@ export function MainMenu() {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			isLogged(cookies).then((res) => { setMe(res.me.data); });
 			setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
 		}
 		return (() => { mount = false; });
@@ -175,7 +153,7 @@ export function MainMenu() {
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
 							<div className="message-body" >
 								<header className='message-header'>
-									<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(me && message.sender === me.username) ? 'You' : message.sender}</h4>
+									<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(data.me && message.sender === data.me.username) ? 'You' : message.sender}</h4>
 									<span className='message-time'>
 										{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
 									</span>
@@ -188,7 +166,6 @@ export function MainMenu() {
 							<div className="dropdown-content">
 								<UserCircle className="chatUserParam" onClick={(e) => { return history.push(`/${message.sender}/profile`) }} />
 								<Challenge className="chatUserParam" />
-								{console.log(me)}
 								<ChevronDoubleUp className="chatUserParam" />
 								<VolumeOff className="chatUserParam" />
 								<Trash className="chatUserParam" />

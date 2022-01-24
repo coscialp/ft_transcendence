@@ -2,8 +2,7 @@ import './login.css'
 import './signup.css'
 import React, { useState } from 'react'
 import axios from 'axios';
-
-const ip = window.location.hostname;
+import { ip } from '../../App';
 
 export function SignForm() {
 

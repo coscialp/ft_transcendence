@@ -4,62 +4,61 @@ import { useCookies } from "react-cookie";
 import "./normalGame.css";
 import { PlayOutline } from 'heroicons-react';
 import { isLogged } from "../../utils/isLogged";
-import { GameManager } from "./playerSettings";
+import { GameManager } from "./gamemanager";
 import { useHistory } from "react-router";
 
 type User = {
-	id: string,
-	username: string,
-	password: string | null,
-	firstName: string,
-	lastName: string,
-	nickName: string,
-	isLogged: boolean,
-	profileImage: string,
-	email: string,
+  id: string,
+  username: string,
+  password: string | null,
+  firstName: string,
+  lastName: string,
+  nickName: string,
+  isLogged: boolean,
+  profileImage: string,
+  email: string,
 }
-
-const ip = window.location.hostname;
-
 export function Normal() {
-    
-    const [cookies] = useCookies();
-    let history = useHistory();
-    const [player, setPlayer] = useState<GameManager>();
-    const [me, setMe] = useState<User>();
-    
-    useEffect(() => {
-      let mount = true;
-      if (mount) {
-        isLogged(cookies).then((res) => { setMe(res.me.data); });
-        setPlayer(new GameManager());
+
+  const [cookies] = useCookies();
+  let history = useHistory();
+  const [player, setPlayer] = useState<GameManager>();
+  const [me, setMe] = useState<User>();
+
+  useEffect(() => {
+    let mount = true;
+    if (mount) {
+      isLogged(cookies).then((res) => { setMe(res.me.data); });
+      setPlayer(new GameManager());
+    }
+    return (() => { mount = false; });
+  }, [cookies]);
+
+  useEffect(() => {
+    let mount = true;
+    if (mount) {
+      if (player?.Socket) {
+        console.log(`startgame/${me?.username}`);
+        player.Socket.on(`startgame/${me?.username}`, (msg: any) => {
+          player.ID = msg;
+          localStorage.setItem('playerID', player.ID);
+          return history.push(`/game`)
+        })
       }
-      return (() => { mount = false; });
-    }, [cookies]);
-  
-    useEffect(() => {
-      let mount = true;
-      if (mount) {
-        if (player?.Socket) {
-          console.log(`startgame/${me?.username}`);
-          player.Socket.on(`startgame/${me?.username}`, (msg: any) => {
-            player.ID = msg;
-            localStorage.setItem('playerID', player.ID);
-            return history.push(`/game`)
-          })
-        }
-      }
-      return (() => { mount = false; });
-    }, [player, cookies, me]);
-    function play(): void {
-        if (player?.Socket)
-          player.Socket.emit('matchmaking', '');
-      }
-    return (
-      <div className="normalElement" >
-        <p className="normalTitle" >Normal Game</p>
-        <PlayOutline className="playBtn" onClick={play}/>
-        <p> Game played : 20 (12W/8L)</p>
-      </div>
-    )
+    }
+    return (() => { mount = false; });
+  }, [player, cookies, me, history]);
+
+  function play(): void {
+    if (player?.Socket)
+      player.Socket.emit('matchmaking', '');
+  }
+
+  return (
+    <div className="normalElement" >
+      <p className="normalTitle" >Normal Game</p>
+      <PlayOutline className="playBtn" onClick={play} />
+      <p> Game played : 20 (12W/8L)</p>
+    </div>
+  )
 }

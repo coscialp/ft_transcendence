@@ -5,7 +5,7 @@ import { UserAdd, Ban, Pencil, CheckCircle, ChevronDoubleUp, ChevronDoubleDown, 
 import './profile.css'
 import { useHistory } from 'react-router';
 import { useEffect, useState } from 'react';
-import { User } from './profile';
+import { User } from '../../utils/user.type';
 
 
 export function Overall(data: any) {

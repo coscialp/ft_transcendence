@@ -7,11 +7,13 @@ export class GameManager
     private _P2ready: boolean;
     private _ID: string;
     private _Socket: Socket;
+    private _GameID: number;
     constructor() {
         this._P1ready = false;
         this._P2ready = false;
         this._ID = "";
         this._Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
+        this._GameID = 0;
     }
     
     public get P1ready()
@@ -30,7 +32,16 @@ export class GameManager
     {
         return this._Socket;
     }
+    public get GameID()
+    {
+        return this._GameID;
+    }
 
+
+    public set GameID(value: number)
+    {
+        this._GameID = value;
+    }
 
     public set Socket(value: Socket)
     {
