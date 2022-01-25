@@ -6,7 +6,6 @@ import './mainMenu.css'
 
 import { useHistory } from "react-router";
 import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
-import { User } from "../../utils/user.type";
 import { useForceUpdate } from "../../utils/forceUpdate";
 import { ip } from "../../App";
 import { MessageType } from "../../utils/message.type";

@@ -55,7 +55,7 @@ export default function PrivateMessage() {
     const [me, setMe] = useState<User>();
 	const [socket, setSocket] = useState<Socket>();
     const [messages, setMessages] = useState<MessageType[]>([]);
-    const [receiver, setReceiver] = useState<string>('wasayad');
+    const [receiver, setReceiver] = useState<string>('akerdeka');
 
     const forceUpdate = useForceUpdate();
 
@@ -99,7 +99,7 @@ export default function PrivateMessage() {
         if (messageInput) {
 			if (socket) {
 				socket.emit('private_message', { sentAt: Date(), body: messageInput, receiver: receiver });
-                messages.push({ id: messages.length, sentAt: Date(), sender: me?.username, body: messageInput, avatar: me?.profileImage, receiver: receiver });
+                // messages.push({ id: messages.length, sentAt: Date(), sender: me?.username, body: messageInput, avatar: me?.profileImage, receiver: receiver });
 			}
 			setMessageInput('');
 		}
