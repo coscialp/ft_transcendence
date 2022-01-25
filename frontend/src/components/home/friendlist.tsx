@@ -5,7 +5,7 @@ import { ip } from "../../App";
 import './home.css'
 import { Open_Message } from "./privateMessage";
 
-export function Friendlist() {
+export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
   const [friends, setFriends]: any = useState([]);
 
@@ -77,9 +77,8 @@ export function Friendlist() {
         <details key={friend.id} id={friend.id} >
           <summary className="FriendList">{friend.username}</summary>
           <nav className="menuFriendList">
-            <button className="friendBtn"  ><span /><span /><span /><span />Send message</button>
+            <button className="friendBtn" onClick={e => {document.getElementById(friend.id)?.removeAttribute("open") ; Open_Message(); setCurrentChat(friend.username)}} ><span /><span /><span /><span />Send message</button>
             <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>
-            <button className="friendBtn" onClick={e => {document.getElementById(friend.id)?.removeAttribute("open") ; Open_Message()}} ><span /><span /><span /><span />Chat</button>
             <button className="friendBtnOut friendBorder" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
             <button className="friendBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
           </nav>

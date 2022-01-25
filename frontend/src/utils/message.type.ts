@@ -1,7 +1,8 @@
 export type MessageType = {
 	id: number;
 	sentAt: string;
-	sender: string;
+	sender: string | undefined;
 	body: string;
-	avatar: string;
+	avatar: string | undefined;
+    receiver?: string | undefined;
 }

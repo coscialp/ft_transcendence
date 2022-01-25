@@ -14,6 +14,7 @@ export function Home() {
   const [cookies] = useCookies();
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
+  const [currentChat, setCurrentChat] = useState("");
 
   useEffect(() => {
     let mount = true;
@@ -33,9 +34,9 @@ export function Home() {
       <div className="HomeMain" >
         <Gamemode />
         <MainMenu me={me} />
-        <Friendlist />
+        <Friendlist currentChat={currentChat} setCurrentChat={setCurrentChat} />
       </div>
-      <PrivateMessage />
+      <PrivateMessage currentChat={currentChat} setCurrentChat={setCurrentChat} me={me} />
     </div>
   );
 }
