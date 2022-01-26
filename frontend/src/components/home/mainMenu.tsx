@@ -6,7 +6,6 @@ import './mainMenu.css'
 
 import { useHistory } from "react-router";
 import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
-import { User } from "../../utils/user.type";
 import { useForceUpdate } from "../../utils/forceUpdate";
 import { ip } from "../../App";
 import { MessageType } from "../../utils/message.type";
@@ -22,7 +21,6 @@ export function MainMenu(data: any) {
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
-	const [me, setMe] = useState<User>();
 	const [socket, setSocket] = useState<Socket>();
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
