@@ -72,9 +72,10 @@ export class ChannelService {
   async getMessageByChannel(name: string): Promise<{messages: Message[]}> {
     const allMessages = await this.messagesRepository.getMessages();
     
+
     let messages: Message[] = [];
     for (let message of allMessages) {
-      if (message.channel.name === name) {
+      if (message.channel && message.channel.name === name) {
         messages.push(message);
       }
     }

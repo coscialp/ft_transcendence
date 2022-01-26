@@ -21,7 +21,6 @@ export function MainMenu(data: any) {
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
-	const [socket, setSocket] = useState<Socket>();
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
 
@@ -30,7 +29,6 @@ export function MainMenu(data: any) {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
 			requestApi.get('user/channels/connected').then((response) => {
 				response.channelsConnected.map((chan: any) => 
 					channels.push(chan.name)
@@ -44,9 +42,9 @@ export function MainMenu(data: any) {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			if (socket) {
+			if (data.socket) {
 
-				socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
+				data.socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
 					console.log(`msg: ${msg}`);
 					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
@@ -55,7 +53,7 @@ export function MainMenu(data: any) {
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [socket, cookies, messages]);
+	}, [data.socket, cookies, messages]);
 
 
 
@@ -72,15 +70,15 @@ export function MainMenu(data: any) {
 				window.alert("Channel's name already taken !")
 			}
 			else {
-				const data = {
+				const channelInfo = {
 					name: channelName,
 					password: channelPassword,
 				}
-				requestApi.post('channel/create', { body: data, contentType: 'application/json' });
+				requestApi.post('channel/create', { body: channelInfo, contentType: 'application/json' });
 
 				channels.push(channelName);
-				if (socket) {
-					socket.emit('change_channel', { channelName: channelName });
+				if (data.socket) {
+					data.socket.emit('change_channel', { channelName: channelName });
 					setCurrent_Channel(channelName);
 				}
 				setMessages([]);
@@ -98,15 +96,15 @@ export function MainMenu(data: any) {
 			window.alert("Channel's name cannot be empty !")
 		}
 		else {
-			const data = {
+			const channelInfo = {
 				name: channelName,
 				password: channelPassword,
 			}
-			requestApi.patch('channel/join', { body: data, contentType: 'application/json' });
+			requestApi.patch('channel/join', { body: channelInfo, contentType: 'application/json' });
 
 			channels.push(channelName);
-			if (socket) {
-				socket.emit('change_channel', { channelName: channelName });
+			if (data.socket) {
+				data.socket.emit('change_channel', { channelName: channelName });
 				setCurrent_Channel(channelName);
 			}
 			setMessages([]);
@@ -121,8 +119,8 @@ export function MainMenu(data: any) {
 	function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
 		if (messageInput) {
 			console.log(messageInput);
-			if (socket) {
-				socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
+			if (data.socket) {
+				data.socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
 				console.log(`msg_toClient/${current_channel}`);
 			}
 			setMessageInput('');
@@ -135,6 +133,7 @@ export function MainMenu(data: any) {
 		let mount = true;
 		if (mount) {
 			if (current_channel) {
+				console.log(current_channel);
 				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
 					response.messages.map((msg: any) =>
 						messages.push({ id: messages.length, sentAt: msg.date, sender: msg.sender.username, body: msg.content, avatar: msg.sender.profileImage })
@@ -149,8 +148,8 @@ export function MainMenu(data: any) {
 
 	function changeChannel(e: any) {
 		console.log(e.target.innerText);
-		if (socket) {
-			socket.emit('change_channel', { channelName: e.target.innerText });
+		if (data.socket) {
+			data.socket.emit('change_channel', { channelName: e.target.innerText });
 			setCurrent_Channel(e.target.innerText);
 		}
 		setMessages([]);

@@ -29,8 +29,8 @@ export class User {
     @Column({nullable: true})
     email?: string | null;
 
-    @Column({nullable: false, default: false})
-    isLogged: boolean;
+    @Column()
+    isLogged: string;
 
     @Column({nullable: false, default: false})
     isAdmin: boolean;
