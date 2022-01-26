@@ -14,26 +14,48 @@ export class ChannelsRepository extends Repository<Channel> {
         super();
     }
 
+    async getChannel(): Promise<Channel[]> {
+        const query = this.createQueryBuilder('channel')
+        .leftJoinAndSelect('channel.creator', 'creator')
+        .leftJoinAndSelect('channel.admin', 'admin')
+        .leftJoinAndSelect('channel.userConnected', 'userConnected')
+        .leftJoinAndSelect('channel.messages', 'messages')
+    
+        const channels = await query.getMany();
+    
+        return channels;
+      }
+
     async createChannel(user: User, name: string, password: string, userService: UserService): Promise<void> {
+        const currUser = await userService.getUserById(user.id);
+        
         const channel: Channel = this.create({
             name,
             password,
-            creator: user,
+            creator: currUser,
             messages: [],
             admin: [],
             userConnected: [],
         })
 
-        channel.admin.push(user);
+        channel.admin.push(currUser);
+        channel.userConnected.push(currUser);
+
+    
+        currUser.channels.push(channel);
+        currUser.channelsAdmin.push(channel);
+        currUser.channelsConnected.push(channel);
+
+        try {
+            await this.save(channel);
+            await this.usersRepository.save(currUser);
+        } catch (e) {
+            console.log(e.code);
+        }
+    }
+
+    async joinChannel(user: User, channel: Channel) {
         channel.userConnected.push(user);
-
-        user.channels = (await userService.getChannelsCreator(user)).channels;
-        user.channels.push(channel);
-
-        user.channelsAdmin = (await userService.getChannelsAdmin(user)).channelsAdmin;
-        user.channelsAdmin.push(channel);
-
-        user.channelsConnected = (await userService.getChannelsConnected(user)).channelsConnected;
         user.channelsConnected.push(channel);
 
         try {

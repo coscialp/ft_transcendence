@@ -32,7 +32,7 @@ export function Home() {
       <NavBar page="Home" />
       <div className="HomeMain" >
         <Gamemode />
-        <MainMenu me={me} />
+        <MainMenu me={me}/>
         <Friendlist />
       </div>
       <PrivateMessage />

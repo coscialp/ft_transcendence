@@ -301,3 +301,13 @@ span.cancel-cross:hover label.cancel{
 }
 
 }
+
+.testing
+{
+  position:absolute;
+  height:20%;
+  width:20%;
+  background: white;
+  right:0;
+  bottom:0;
+}

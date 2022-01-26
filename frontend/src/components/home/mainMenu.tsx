@@ -6,14 +6,10 @@ import './mainMenu.css'
 
 import { useHistory } from "react-router";
 import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
-import { MessageType } from "../../utils/message.type";
+import { User } from "../../utils/user.type";
+import { useForceUpdate } from "../../utils/forceUpdate";
 import { ip } from "../../App";
-
-function useForceUpdate() {
-	// eslint-disable-next-line
-	const [value, setValue] = useState(0);
-	return () => setValue(value => ++value);
-}
+import { MessageType } from "../../utils/message.type";
 
 export function MainMenu(data: any) {
 	let history = useHistory();
@@ -21,27 +17,30 @@ export function MainMenu(data: any) {
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
 	const [current_channel, setCurrent_Channel] = useState<string>('');
-	// eslint-disable-next-line
-	const [channels, setChannels] = useState<string[]>([]);
+	const [channels] = useState<string[]>([]);
 	const [channelName, setChannelName] = useState<string>('');
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
-	// eslint-disable-next-line
-	const [scrollTarget, setScrollTarget] = useState();
+	const [me, setMe] = useState<User>();
 	const [socket, setSocket] = useState<Socket>();
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
 
 	const forceUpdate = useForceUpdate();
 
-
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
 			setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
+			requestApi.get('user/channels/connected').then((response) => {
+				response.channelsConnected.map((chan: any) => 
+					channels.push(chan.name)
+				)
+			})
 		}
 		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cookies]);
 
 	useEffect(() => {
@@ -82,6 +81,11 @@ export function MainMenu(data: any) {
 				requestApi.post('channel/create', { body: data, contentType: 'application/json' });
 
 				channels.push(channelName);
+				if (socket) {
+					socket.emit('change_channel', { channelName: channelName });
+					setCurrent_Channel(channelName);
+				}
+				setMessages([]);
 				togglePopup();
 				setChannelName('');
 				setChannelPassword('');
@@ -100,9 +104,14 @@ export function MainMenu(data: any) {
 				name: channelName,
 				password: channelPassword,
 			}
-			requestApi.post('channel/create', { body: data, contentType: 'application/json' });
+			requestApi.patch('channel/join', { body: data, contentType: 'application/json' });
 
 			channels.push(channelName);
+			if (socket) {
+				socket.emit('change_channel', { channelName: channelName });
+				setCurrent_Channel(channelName);
+			}
+			setMessages([]);
 			togglePopup();
 			setChannelName('');
 			setChannelPassword('');
@@ -123,6 +132,22 @@ export function MainMenu(data: any) {
 		e.preventDefault();
 	}
 
+
+	useEffect(() => {
+		let mount = true;
+		if (mount) {
+			if (current_channel) {
+				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
+					response.messages.map((msg: any) =>
+						messages.push({ id: messages.length, sentAt: msg.date, sender: msg.sender.username, body: msg.content, avatar: msg.sender.profileImage })
+					);
+					forceUpdate();
+				})
+			}
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cookies, messages, current_channel]);
 
 	function changeChannel(e: any) {
 		console.log(e.target.innerText);
@@ -147,7 +172,9 @@ export function MainMenu(data: any) {
 				<button className="addChannel" onClick={togglePopup}>+</button>
 			</div>
 			<div className="Message Container" >
-				{messages.map((message: any) => (
+				{console.log(messages)}
+				{messages.map((message: any) =>
+				(
 					<article key={message.id} className='message-container'>
 						<div className="img-content" >
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />

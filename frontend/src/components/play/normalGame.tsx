@@ -6,6 +6,8 @@ import { PlayOutline } from 'heroicons-react';
 import { isLogged } from "../../utils/isLogged";
 import { GameManager } from "./gamemanager";
 import { useHistory } from "react-router";
+import { io } from "socket.io-client";
+import { ip } from "../../App";
 
 type User = {
   id: string,
@@ -36,7 +38,8 @@ export function Normal() {
 
   useEffect(() => {
     let mount = true;
-    if (mount) {
+    if (mount && player) {
+      player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
       if (player?.Socket) {
         console.log(`startgame/${me?.username}`);
         player.Socket.on(`startgame/${me?.username}`, (msg: any) => {

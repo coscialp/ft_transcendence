@@ -18,7 +18,7 @@ export class GameGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('GameGateway');
-    private usersInQueue: User[];
+    private usersInQueue: User[]; 
     private MatchInProgress: {
         user1: User, 
         user2: User, 
@@ -47,7 +47,6 @@ export class GameGateway
             this.usersInQueue.push(user);
         }
         for (let u of this.usersInQueue) {
-            console.log(u.username)
             if (user.username !== u.username) {
                 this.server.emit(`startgame/${user.username}`, 'Player1');
                 this.server.emit(`startgame/${u.username}`, 'Player2');
@@ -56,58 +55,55 @@ export class GameGateway
                 this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
             }
         }
-        console.log('-------------------------------------------------------------------------')
     }
     @SubscribeMessage('ReadyUp')
-    async ReadyUp(
-        @ConnectedSocket() socket: Socket,
-        @MessageBody() message: string): Promise<void> {
-        const user: User = await this.gameService.getUserFromSocket(socket);
-        console.log(`ReadyUp/${this.getId(this.MatchInProgress, user)}`)
-        this.server.emit(`ReadyUp/${this.getId(this.MatchInProgress, user)}`, message);
+     ReadyUp(
+        @ConnectedSocket() socket: Socket,  
+        @MessageBody() data: any){
+        this.server.emit(`ReadyUp/${data.gameId}`, data.player);
     }
+
     @SubscribeMessage('getGameID')
     async getOpponent(
         @ConnectedSocket() socket: Socket,
-        @MessageBody() message: string): Promise<void> {
+        @MessageBody() message: string, id: number): Promise<void> {
         const user: User = await this.gameService.getUserFromSocket(socket);
-        
-        console.log(this.MatchInProgress)
         for(let {user1, user2, gameID} of this.MatchInProgress)
         {
             if (user1.username === user.username || user2.username === user.username){
-                console.log(gameID);
                 this.server.emit(`getGameID/${user.username}`, gameID);
             }
         }
         
     }
-
-
-    @SubscribeMessage('AddPoint')
-    async AddPoint(
+    @SubscribeMessage('finishGame')
+    finishGame(
         @ConnectedSocket() socket: Socket,
-        @MessageBody() Player: string): Promise<void> {
-        const user: User = await this.gameService.getUserFromSocket(socket);
-        this.server.emit(`AddPoint/${user.username}`, Player);
+        @MessageBody() data: any){
+        this.server.emit(`finishGame/${data.gameId}`, data.player);
+        
+    }
+    @SubscribeMessage('AddPoint')
+    AddPoint(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+        this.server.emit(`AddPoint/${data.gameId}`, data.point);
     }
 
     @SubscribeMessage('SetPosition')
-    async SetPosition(
+    SetPosition(
         @ConnectedSocket() socket: Socket,
-        @MessageBody() Position: number, @MessageBody() Player: string): Promise<void> {
-        const user: User = await this.gameService.getUserFromSocket(socket);
-        console.log(`string : SetPosition/${user.username}`);
-        this.server.emit(`SetPosition/${user.username}`, Position[0], Position[1]);
+        @MessageBody() data: any){
+        
+        this.server.emit(`SetPosition/${data.gameId}`, data.pos, data.id);
     }
 
-
+    
     @SubscribeMessage('SetBallPos')
-    async SetBallPos(
+    SetBallPos(
         @ConnectedSocket() socket: Socket,
-        @MessageBody() posx: number, @MessageBody() posy: number): Promise<void> {
-        const user: User = await this.gameService.getUserFromSocket(socket);
-        this.server.emit(`SetBallPos/${user.username}`, posx[0], posy[1]);
+        @MessageBody() data:any){
+        this.server.emit(`SetBallPos/${data.id}`, data.posx, data.posy);
     }
 
     async afterInit(server: Server) {
