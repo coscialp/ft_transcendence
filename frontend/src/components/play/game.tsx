@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Unity from "react-unity-webgl";
 import { GameManager } from "./gamemanager";
 import './duel.css'
@@ -15,8 +15,38 @@ export function InGame() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
   const [reload, setReload] = useState<Boolean>(false);
+  const [leave, setLeave] = useState<number>(0);
+  const [leaveTime, setLeaveTime] = useState<number>(0);
+  const leaveTimeRef = useRef(leaveTime);
+  const [tabTime, setTabTime] = useState<number>(0);
+  const leaveRef = useRef(leave);
+  const setMyState = (data: any) => {
+    leaveRef.current = data;
+    setLeave(data);
+  }
+  const setMyLeaveTime = (data: any) => {
+    leaveTimeRef.current = data;
+    setLeaveTime(data);
+  }
   player.ID = String(localStorage.getItem('playerID'));
 
+
+  const onBlur = () => {
+      setMyState(leaveRef.current + 1);
+      setMyLeaveTime(1);
+  };
+  const onFocus = () => {
+    setMyLeaveTime(0);
+};
+
+    useEffect(() => {
+        window.addEventListener("blur", onBlur);
+        window.addEventListener("focus", onFocus);
+        return () => {
+            window.removeEventListener("blur", onBlur);
+            window.removeEventListener("focus", onFocus);
+    };
+  });
   useEffect(() => {
     let mount = true;
     if (mount) {
@@ -24,7 +54,7 @@ export function InGame() {
       player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
     }
     return (() => { mount = false; });
-  }, [cookies, player])
+  }, [cookies, player]);
 
   useEffect(function () {
     player.send_ready_up();
@@ -50,13 +80,6 @@ export function InGame() {
     player.Socket.emit('ReadyUp', { player: id, gameId: gameid });
   }
 
-  function game_focus()
-  {
-    let test: any = document.getElementsByClassName('game_screen')[0];
-    test.focus();
-    console.log();
-  }
-
   useEffect(function () {
     player.receive_ball_position();
     player.receive_player_position();
@@ -69,11 +92,21 @@ export function InGame() {
   }
 
   setInterval(() => {
+    if (leaveTimeRef.current === 1)
+    {
+      setTabTime(tabTime + 1);
+    }
+    else
+    {
+      setTabTime(0);
+    }
+    if (tabTime === 10)
+      console.log("you've left the game");
+    if (player.GameState === true || leaveRef.current === 2)
+      console.log("leave page");
     check_ready(player);
   }, 1000);
-  setInterval(() => {
-    game_focus();
-  }, 10);
+
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
   }
