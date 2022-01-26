@@ -61,7 +61,7 @@ export function MainMenu(data: any) {
 		setShowPopup(!showPopup);
 	}
 
-	function handleCreateNewChannel(e: any) {
+ 	function handleCreateNewChannel(e: any) {
 		if (channelName === "") {
 			window.alert("Channel's name cannot be empty !")
 		}
@@ -135,6 +135,7 @@ export function MainMenu(data: any) {
 			if (current_channel) {
 				console.log(current_channel);
 				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
+					console.log(`res: ${response}`);
 					response.messages.map((msg: any) =>
 						messages.push({ id: messages.length, sentAt: msg.date, sender: msg.sender.username, body: msg.content, avatar: msg.sender.profileImage })
 					);
@@ -194,6 +195,13 @@ export function MainMenu(data: any) {
 								<VolumeOff className="chatUserParam" />
 								<Trash className="chatUserParam" />
 							</div>
+						<div className="scrollingMenu container">
+        					<UserCircle className="chatUserParam" />
+        					<Challenge className="chatUserParam" />
+        					<ChevronDoubleUp className="chatUserParam" />
+        					<VolumeOff className="chatUserParam" />
+        					<Trash className="chatUserParam" />
+      					</div >
 						</div>
 					</article>
 				))}

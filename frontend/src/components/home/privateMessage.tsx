@@ -77,7 +77,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
                 
 				socket.on(`private_message/${me?.username}`, (msg: any) => {
                     console.log(msg);
-					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username });
+					conversations.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username });
 					forceUpdate();
 				})
 			}
@@ -99,10 +99,10 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
         e.preventDefault();
     }
 
-    function handleSelectConversation(sender: string) {
+    function handleSelectConversation(receiver: string) {
         if (socket) {
-            socket.emit('change_conversation', {conversationName: sender});
-            setCurrentChat(sender);
+            socket.emit('change_conversation', {conversationName: receiver});
+            setCurrentChat(receiver);
             console.log(`here: ${currentChat}`)
         }
         setMessages([]);
@@ -116,7 +116,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
                 <ArrowSmUp id="arrowL" onClick={() => Open_Message()} />
             </div>
             <div className="scrollMessageContainer">
-            {
+            { 
                 isConvOpen === false ? conversations.map((message: any) => (
                     <article key={message.id} id='message-container' onClick={(e) => handleSelectConversation(message.sender)}>
                             <div>
