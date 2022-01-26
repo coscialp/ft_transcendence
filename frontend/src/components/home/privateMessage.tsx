@@ -56,7 +56,6 @@ export default function PrivateMessage({currentChat, setCurrentChat, me}: any) {
         let mount = true;
 		if (mount) {
             setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
-            setConversations([]);
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
