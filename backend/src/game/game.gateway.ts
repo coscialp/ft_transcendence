@@ -18,22 +18,21 @@ export class GameGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('GameGateway');
-    private usersInQueue: User[]; 
+    private usersInQueue: User[];
     private MatchInProgress: {
-        user1: User, 
-        user2: User, 
-        gameID: number }[];
+        user1: User,
+        user2: User,
+        gameID: number
+    }[];
     constructor(
         private readonly gameService: GameService,
     ) {
         this.usersInQueue = [];
         this.MatchInProgress = [];
     }
-    getId(MatchInProgress: {user1: User, user2: User, gameID: number}[], user: User)
-    {
-        for(let {user1, user2, gameID} of this.MatchInProgress)
-        {
-            if (user1.username === user.username || user2.username === user.username){
+    getId(MatchInProgress: { user1: User, user2: User, gameID: number }[], user: User) {
+        for (let { user1, user2, gameID } of this.MatchInProgress) {
+            if (user1.username === user.username || user2.username === user.username) {
                 return gameID;
             }
         }
@@ -50,16 +49,16 @@ export class GameGateway
             if (user.username !== u.username) {
                 this.server.emit(`startgame/${user.username}`, 'Player1');
                 this.server.emit(`startgame/${u.username}`, 'Player2');
-                this.MatchInProgress.push({user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1)});
+                this.MatchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1) });
                 this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
                 this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
             }
         }
     }
     @SubscribeMessage('ReadyUp')
-     ReadyUp(
-        @ConnectedSocket() socket: Socket,  
-        @MessageBody() data: any){
+    ReadyUp(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
         this.server.emit(`ReadyUp/${data.gameId}`, data.player);
     }
 
@@ -68,20 +67,28 @@ export class GameGateway
         @ConnectedSocket() socket: Socket,
         @MessageBody() message: string, id: number): Promise<void> {
         const user: User = await this.gameService.getUserFromSocket(socket);
-        for(let {user1, user2, gameID} of this.MatchInProgress)
-        {
-            if (user1.username === user.username || user2.username === user.username){
+        for (let { user1, user2, gameID } of this.MatchInProgress) {
+            if (user1.username === user.username || user2.username === user.username) {
                 this.server.emit(`getGameID/${user.username}`, gameID);
             }
         }
-        
+
     }
     @SubscribeMessage('finishGame')
-    finishGame(
+    async finishGame(
         @ConnectedSocket() socket: Socket,
-        @MessageBody() data: any){
+        @MessageBody() data: any) {
+        const user: User = await this.gameService.getUserFromSocket(socket);
         this.server.emit(`finishGame/${data.gameId}`, data.player);
-        
+        for (let { user1, user2, gameID } of this.MatchInProgress) {
+            if (user1.username === user.username || user2.username === user.username) {
+                const gameToDelete = this.MatchInProgress.indexOf({user1, user2, gameID}, 1);
+                console.log(gameToDelete);
+                if (gameToDelete != -1) {
+                    this.MatchInProgress.splice(gameToDelete, 1);
+                }
+            }
+        }
     }
     @SubscribeMessage('AddPoint')
     AddPoint(
@@ -93,16 +100,16 @@ export class GameGateway
     @SubscribeMessage('SetPosition')
     SetPosition(
         @ConnectedSocket() socket: Socket,
-        @MessageBody() data: any){
-        
+        @MessageBody() data: any) {
+
         this.server.emit(`SetPosition/${data.gameId}`, data.pos, data.id);
     }
 
-    
+
     @SubscribeMessage('SetBallPos')
     SetBallPos(
         @ConnectedSocket() socket: Socket,
-        @MessageBody() data:any){
+        @MessageBody() data: any) {
         this.server.emit(`SetBallPos/${data.id}`, data.posx, data.posy);
     }
 
