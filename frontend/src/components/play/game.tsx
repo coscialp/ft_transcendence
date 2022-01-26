@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Unity from "react-unity-webgl";
 import { GameManager } from "./gamemanager";
 import './duel.css'
@@ -11,13 +11,13 @@ import { ip } from "../../App";
 
 export function InGame() {
 
-  //let history = useHistory();
+  let history = useHistory();
   const [player] = useState<GameManager>(new GameManager());
   const [cookies] = useCookies();
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
   const [reload, setReload] = useState<Boolean>(false);
-  const focusDiv = useRef();
+  const [gameFinish, setGameFinish] = useState<Boolean>(false);
   player.ID = String(localStorage.getItem('playerID'));
 
   useEffect(() => {
@@ -53,30 +53,26 @@ export function InGame() {
     player.Socket.emit('ReadyUp', { player: id, gameId: gameid });
   }
 
-  function game_focus()
-  {
-    let test: any = document.getElementsByClassName('game_screen')[0];
-    test.focus();
-    console.log();
-  }
-
   useEffect(function () {
     player.receive_ball_position();
     player.receive_player_position();
     player.receive_point();
     player.receive_ready_up();
+    player.receive_endgame(setGameFinish);
   }, [reload, player]);
 
   function check_ready(player: any) {
+    console.log(gameFinish);
+    if (gameFinish === true) {
+      return history.push('/resume');
+    }
     player.ready_checker();
   }
 
   setInterval(() => {
     check_ready(player);
   }, 1000);
-  setInterval(() => {
-    game_focus();
-  }, 10);
+
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
   }

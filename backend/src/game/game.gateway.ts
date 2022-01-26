@@ -77,11 +77,19 @@ export class GameGateway
         
     }
     @SubscribeMessage('finishGame')
-    finishGame(
+    async finishGame(
         @ConnectedSocket() socket: Socket,
-        @MessageBody() data: any){
+        @MessageBody() data: any) {
+        const user: User = await this.gameService.getUserFromSocket(socket);
         this.server.emit(`finishGame/${data.gameId}`, data.player);
-        
+        let gameToDelete = this.MatchInProgress.findIndex(u => u.user1.username === user.username);
+        if (gameToDelete === -1){
+            gameToDelete = this.MatchInProgress.findIndex(u => u.user2.username === user.username);
+        }
+        if (gameToDelete !== -1) {
+                       this.MatchInProgress.splice(gameToDelete, 1);
+                       console.log(this.MatchInProgress);
+                   }
     }
     @SubscribeMessage('AddPoint')
     AddPoint(
