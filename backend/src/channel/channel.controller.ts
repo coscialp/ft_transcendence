@@ -25,8 +25,8 @@ export class ChannelController {
     return await this.channelService.getMessageByChannel(name);
   }
 
-  @Get('privmessages/')
-  async getMessageByUser(@GetUser() user: User) {
+  @Get('privmessages/:id')
+  async getMessageByUser(@GetUser() user: User, @Param('id') id: string) {
     return await this.channelService.getMessageByUser(user);
   }
 
