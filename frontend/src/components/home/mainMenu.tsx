@@ -63,7 +63,7 @@ export function MainMenu(data: any) {
 		setShowPopup(!showPopup);
 	}
 
-	function handleCreateNewChannel(e: any) {
+	async function handleCreateNewChannel(e: any) {
 		if (channelName === "") {
 			window.alert("Channel's name cannot be empty !")
 		}
@@ -76,7 +76,7 @@ export function MainMenu(data: any) {
 					name: channelName,
 					password: channelPassword,
 				}
-				requestApi.post('channel/create', { body: data, contentType: 'application/json' });
+				await requestApi.post('channel/create', { body: data, contentType: 'application/json' });
 
 				channels.push(channelName);
 				if (socket) {
@@ -136,6 +136,7 @@ export function MainMenu(data: any) {
 		if (mount) {
 			if (current_channel) {
 				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
+					console.log(`res: ${response}`);
 					response.messages.map((msg: any) =>
 						messages.push({ id: messages.length, sentAt: msg.date, sender: msg.sender.username, body: msg.content, avatar: msg.sender.profileImage })
 					);

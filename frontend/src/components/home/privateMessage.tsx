@@ -33,7 +33,7 @@ export function Open_Message() {
 }
 
 
-export default function PrivateMessage({currentChat, setCurrentChat}: any, data: any) {
+export default function PrivateMessage({currentChat, setCurrentChat, me}: any) {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
     const [conversations, setConversations] = useState<MessageType[]>([]);
     const [messageInput, setMessageInput] = useState("");
@@ -55,21 +55,21 @@ export default function PrivateMessage({currentChat, setCurrentChat}: any, data:
         let mount = true;
 		if (mount) {
             setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
-            setConversations([{
+            /*setConversations([{
                 id: 0,
                 sentAt: '14',
                 sender: 'wasayad',
                 body: 'coucou',
                 avatar: 'https://cdn.intra.42.fr/users/medium_wasayad.jpg',
-                receiver: data.me?.username,
+                receiver: me?.username,
             },{
                 id: 1,
                 sentAt: '14',
                 sender: 'coco',
                 body: 'coucou',
                 avatar: 'https://cdn.intra.42.fr/users/medium_wasayad.jpg',
-                receiver: data.me?.username,
-            }])
+                receiver: me?.username,
+            }])*/
             /*requestApi.get('user/conversations/connected').then((response) => {
 				response.conversationsConnected.map((chan: any) => 
 					conversations.push(chan.name)
@@ -85,9 +85,9 @@ export default function PrivateMessage({currentChat, setCurrentChat}: any, data:
 		if (mount) {
             if (socket) {
                 
-				socket.on(`private_message/${data.me?.username}`, (msg: any) => {
+				socket.on(`private_message/${me?.username}`, (msg: any) => {
                     console.log(msg);
-					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username });
+					conversations.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username });
 					forceUpdate();
 				})
 			}
@@ -102,17 +102,17 @@ export default function PrivateMessage({currentChat, setCurrentChat}: any, data:
         if (messageInput) {
             if (socket) {
                 socket.emit('private_message', { sentAt: Date(), body: messageInput, receiver: receiver });
-                messages.push({ id: messages.length, sentAt: Date(), sender: data.me?.username, body: messageInput, avatar: data.me?.profileImage, receiver: receiver });
+                messages.push({ id: messages.length, sentAt: Date(), sender: me?.username, body: messageInput, avatar: me?.profileImage, receiver: currentChat });
 			}
 			setMessageInput('');
 		}
         e.preventDefault();
     }
 
-    function handleSelectConversation(sender: string) {
+    function handleSelectConversation(receiver: string) {
         if (socket) {
-            socket.emit('change_conversation', {conversationName: sender});
-            setCurrentChat(sender);
+            socket.emit('change_conversation', {conversationName: receiver});
+            setCurrentChat(receiver);
             console.log(`here: ${currentChat}`)
         }
         setMessages([]);
@@ -126,7 +126,7 @@ export default function PrivateMessage({currentChat, setCurrentChat}: any, data:
                 <ArrowSmUp id="arrowL" onClick={() => Open_Message()} />
             </div>
             <div className="scrollMessageContainer">
-            {
+            { 
                 isConvOpen === false ? conversations.map((message: any) => (
                     <article key={message.id} id='message-container' onClick={(e) => handleSelectConversation(message.sender)}>
                             <div>
@@ -149,7 +149,7 @@ export default function PrivateMessage({currentChat, setCurrentChat}: any, data:
                             <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
                             {
                                 messages.map((messages: any) => (
-                                    messages.sender === data.me.username ?
+                                    messages.sender === me.username ?
                                         <div className="bubble sender"> {messages.body} </div> :
                                         <div className="bubble recipient"> {messages.body} </div>
                                 ))
