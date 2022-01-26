@@ -40,8 +40,8 @@ export default function PrivateMessage({currentChat, setCurrentChat, me}: any) {
     const [cookies] = useCookies();
 	const [socket, setSocket] = useState<Socket>();
     const [messages, setMessages] = useState<MessageType[]>([]);
-    const [receiver, setReceiver] = useState<string>('wasayad');
-    
+    const [receiver, setReceiver] = useState<string>('akerdeka');
+
     const forceUpdate = useForceUpdate();
     
     useEffect(() => {
@@ -100,9 +100,9 @@ export default function PrivateMessage({currentChat, setCurrentChat, me}: any) {
     
     function handleSendMessage(e: any) {
         if (messageInput) {
-            if (socket) {
-                socket.emit('private_message', { sentAt: Date(), body: messageInput, receiver: receiver });
-                messages.push({ id: messages.length, sentAt: Date(), sender: me?.username, body: messageInput, avatar: me?.profileImage, receiver: currentChat });
+			if (socket) {
+				socket.emit('private_message', { sentAt: Date(), body: messageInput, receiver: receiver });
+                // messages.push({ id: messages.length, sentAt: Date(), sender: me?.username, body: messageInput, avatar: me?.profileImage, receiver: receiver });
 			}
 			setMessageInput('');
 		}
