@@ -82,4 +82,19 @@ export class ChannelService {
     console.log(messages);
     return { messages };
   }
+
+  async getMessageByUser(user: User, name: string): Promise<{messages: Message[]}> {
+    const allMessages = await this.messagesRepository.getMessages();
+    
+
+    let messages: Message[] = [];
+    for (let message of allMessages) {
+      if (message.receiver && message.receiver.username === name) {
+        messages.push(message);
+      } else if (message.sender.username === user.username) {
+        messages.push(message);
+      }
+    }
+    return { messages };
+  }
 }

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { io, Socket } from "socket.io-client";
 import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
 

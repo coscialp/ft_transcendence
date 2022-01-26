@@ -15,7 +15,7 @@ import { GameService } from './game.service';
 
 @WebSocketGateway(5002, { transports: ['websocket'] })
 export class GameGateway
-    implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+    implements OnGatewayInit {
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('GameGateway');
     private usersInQueue: User[]; 
@@ -108,19 +108,5 @@ export class GameGateway
 
     async afterInit(server: Server) {
         this.logger.log('Init');
-    }
-
-    async handleDisconnect(@ConnectedSocket() socket: Socket) {
-
-        try {
-        } catch (error) {
-            this.logger.error(error);
-        }
-    }
-    async handleConnection(@ConnectedSocket() socket: Socket) {
-        try {
-        } catch (error) {
-            this.logger.error(error);
-        }
     }
 }

@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Unity from "react-unity-webgl";
 import { GameManager } from "./gamemanager";
 import './duel.css'
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { isLogged } from "../../utils/isLogged";
 import { User } from "../../utils/user.type";
 import { useCookies } from "react-cookie";
@@ -10,14 +10,11 @@ import { io } from "socket.io-client";
 import { ip } from "../../App";
 
 export function InGame() {
-
-  //let history = useHistory();
   const [player] = useState<GameManager>(new GameManager());
   const [cookies] = useCookies();
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
   const [reload, setReload] = useState<Boolean>(false);
-  const focusDiv = useRef();
   player.ID = String(localStorage.getItem('playerID'));
 
   useEffect(() => {
