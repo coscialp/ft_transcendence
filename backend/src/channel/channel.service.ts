@@ -115,6 +115,7 @@ export class ChannelService {
 
       if (
         message.receiver &&
+        message.sender &&
         message.receiver.username === user.username &&
         !messages.find(
           (msg) => msg.property.username === message.sender.username,

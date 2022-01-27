@@ -1,21 +1,67 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Unity from "react-unity-webgl";
 import { GameManager } from "./gamemanager";
 import './duel.css'
-import { Redirect } from "react-router-dom";
+import { Redirect, useHistory } from "react-router-dom";
 import { isLogged } from "../../utils/isLogged";
 import { User } from "../../utils/user.type";
 import { useCookies } from "react-cookie";
 import { io } from "socket.io-client";
 import { ip } from "../../App";
 
+const onFocus = (player: GameManager, leave: any, setLeave: any) => {
+};
+
+// User has switched away from the tab (AKA tab is hidden)
+const onBlur = (player: GameManager, leave: any, setLeave: any) => {
+  setLeave(leave + 1);
+  console.log('test');
+  console.log(`${leave}`);
+  if (leave === 3)
+    player.Socket.emit('warning');
+};
+
 export function InGame() {
+
+  let history = useHistory();
   const [player] = useState<GameManager>(new GameManager());
+  const [leave, setLeave] = useState<number>(0);
   const [cookies] = useCookies();
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
-  const [reload, setReload] = useState<Boolean>(false);
+  const [reload, setReload] = useState<boolean>(false);
+  const [gameFinish, setGameFinish] = useState<boolean>(false);
+  const [leaveTime, setLeaveTime] = useState<number>(0);
+  const leaveTimeRef = useRef(leaveTime);
+  const [tabTime, setTabTime] = useState<number>(0);
+  const leaveRef = useRef(leave);
+  const setMyState = (data: any) => {
+    leaveRef.current = data;
+    setLeave(data);
+  }
+  const setMyLeaveTime = (data: any) => {
+    leaveTimeRef.current = data;
+    setLeaveTime(data);
+  }
   player.ID = String(localStorage.getItem('playerID'));
+
+
+  const onBlur = () => {
+      setMyState(leaveRef.current + 1);
+      setMyLeaveTime(1);
+  };
+  const onFocus = () => {
+    setMyLeaveTime(0);
+};
+
+    useEffect(() => {
+        window.addEventListener("blur", onBlur);
+        window.addEventListener("focus", onFocus);
+        return () => {
+            window.removeEventListener("blur", onBlur);
+            window.removeEventListener("focus", onFocus);
+    };
+  });
 
   useEffect(() => {
     let mount = true;
@@ -24,7 +70,7 @@ export function InGame() {
       player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
     }
     return (() => { mount = false; });
-  }, [cookies, player])
+  }, [cookies, player]);
 
   useEffect(function () {
     player.send_ready_up();
@@ -45,16 +91,8 @@ export function InGame() {
     return (() => { mount = false; });
   }, [me, player]);
 
-
   function setReady(id: string, gameid: number) {
     player.Socket.emit('ReadyUp', { player: id, gameId: gameid });
-  }
-
-  function game_focus()
-  {
-    let test: any = document.getElementsByClassName('game_screen')[0];
-    test.focus();
-    console.log();
   }
 
   useEffect(function () {
@@ -62,18 +100,33 @@ export function InGame() {
     player.receive_player_position();
     player.receive_point();
     player.receive_ready_up();
+    player.receive_endGame();
   }, [reload, player]);
 
   function check_ready(player: any) {
+    console.log(gameFinish);
+    if (gameFinish === true) {
+      return history.push('/resume');
+    }
     player.ready_checker();
   }
 
   setInterval(() => {
+    if (leaveTimeRef.current === 1)
+    {
+      setTabTime(tabTime + 1);
+    }
+    else
+    {
+      setTabTime(0);
+    }
+    if (tabTime === 10)
+      console.log("you've left the game");
+    if (player.GameState === true || leaveRef.current === 2)
+      console.log("leave page");
     check_ready(player);
   }, 1000);
-  setInterval(() => {
-    game_focus();
-  }, 10);
+
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
   }
