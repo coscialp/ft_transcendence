@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Socket } from 'socket.io';
@@ -13,10 +12,8 @@ import { ChannelsRepository } from './channels.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
 import { Channel } from './channel.entity';
-import { UserController } from 'src/user/user.controller';
 import { MessagesDto } from './dto/messages.dto';
 import { MessagesRepository } from './messages.repository';
-import { UsersRepository } from 'src/user/user.repository';
 import { Message } from './message.entity';
 
 @Injectable()
@@ -70,7 +67,7 @@ export class ChannelService {
   }
 
   async createMessage(user: User, message: MessagesDto): Promise<void> {
-    return await this.messagesRepository.createMessage(user, message);
+    return await this.messagesRepository.createMessage(user, message, this.userService, this);
   }
 
   async joinChannel(user: User, name: string, password: string): Promise<void> {
@@ -78,7 +75,7 @@ export class ChannelService {
 
     return await this.channelsRepository.joinChannel(
       await this.userService.getUserById(user.id, user),
-      channel,
+      channel, this.userService
     );
   }
 
@@ -91,7 +88,6 @@ export class ChannelService {
         messages.push(message);
       }
     }
-    console.log(messages);
     return { messages };
   }
 
@@ -108,6 +104,7 @@ export class ChannelService {
     for (let message of allMessages) {
       if (
         message.sender &&
+        message.receiver &&
         message.sender.username === user.username &&
         !messages.find(
           (msg) => msg.property.username === message.receiver.username,

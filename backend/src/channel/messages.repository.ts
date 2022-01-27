@@ -3,6 +3,7 @@ import { User } from 'src/user/user.entity';
 import { UsersRepository } from 'src/user/user.repository';
 import { UserService } from 'src/user/user.service';
 import { EntityRepository, Repository } from 'typeorm';
+import { ChannelService } from './channel.service';
 import { ChannelsRepository } from './channels.repository';
 import { MessagesDto } from './dto/messages.dto';
 import { Message } from './message.entity';
@@ -21,6 +22,8 @@ export class MessagesRepository extends Repository<Message> {
   async createMessage(
     user: User,
     message: MessagesDto,
+    userService: UserService,
+    channelService: ChannelService,
   ): Promise<void> {
     const msg: Message = this.create({
       sender: user,
@@ -30,13 +33,16 @@ export class MessagesRepository extends Repository<Message> {
       channel: message.channel,
     });
 
+    user.messagesSend = (await userService.getMessages(user.id, user)).messagesSend;
     user.messagesSend.push(msg);
 
     if (message.receiver) {
+      message.receiver.messagesReceive = (await userService.getMessages(message.receiver.id, message.receiver)).messagesReceive;
       message.receiver.messagesReceive.push(msg);
     }
 
     if (message.channel) {
+      message.channel.messages = (await channelService.getMessageByChannel(message.channel.name)).messages;
       message.channel.messages.push(msg);
     }
 
