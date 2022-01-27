@@ -1,6 +1,8 @@
 import { UnityContext } from "react-unity-webgl";
 import { io, Socket } from "socket.io-client";
 
+
+
 export class GameManager {
     private _P1ready: boolean;
     private _P2ready: boolean;
@@ -91,6 +93,11 @@ export class GameManager {
             }
         })
     }
+    receive_warning(setGameFinish: any) {
+        this._Socket.on(`warning/${this._GameID}`, () => {
+            setGameFinish(true);
+        })
+    }
     receive_ready_up() {
         this._Socket.on(`ReadyUp/${this._GameID}`, (playerID: string) => {
             console.log('test1');
@@ -110,7 +117,12 @@ export class GameManager {
             }
         })
     }
-
+    receive_endGame()
+    {
+        this._Socket.on(`finishgame/${this._GameID}`, (Player: string, score1: number, score2: number) => {
+            this._GameState = true;
+        })
+    }
 
     send_ready_up() {
         
@@ -139,9 +151,10 @@ export class GameManager {
                 else if (score1 !== 10 && score2 !== 10)
                     this._Socket.emit('AddPoint', { gameId: this._GameID, point: 'player2' });
             }
-            if (score1 === 2 || score2 === 10) {
+            if (score1 === 10 || score2 === 10) {
                 this._UnityContext.send("LocalPaddle", "setGameStarted", 0);
                 this._UnityContext.send("RemotePaddle", "setGameStarted", 0);
+                this._Socket.emit('finishGame', {gameId: this._GameID, player: this._ID, score1: score1, score2: score2})
                 this._GameState = true;
             }
         });

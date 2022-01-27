@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Socket } from 'socket.io';
@@ -13,10 +12,8 @@ import { ChannelsRepository } from './channels.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
 import { Channel } from './channel.entity';
-import { UserController } from 'src/user/user.controller';
 import { MessagesDto } from './dto/messages.dto';
 import { MessagesRepository } from './messages.repository';
-import { UsersRepository } from 'src/user/user.repository';
 import { Message } from './message.entity';
 
 @Injectable()
@@ -70,7 +67,7 @@ export class ChannelService {
   }
 
   async createMessage(user: User, message: MessagesDto): Promise<void> {
-    return await this.messagesRepository.createMessage(user, message);
+    return await this.messagesRepository.createMessage(user, message, this.userService, this);
   }
 
   async joinChannel(user: User, name: string, password: string): Promise<void> {
@@ -78,7 +75,7 @@ export class ChannelService {
 
     return await this.channelsRepository.joinChannel(
       await this.userService.getUserById(user.id, user),
-      channel,
+      channel, this.userService
     );
   }
 
@@ -91,18 +88,17 @@ export class ChannelService {
         messages.push(message);
       }
     }
-    console.log(messages);
     return { messages };
   }
 
   async getMessageByUser(
     user: User,
   ): Promise<{
-    messages: { property: User; send: Message[]; receive: Message[] }[];
+    messages: { property: User, conversations: Message[] }[];
   }> {
     const allMessages = await this.messagesRepository.getMessages();
 
-    const messages: { property: User; send: Message[]; receive: Message[] }[] =
+    const messages: { property: User, conversations: Message[] }[] =
       [];
 
     for (let message of allMessages) {
@@ -114,7 +110,7 @@ export class ChannelService {
           (msg) => msg.property.username === message.receiver.username,
         )
       ) {
-        messages.push({ property: message.receiver, send: [], receive: [] });
+        messages.push({ property: message.receiver, conversations: [] });
       }
 
       if (
@@ -125,7 +121,7 @@ export class ChannelService {
           (msg) => msg.property.username === message.sender.username,
         )
       ) {
-        messages.push({ property: message.sender, send: [], receive: [] });
+        messages.push({ property: message.sender, conversations: [] });
       }
     }
 
@@ -136,7 +132,7 @@ export class ChannelService {
             message.receiver &&
             message.receiver.username === conv.property.username
           ) {
-            conv.send.push(message);
+            conv.conversations.push(message);
           }
         }
       } else if (
@@ -148,7 +144,7 @@ export class ChannelService {
             message.sender &&
             message.sender.username === conv.property.username
           ) {
-            conv.receive.push(message);
+            conv.conversations.push(message);
           }
         }
       }

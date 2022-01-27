@@ -8,15 +8,6 @@ import { GetUserFilterDto } from 'src/user/dto/user-filter.dto';
 export class UsersRepository extends Repository<User> {
   async getUser(filterDto: GetUserFilterDto): Promise<User[]> {
     const query = this.createQueryBuilder('user')
-    .leftJoinAndSelect('user.friends', 'friends')
-    .leftJoinAndSelect('user.blackList', 'blackList')
-    .leftJoinAndSelect('user.requestFrom', 'requestFrom')
-    .leftJoinAndSelect('user.requestTo', 'requestTo')
-    .leftJoinAndSelect('user.messagesSend', 'messagesSend')
-    .leftJoinAndSelect('user.messagesReceive', 'messagesReceive')
-    .leftJoinAndSelect('user.channels', 'channels')
-    .leftJoinAndSelect('user.channelsAdmin', 'channelsAdmin')
-    .leftJoinAndSelect('user.channelsConnected', 'channelsConnected')
 
     const { search } = filterDto;
 
