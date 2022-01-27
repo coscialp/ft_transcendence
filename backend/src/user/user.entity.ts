@@ -29,7 +29,7 @@ export class User {
     @Column({nullable: true})
     email?: string | null;
 
-    @Column()
+    @Column({nullable: true, default: false})
     isLogged: string;
 
     @Column({nullable: false, default: false})

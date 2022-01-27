@@ -42,6 +42,7 @@ export class MessagesRepository extends Repository<Message> {
 
     try {
       await this.save(msg);
+      await this.usersRepository.save(user);
     } catch (e) {
       console.log(e.code);
     }
