@@ -100,7 +100,7 @@ export function InGame() {
     player.receive_player_position();
     player.receive_point();
     player.receive_ready_up();
-    player.receive_endgame(setGameFinish);
+    player.receive_endGame();
   }, [reload, player]);
 
   function check_ready(player: any) {
