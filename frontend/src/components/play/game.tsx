@@ -9,16 +9,40 @@ import { useCookies } from "react-cookie";
 import { io } from "socket.io-client";
 import { ip } from "../../App";
 
+const onFocus = (player: GameManager, leave: any, setLeave: any) => {
+};
+
+// User has switched away from the tab (AKA tab is hidden)
+const onBlur = (player: GameManager, leave: any, setLeave: any) => {
+  setLeave(leave + 1);
+  console.log('test');
+  console.log(`${leave}`);
+  if (leave === 3)
+    player.Socket.emit('warning');
+};
+
 export function InGame() {
 
   let history = useHistory();
   const [player] = useState<GameManager>(new GameManager());
+  const [leave, setLeave] = useState<Number>(0);
   const [cookies] = useCookies();
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
   const [reload, setReload] = useState<Boolean>(false);
   const [gameFinish, setGameFinish] = useState<Boolean>(false);
   player.ID = String(localStorage.getItem('playerID'));
+
+  useEffect(() => {
+    window.addEventListener("focus",() =>  onFocus(player, leave, setLeave));
+    window.addEventListener("blur",() => onBlur(player, leave, setLeave));
+
+    return () => {
+        player.Socket.emit('leave');
+        window.removeEventListener("focus", () => onFocus(player, leave, setLeave));
+        window.removeEventListener("blur", () => onBlur(player, leave, setLeave));
+    };
+});
 
   useEffect(() => {
     let mount = true;
@@ -47,7 +71,6 @@ export function InGame() {
     }
     return (() => { mount = false; });
   }, [me, player]);
-
 
   function setReady(id: string, gameid: number) {
     player.Socket.emit('ReadyUp', { player: id, gameId: gameid });

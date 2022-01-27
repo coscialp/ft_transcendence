@@ -93,6 +93,11 @@ export class GameManager {
             }
         })
     }
+    receive_warning(setGameFinish: any) {
+        this._Socket.on(`warning/${this._GameID}`, () => {
+            setGameFinish(true);
+        })
+    }
     receive_ready_up() {
         this._Socket.on(`ReadyUp/${this._GameID}`, (playerID: string) => {
             console.log('test1');

@@ -13,7 +13,7 @@ import { Socket, Server } from 'socket.io';
 import { User } from 'src/user/user.entity';
 import { GameService } from './game.service';
 
-@WebSocketGateway(5002, { transports: ['websocket'] })
+@WebSocketGateway(5002, { transports: ['websocket'], timeout: 10000})
 export class GameGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
@@ -86,11 +86,27 @@ export class GameGateway
         if (gameToDelete === -1){
             gameToDelete = this.MatchInProgress.findIndex(u => u.user2.username === user.username);
         }
-        if (gameToDelete !== -1) {
-                       this.MatchInProgress.splice(gameToDelete, 1);
-                       console.log(this.MatchInProgress);
-                   }
+        if (gameToDelete !== -1){
+            this.MatchInProgress.splice(gameToDelete, 1);
+        }
     }
+
+    //add point and game stat
+    @SubscribeMessage('warning')
+    async warning(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+        const user: User = await this.gameService.getUserFromSocket(socket);
+        this.server.emit(`warning/${data.gameId}`, data.player);
+        let gameToDelete = this.MatchInProgress.findIndex(u => u.user1.username === user.username);
+        if (gameToDelete === -1){
+            gameToDelete = this.MatchInProgress.findIndex(u => u.user2.username === user.username);
+        }
+        if (gameToDelete !== -1) {
+            this.MatchInProgress.splice(gameToDelete, 1);
+        }
+    }
+
     @SubscribeMessage('AddPoint')
     AddPoint(
         @ConnectedSocket() socket: Socket,
@@ -119,12 +135,13 @@ export class GameGateway
     }
 
     async handleDisconnect(@ConnectedSocket() socket: Socket) {
-
+        const user: User = await this.gameService.getUserFromSocket(socket);
         try {
+          this.logger.log(`Client ${user.username} disconnected`);
         } catch (error) {
-            this.logger.error(error);
+          this.logger.error(error);
         }
-    }
+      }
     async handleConnection(@ConnectedSocket() socket: Socket) {
         try {
         } catch (error) {
