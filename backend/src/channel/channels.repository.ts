@@ -42,8 +42,13 @@ export class ChannelsRepository extends Repository<Channel> {
         channel.userConnected.push(currUser);
 
     
+        currUser.channels = (await userService.getChannelsCreator(currUser)).channels;
         currUser.channels.push(channel);
+
+        currUser.channelsAdmin = (await userService.getChannelsAdmin(currUser)).channelsAdmin;
         currUser.channelsAdmin.push(channel);
+
+        currUser.channelsConnected = (await userService.getChannelsConnected(currUser)).channelsConnected;
         currUser.channelsConnected.push(channel);
 
         try {
@@ -54,8 +59,10 @@ export class ChannelsRepository extends Repository<Channel> {
         }
     }
 
-    async joinChannel(user: User, channel: Channel) {
+    async joinChannel(user: User, channel: Channel, userService: UserService) {
         channel.userConnected.push(user);
+
+        user.channelsConnected = (await userService.getChannelsConnected(user)).channelsConnected;
         user.channelsConnected.push(channel);
 
         try {

@@ -15,8 +15,7 @@ import { GameService } from './game.service';
 
 @WebSocketGateway(5002, { transports: ['websocket'], "pingInterval":5000,"pingTimeout":20000 })
 export class GameGateway
-    implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-    {
+    implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('GameGateway');
     private usersInQueue: User[];
