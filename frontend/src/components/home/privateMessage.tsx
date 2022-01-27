@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForceUpdate } from '../../utils/forceUpdate'
 import { MessageType } from '../../utils/message.type'
+import { RequestApi } from '../../utils/RequestApi.class'
+import { ip } from '../../App'
+import { Conversation } from '../../utils/conversation.type'
 
 export function Open_Message() {
     var Message: any = document.getElementById('Message')
@@ -33,16 +36,18 @@ export function Open_Message() {
 
 export default function PrivateMessage({currentChat, setCurrentChat, me, socket}: any) {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
-    const [conversations, setConversations] = useState<MessageType[]>([]);
+    const [conversations, setConversations] = useState<MessageType[]>();
+    const [property, setProperty] = useState<Conversation[]>([]);
     const [messageInput, setMessageInput] = useState("");
     const [cookies] = useCookies();
     const [messages, setMessages] = useState<MessageType[]>([]);
 
     const forceUpdate = useForceUpdate();
+
+    const requestApi = new RequestApi(cookies.access_token, ip);
     
     useEffect(() => {
         if (currentChat !== "") {
-            console.log(`chat: ${currentChat}`);
             setisConvOpen(true);
         }
 	}, [currentChat]);
@@ -50,35 +55,17 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
     useEffect(() => {
         let mount = true;
 		if (mount) {
-            setConversations([{
-                id: 0,
-                sentAt: '14',
-                sender: 'wasayad',
-                body: 'coucou',
-                avatar: 'https://cdn.intra.42.fr/users/medium_wasayad.jpg',
-                receiver: me?.username,
-            },{
-                id: 1,
-                sentAt: '14',
-                sender: 'coco',
-                body: 'coucou',
-                avatar: 'https://cdn.intra.42.fr/users/medium_wasayad.jpg',
-                receiver: me?.username,
-            }])
-		}
-		return (() => { mount = false; });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cookies]);
-    
-    useEffect(() => {
-        let mount = true;
-		if (mount) {
             if (socket) {
-                
 				socket.on(`private_message/${me?.username}`, (msg: any) => {
-                    console.log(msg);
-					conversations.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username });
-					forceUpdate();
+                    console.log(conversations)
+                    const convIndex = conversations?.findIndex((obj => obj.receiver === currentChat));
+                    console.log(convIndex);
+                    if (convIndex === -1) {
+					    conversations?.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.receiver.profileImage, receiver: msg.receiver.username });
+					    forceUpdate();
+                    } else if (conversations) {
+                        conversations[convIndex!].body = msg.body;
+                    }
 				})
 			}
 		}
@@ -86,13 +73,26 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, cookies, messages]);
     
-    
+    useEffect(() => {
+		let mount = true;
+		if (mount) {
+				requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
+                    console.log(response)
+					response.messages.map((msg: any) =>
+						property.push({ property: msg.property, sender: msg.sender, reciver: msg.reciver })
+					);
+					forceUpdate();
+				})
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cookies, property]);
     
     function handleSendMessage(e: any) {
         if (messageInput) {
 			if (socket) {
 				socket.emit('private_message', { sentAt: Date(), body: messageInput, receiver: currentChat });
-                // messages.push({ id: messages.length, sentAt: Date(), sender: me?.username, body: messageInput, avatar: me?.profileImage, receiver: receiver });
+                messages.push({ id: messages.length, sentAt: Date(), sender: me?.username, body: messageInput, avatar: me?.profileImage, receiver: currentChat });
 			}
 			setMessageInput('');
 		}
@@ -103,28 +103,28 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
         if (socket) {
             socket.emit('change_conversation', {conversationName: receiver});
             setCurrentChat(receiver);
-            console.log(`here: ${currentChat}`)
         }
         setMessages([]);
         setisConvOpen(true);
     }
-    
+    console.log(property);
+
     return (
         <div id="Message" >
             <div id="OpenMsg" onClick={() => { Open_Message(); setCurrentChat(""); setisConvOpen(false) }}>
-                <ArrowSmUp id="arrowR" onClick={() => Open_Message()} />Message
-                <ArrowSmUp id="arrowL" onClick={() => Open_Message()} />
+                <ArrowSmUp id="arrowR" />Message
+                <ArrowSmUp id="arrowL" />
             </div>
             <div className="scrollMessageContainer">
-            { 
-                isConvOpen === false ? conversations.map((message: any) => (
-                    <article key={message.id} id='message-container' onClick={(e) => handleSelectConversation(message.sender)}>
+            {
+                isConvOpen === false ? conversations?.map((message: any) => (
+                    <article key={message.id} id='message-container' onClick={(e) => handleSelectConversation(message.receiver)}>
                             <div>
                                 <img id="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
                             </div>
                             <div id="message-body" >
                                 <header id='message-header'>
-                                    <h4 id='message-sender'>{message.sender}</h4>
+                                    <h4 id='message-sender'>{message.receiver}</h4>
                                     <span id='message-time'>
                                         {new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
                                     </span>

@@ -108,6 +108,7 @@ export class ChannelService {
     for (let message of allMessages) {
       if (
         message.sender &&
+        message.receiver &&
         message.sender.username === user.username &&
         !messages.find(
           (msg) => msg.property.username === message.receiver.username,
@@ -118,6 +119,7 @@ export class ChannelService {
 
       if (
         message.receiver &&
+        message.sender &&
         message.receiver.username === user.username &&
         !messages.find(
           (msg) => msg.property.username === message.sender.username,
