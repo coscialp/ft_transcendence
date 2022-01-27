@@ -2,12 +2,12 @@ import { ArrowSmUp, Backspace } from 'heroicons-react'
 import './privateMessage.css'
 import './mainMenu.css'
 import { useEffect, useState } from 'react'
-import { io, Socket } from 'socket.io-client'
 import { useCookies } from 'react-cookie'
-import { ip } from '../../App'
 import { useForceUpdate } from '../../utils/forceUpdate'
 import { MessageType } from '../../utils/message.type'
 import { RequestApi } from '../../utils/RequestApi.class'
+import { ip } from '../../App'
+import { Conversation } from '../../utils/conversation.type'
 
 export function Open_Message() {
     var Message: any = document.getElementById('Message')
@@ -34,12 +34,12 @@ export function Open_Message() {
 }
 
 
-export default function PrivateMessage({currentChat, setCurrentChat, me}: any) {
+export default function PrivateMessage({currentChat, setCurrentChat, me, socket}: any) {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
     const [conversations, setConversations] = useState<MessageType[]>();
+    const [property, setProperty] = useState<Conversation[]>([]);
     const [messageInput, setMessageInput] = useState("");
     const [cookies] = useCookies();
-	const [socket, setSocket] = useState<Socket>();
     const [messages, setMessages] = useState<MessageType[]>([]);
 
     const forceUpdate = useForceUpdate();
@@ -51,15 +51,6 @@ export default function PrivateMessage({currentChat, setCurrentChat, me}: any) {
             setisConvOpen(true);
         }
 	}, [currentChat]);
-    
-    useEffect(() => {
-        let mount = true;
-		if (mount) {
-            setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
-		}
-		return (() => { mount = false; });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cookies]);
     
     useEffect(() => {
         let mount = true;
@@ -82,21 +73,20 @@ export default function PrivateMessage({currentChat, setCurrentChat, me}: any) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [socket, cookies, messages]);
     
-    /*useEffect(() => {
+    useEffect(() => {
 		let mount = true;
 		if (mount) {
-			if (currentChat) {
-				requestApi.get(`channel/messages/${currentChat}`).then((response: any) => {
+				requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
+                    console.log(response)
 					response.messages.map((msg: any) =>
-						messages.push({ id: messages.length, sentAt: msg.date, sender: msg.sender.username, body: msg.content, avatar: msg.sender.profileImage })
+						property.push({ property: msg.property, sender: msg.sender, reciver: msg.reciver })
 					);
 					forceUpdate();
 				})
-			}
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cookies, messages, currentChat]);*/
+	}, [cookies, property]);
     
     function handleSendMessage(e: any) {
         if (messageInput) {
@@ -117,6 +107,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me}: any) {
         setMessages([]);
         setisConvOpen(true);
     }
+    console.log(property);
 
     return (
         <div id="Message" >

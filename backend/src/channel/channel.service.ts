@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { parse } from 'cookie';
 import { AuthService } from '../auth/auth.service';
@@ -20,11 +25,11 @@ export class ChannelService {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
-    @InjectRepository(ChannelsRepository) private readonly channelsRepository: ChannelsRepository,
-    @InjectRepository(MessagesRepository) private readonly messagesRepository: MessagesRepository,
-
-    ) {}
-
+    @InjectRepository(ChannelsRepository)
+    private readonly channelsRepository: ChannelsRepository,
+    @InjectRepository(MessagesRepository)
+    private readonly messagesRepository: MessagesRepository,
+  ) {}
 
   async getChannel() {
     return await this.channelsRepository.getChannel();
@@ -41,7 +46,12 @@ export class ChannelService {
     name: string,
     password: string,
   ): Promise<void> {
-    return this.channelsRepository.createChannel(user, name, password, this.userService);
+    return this.channelsRepository.createChannel(
+      user,
+      name,
+      password,
+      this.userService,
+    );
   }
 
   private isUUID(id: string): Boolean {
@@ -52,11 +62,11 @@ export class ChannelService {
 
   async getOneChannel(id: string): Promise<Channel> {
     let found: Channel = this.isUUID(id)
-        ? (await this.getChannel()).find((channel) => channel.id === id)
-        : (await this.getChannel()).find((channel) => channel.name === id);
-      if (!found) throw new NotFoundException(`Channel ${id} not found`);
+      ? (await this.getChannel()).find((channel) => channel.id === id)
+      : (await this.getChannel()).find((channel) => channel.name === id);
+    if (!found) throw new NotFoundException(`Channel ${id} not found`);
 
-      return found;
+    return found;
   }
 
   async createMessage(user: User, message: MessagesDto): Promise<void> {
@@ -65,20 +75,85 @@ export class ChannelService {
 
   async joinChannel(user: User, name: string, password: string): Promise<void> {
     let channel = await this.getOneChannel(name);
-    
-    return await this.channelsRepository.joinChannel( await this.userService.getUserById(user.id, user), channel)
+
+    return await this.channelsRepository.joinChannel(
+      await this.userService.getUserById(user.id, user),
+      channel,
+    );
   }
 
-  async getMessageByChannel(name: string): Promise<{messages: Message[]}> {
+  async getMessageByChannel(name: string): Promise<{ messages: Message[] }> {
     const allMessages = await this.messagesRepository.getMessages();
-    
+
     let messages: Message[] = [];
     for (let message of allMessages) {
-      if (message.channel.name === name) {
+      if (message.channel && message.channel.name === name) {
         messages.push(message);
       }
     }
     console.log(messages);
+    return { messages };
+  }
+
+  async getMessageByUser(
+    user: User,
+  ): Promise<{
+    messages: { property: User; send: Message[]; receive: Message[] }[];
+  }> {
+    const allMessages = await this.messagesRepository.getMessages();
+
+    const messages: { property: User; send: Message[]; receive: Message[] }[] =
+      [];
+
+    for (let message of allMessages) {
+      if (
+        message.sender &&
+        message.receiver &&
+        message.sender.username === user.username &&
+        !messages.find(
+          (msg) => msg.property.username === message.receiver.username,
+        )
+      ) {
+        messages.push({ property: message.receiver, send: [], receive: [] });
+      }
+
+      if (
+        message.receiver &&
+        message.sender &&
+        message.receiver.username === user.username &&
+        !messages.find(
+          (msg) => msg.property.username === message.sender.username,
+        )
+      ) {
+        messages.push({ property: message.sender, send: [], receive: [] });
+      }
+    }
+
+    for (let message of allMessages) {
+      if (message.sender && message.sender.username === user.username) {
+        for (let conv of messages) {
+          if (
+            message.receiver &&
+            message.receiver.username === conv.property.username
+          ) {
+            conv.send.push(message);
+          }
+        }
+      } else if (
+        message.receiver &&
+        message.receiver.username === user.username
+      ) {
+        for (let conv of messages) {
+          if (
+            message.sender &&
+            message.sender.username === conv.property.username
+          ) {
+            conv.receive.push(message);
+          }
+        }
+      }
+    }
+
     return { messages };
   }
 }
