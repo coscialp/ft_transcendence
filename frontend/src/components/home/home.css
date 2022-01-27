@@ -175,6 +175,7 @@ p.FriendTitle {
     text-align: center;
     transition: 0.2s;
     display: flex;
+    overflow: hidden;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
@@ -269,6 +270,7 @@ p.FriendTitle {
     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     text-decoration: none;
     text-align: center;
+    overflow: hidden;
     transition: 0.2s;
     justify-content: space-around;
   }
@@ -431,4 +433,47 @@ nav.menuFriendList {
     background-color: rgb(128 128 128 / 42%);
     border-radius: 50px;
     height: 5px;
+}
+
+#gamemodeMini {
+    display:none;
+}
+
+@media screen and (orientation: portrait) {
+
+
+    #OpenGamemode {
+        position: sticky;
+        bottom: 0;
+        background-color: #454545;
+        height: 50px;
+        width: 100%;
+        display: flex;
+        border-radius: 10px 10px 0 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+    }
+
+    #gamemodeMini {
+        display: flex;
+        position: absolute;
+        transform: rotate(90deg);
+        left: -23.4vw;
+        bottom: 50vh;
+        height: 50px;
+        width: 50vh;
+        border-radius: 10px 10px 0 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+    }
+
+    .GMBody {
+        display:none;
+    }
+
+    .GMTitle {
+        display:none;
+    }
+
 }

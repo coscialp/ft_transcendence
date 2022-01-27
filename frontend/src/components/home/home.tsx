@@ -9,6 +9,7 @@ import './home.css'
 import { isLogged } from '../../utils/isLogged';
 import PrivateMessage from './privateMessage';
 import { User } from '../../utils/user.type';
+import { Disclosure } from '@headlessui/react';
 
 export function Home() {
   const [cookies] = useCookies();

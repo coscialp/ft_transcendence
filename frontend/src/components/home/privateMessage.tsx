@@ -94,7 +94,7 @@ export default function PrivateMessage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket, cookies, messages]);*/
 
-    function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
+    function handleSendMessage(e: any) {
         /*if (messageInput) {
             console.log(messageInput);
             if (socket) {
