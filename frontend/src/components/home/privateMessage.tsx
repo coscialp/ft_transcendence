@@ -107,7 +107,6 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
         setMessages([]);
         setisConvOpen(true);
     }
-    console.log(property);
 
     return (
         <div id="Message" >
