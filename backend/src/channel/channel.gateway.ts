@@ -91,6 +91,7 @@ export class ChannelGateway
 
     this.channelService.createMessage(user, response);
 
+    console.log(`private_message/${data.receiver.username}`);
     this.server.emit(`private_message/${data.receiver.username}`, response);
   }
 

@@ -200,15 +200,22 @@ export class UserService {
   async deleteFriend(user: User, idToDelete: string): Promise<void> {
     const userToDelete: User = await this.getUserById(idToDelete);
 
-    const friends = (await this.getFriends(user.id, user)).friends;
+    const myFriends = (await this.getFriends(user.id, user)).friends;
+
+    const hisFriends = (await this.getFriends(idToDelete, userToDelete)).friends;
 
     user.friends = [];
     userToDelete.friends = [];
 
-    for (let friend of friends) {
+    for (let friend of myFriends) {
       if (friend.id !== userToDelete.id) {
         user.friends.push(friend);
-        userToDelete.friends.push(user);
+      }
+    }
+
+    for (let friend of hisFriends) {
+      if (friend.id !== user.id) {
+        userToDelete.friends.push(friend);
       }
     }
 
