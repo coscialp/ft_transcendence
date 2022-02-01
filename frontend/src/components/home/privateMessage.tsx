@@ -36,11 +36,11 @@ export function Open_Message() {
 
 export default function PrivateMessage({currentChat, setCurrentChat, me, socket}: any) {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
-    const [conversations, setConversations] = useState<MessageType[]>();
-    const [property, setProperty] = useState<Conversation[]>([]);
+    const [conversations, setConversations] = useState<Conversation[]>([]);
     const [messageInput, setMessageInput] = useState("");
     const [cookies] = useCookies();
     const [messages, setMessages] = useState<MessageType[]>([]);
+    const [receiver, setReceiver] = useState<string>("");
 
     const forceUpdate = useForceUpdate();
 
@@ -48,30 +48,10 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
     
     useEffect(() => {
         if (currentChat !== "") {
+            setReceiver(currentChat);
             setisConvOpen(true);
         }
 	}, [currentChat]);
-    
-    useEffect(() => {
-        let mount = true;
-		if (mount) {
-            if (socket) {
-				socket.on(`private_message/${me?.username}`, (msg: any) => {
-                    console.log(conversations)
-                    const convIndex = conversations?.findIndex((obj => obj.receiver === currentChat));
-                    console.log(convIndex);
-                    if (convIndex === -1) {
-					    conversations?.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.receiver.profileImage, receiver: msg.receiver.username });
-					    forceUpdate();
-                    } else if (conversations) {
-                        conversations[convIndex!].body = msg.body;
-                    }
-				})
-			}
-		}
-		return (() => { mount = false; });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [socket, cookies, messages]);
     
     useEffect(() => {
 		let mount = true;
@@ -79,35 +59,64 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 				requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
                     console.log(response)
 					response.messages.map((msg: any) =>
-						property.push({ property: msg.property, sender: msg.sender, reciver: msg.reciver })
+						conversations.push({ property: msg.property, conversations: msg.conversations })
 					);
 					forceUpdate();
 				})
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cookies, property]);
+	}, [cookies, conversations]);
+
+    useEffect(() => {
+        let mount = true;
+		if (mount) {
+            if (socket) {
+                console.log(me?.username)
+				socket.on(`private_message/${me?.username}`, (msg: any) => {
+                    const convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
+                    console.log(convIndex)
+                    if (conversations && convIndex !== -1) {
+                        conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
+                        messages.push({ id: messages.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
+                    }
+                    forceUpdate();
+                })
+			}
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [socket, me, cookies, messages]);
     
     function handleSendMessage(e: any) {
         if (messageInput) {
 			if (socket) {
-				socket.emit('private_message', { sentAt: Date(), body: messageInput, receiver: currentChat });
-                messages.push({ id: messages.length, sentAt: Date(), sender: me?.username, body: messageInput, avatar: me?.profileImage, receiver: currentChat });
-			}
+                console.log(receiver);
+				socket.emit('private_message', { sentAt: Date(), sender: me , body: messageInput, receiver: receiver });
+                messages.push({ id: messages.length, date: Date(), sender: me?.username, content: messageInput, avatar: me?.profileImage, receiver: receiver })
+            }
 			setMessageInput('');
 		}
         e.preventDefault();
     }
 
+    useEffect(() => {
+		let mount = true;
+		if (mount) {
+            const indexOfConv = conversations.findIndex(obj => obj.property.username === receiver)
+            conversations[indexOfConv]?.conversations.map((allMessages: any) => {
+                messages.push({ id: allMessages.id, date: new Date(allMessages.date).toLocaleTimeString(undefined, { timeStyle: 'short' }), sender: allMessages.sender.username, content: allMessages.content , avatar: allMessages.sender.profileImage, receiver: allMessages.receiver.username })
+            })
+            forceUpdate();
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cookies, conversations, receiver]);
+
     function handleSelectConversation(receiver: string) {
-        if (socket) {
-            socket.emit('change_conversation', {conversationName: receiver});
-            setCurrentChat(receiver);
-        }
-        setMessages([]);
+        setReceiver(receiver);
         setisConvOpen(true);
     }
-    console.log(property);
 
     return (
         <div id="Message" >
@@ -118,30 +127,29 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
             <div className="scrollMessageContainer">
             {
                 isConvOpen === false ? conversations?.map((message: any) => (
-                    <article key={message.id} id='message-container' onClick={(e) => handleSelectConversation(message.receiver)}>
+                    <article key={message.property.id} id='message-container' onClick={(e) => handleSelectConversation(message.property.username)}>
                             <div>
-                                <img id="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
+                                <img id="message-image" style={{ backgroundImage: `url(${message.property.profileImage})` }} alt="" />
                             </div>
                             <div id="message-body" >
                                 <header id='message-header'>
-                                    <h4 id='message-sender'>{message.receiver}</h4>
+                                    <h4 id='message-sender'>{message.property.username}</h4>
                                     <span id='message-time'>
-                                        {new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
+                                        {new Date(message.conversations[message.conversations.length - 1].date).toLocaleTimeString(undefined, { timeStyle: 'short' })}
                                     </span>
                                 </header>
-                                <p id='message-text'>{message.body}</p>
+                                <p id='message-text'>{message.conversations[message.conversations.length - 1].content}</p>
                             </div>
                     </article>
-                    
-                )) :
+                    )) :
                     <div>
                         <section className='discussion' >
                             <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
                             {
-                                messages.map((messages: any) => (
-                                    messages.sender === me.username ?
-                                        <div className="bubble sender"> {messages.body} </div> :
-                                        <div className="bubble recipient"> {messages.body} </div>
+                                messages.map((message: any) => (
+                                    message.sender === me.username ?
+                                        <div key={message.id} className="bubble sender"> {message.content} </div> :
+                                        <div key={message.id} className="bubble recipient"> {message.content} </div>
                                 ))
                             }
                         </section>

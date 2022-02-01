@@ -80,7 +80,6 @@ export class ChannelGateway
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
 
-
     const response: MessagesDto = {
       sentAt: data.sentAt,
       sender: user,
@@ -91,8 +90,7 @@ export class ChannelGateway
 
     this.channelService.createMessage(user, response);
 
-    console.log(`private_message/${data.receiver.username}`);
-    this.server.emit(`private_message/${data.receiver.username}`, response);
+    this.server.emit(`private_message/${data.receiver}`, response);
   }
 
   afterInit(server: Server) {

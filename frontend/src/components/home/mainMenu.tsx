@@ -45,7 +45,7 @@ export function MainMenu(data: any) {
 
 				data.socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
 					console.log(`msg: ${msg}`);
-					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage });
+					messages.push({ id: messages.length, date: msg.sentAt, sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
 				})
 			}
@@ -136,7 +136,7 @@ export function MainMenu(data: any) {
 				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
 					console.log(`res: ${response}`);
 					response.messages.map((msg: any) =>
-						messages.push({ id: messages.length, sentAt: msg.date, sender: msg.sender.username, body: msg.content, avatar: msg.sender.profileImage })
+						messages.push({ id: messages.length, date: msg.date, sender: msg.sender.username, content: msg.content, avatar: msg.sender.profileImage })
 					);
 					forceUpdate();
 				})
