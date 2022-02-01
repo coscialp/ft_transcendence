@@ -3,6 +3,5 @@ import { MessageType } from "./message.type";
 
 export type Conversation = {
     property: User;
-    sender: MessageType[];
-    reciver: MessageType[];
+    conversations: MessageType[];
 }
