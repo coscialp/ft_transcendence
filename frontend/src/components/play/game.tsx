@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Unity from "react-unity-webgl";
 import { GameManager } from "./gamemanager";
-import './duel.css'
+import './game.css'
 import { Redirect, useHistory } from "react-router-dom";
 import { isLogged } from "../../utils/isLogged";
 import { User } from "../../utils/user.type";
@@ -15,8 +15,6 @@ const onFocus = (player: GameManager, leave: any, setLeave: any) => {
 // User has switched away from the tab (AKA tab is hidden)
 const onBlur = (player: GameManager, leave: any, setLeave: any) => {
   setLeave(leave + 1);
-  console.log('test');
-  console.log(`${leave}`);
   if (leave === 3)
     player.Socket.emit('warning');
 };
@@ -34,7 +32,13 @@ export function InGame() {
   const [leaveTime, setLeaveTime] = useState<number>(0);
   const leaveTimeRef = useRef(leaveTime);
   const [tabTime, setTabTime] = useState<number>(0);
+  const tabTimeRef = useRef(tabTime);
   const leaveRef = useRef(leave);
+
+  const setMyTabTime = (data: any) => {
+    tabTimeRef.current = data;
+    setTabTime(data);
+  }
   const setMyState = (data: any) => {
     leaveRef.current = data;
     setLeave(data);
@@ -93,6 +97,11 @@ export function InGame() {
 
   function setReady(id: string, gameid: number) {
     player.Socket.emit('ReadyUp', { player: id, gameId: gameid });
+    let ready: HTMLElement | null = document.getElementById('button_ready');
+    if (ready) {
+      ready.style.display = 'none';
+    }
+
   }
 
   useEffect(function () {
@@ -101,39 +110,65 @@ export function InGame() {
     player.receive_point();
     player.receive_ready_up();
     player.receive_endGame();
+    player.receive_warning(setGameFinish);
   }, [reload, player]);
 
-  function check_ready(player: any) {
-    console.log(gameFinish);
-    if (gameFinish === true) {
+  function handleResize()
+  {
+      let game: any = document.getElementsByClassName('game_screen')[0];
+      if ((window.innerHeight / 900) > (window.innerWidth / 2300) && game)
+      {
+        game.style.height = '40vw';
+        game.style.width = '100vw';
+      }
+      else if (game)
+      {
+        game.style.height = `${window.innerHeight * 0.5}px`;
+        game.style.width = `${window.innerWidth}px`;
+      }
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+  });
+
+  function check_ready() {
+    if (leaveTimeRef.current === 1) {
+      console.log(`tab time : ${tabTimeRef.current}`);
+      setMyTabTime(tabTimeRef.current + 1);
+    }
+    else {
+      setTabTime(0);
+    }
+    if (tabTimeRef.current === 1000) {
+      player.Socket.emit('warning', {player: player.ID, gameId: player.GameID});
+    }
+    console.log(`tab number: ${leaveRef.current}`)
+    if (player.GameState === true || leaveRef.current === 300) {
+      console.log(player.GameID);
+      player.Socket.emit('warning', {player: player.ID, gameId: player.GameID});
+    }
+    console.log(`gameFinish : ${gameFinish}`);
+    if (gameFinish === true || player.Warning === true) {
+      console.log('error');
       return history.push('/resume');
     }
     player.ready_checker();
   }
+useEffect(() => {  setInterval(() => {
+  console.log(player.GameID);
+  check_ready();
+}, 1000);
+}, []);
 
-  setInterval(() => {
-    if (leaveTimeRef.current === 1)
-    {
-      setTabTime(tabTime + 1);
-    }
-    else
-    {
-      setTabTime(0);
-    }
-    if (tabTime === 10)
-      console.log("you've left the game");
-    if (player.GameState === true || leaveRef.current === 2)
-      console.log("leave page");
-    check_ready(player);
-  }, 1000);
 
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
   }
   return (
-    <div>
+    <div className="game_body">
       <Unity className="game_screen" unityContext={player.UnityContext} />
-      <div className="testing" onClick={() => setReady(player.ID, player.GameID)}></div>
-    </div>
+      <button id="button_ready" onClick={() => setReady(player.ID, player.GameID)}>Ready up</button>
+    </div> 
   );
 }

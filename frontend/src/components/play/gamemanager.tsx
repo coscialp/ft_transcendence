@@ -12,6 +12,7 @@ export class GameManager {
     private _UnityContext: UnityContext;
     private _GameState: boolean;
     private _Ballpos: string;
+    private _Warning: boolean;
     constructor() {
         this._P1ready = false;
         this._P2ready = false;
@@ -20,6 +21,7 @@ export class GameManager {
         this._GameID = 0;
         this._GameState = false;
         this._Ballpos = '';
+        this._Warning = false;
         this._UnityContext = new UnityContext({
             loaderUrl: "./Build/webgl.loader.js",
             dataUrl: "./Build/webgl.data",
@@ -49,7 +51,13 @@ export class GameManager {
     public get GameState() {
         return this._GameState;
     }
+    public get Warning() {
+        return this._Warning;
+    }
 
+    public set Warning(value: boolean) {
+        this.Warning = value;
+    }
     public set UnityContext(value: any) {
         this._GameID = value;
     }
@@ -95,7 +103,7 @@ export class GameManager {
     }
     receive_warning(setGameFinish: any) {
         this._Socket.on(`warning/${this._GameID}`, () => {
-            setGameFinish(true);
+            this._Warning = true;
         })
     }
     receive_ready_up() {
@@ -125,7 +133,6 @@ export class GameManager {
     }
 
     send_ready_up() {
-        
         this._UnityContext.on("setReady", () => {
             console.log('test');
             this._Socket.emit('ReadyUp', { player: this._ID, gameId: this._GameID });

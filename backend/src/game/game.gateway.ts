@@ -136,14 +136,15 @@ export class GameGateway
         const user: User = await this.gameService.getUserFromSocket(socket);
         try {
           this.logger.log(`Client ${user.username} disconnected`);
-          let index = this.MatchInProgress.findIndex(m => m.user1 === user)
+          let index = this.MatchInProgress.findIndex(m => m.user1.username === user.username)
           let winner = "Player1";
           if (index === -1)
           {
-            index = this.MatchInProgress.findIndex(m => m.user2 === user)
-            winner = "Player2";
-          }
-          this.server.emit(`finishGame/${this.MatchInProgress[index].gameID}`, winner, -5, -5);
+              index = this.MatchInProgress.findIndex(m => m.user2.username === user.username)
+              winner = "Player2";
+            }
+            console.log(this.MatchInProgress[index].gameID);
+          this.server.emit(`warning/${this.MatchInProgress[index].gameID}`, winner, -5, -5);
           this.MatchInProgress.slice(index, 1);
         } catch (error) {
           this.logger.error(error);

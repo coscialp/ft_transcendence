@@ -4,10 +4,11 @@ import './mainMenu.css'
 import { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForceUpdate } from '../../utils/forceUpdate'
-import { MessageType } from '../../utils/message.type'
+import { MessageType, PrivateMessageType } from '../../utils/message.type'
 import { RequestApi } from '../../utils/RequestApi.class'
 import { ip } from '../../App'
 import { Conversation } from '../../utils/conversation.type'
+import { User } from '../../utils/user.type'
 
 export function Open_Message() {
     var Message: any = document.getElementById('Message')
@@ -36,11 +37,11 @@ export function Open_Message() {
 
 export default function PrivateMessage({currentChat, setCurrentChat, me, socket}: any) {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
-    const [conversations, setConversations] = useState<MessageType[]>();
-    const [property, setProperty] = useState<Conversation[]>([]);
+    const [conversations, setConversations] = useState<Conversation[]>([]);
     const [messageInput, setMessageInput] = useState("");
     const [cookies] = useCookies();
     const [messages, setMessages] = useState<MessageType[]>([]);
+    const [conversationTab, setConversationTab] = useState<{user: User, conversation: PrivateMessageType[]}[]>();
 
     const forceUpdate = useForceUpdate();
 
@@ -55,7 +56,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
     useEffect(() => {
         let mount = true;
 		if (mount) {
-            if (socket) {
+            /*if (socket) {
 				socket.on(`private_message/${me?.username}`, (msg: any) => {
                     console.log(conversations)
                     const convIndex = conversations?.findIndex((obj => obj.receiver === currentChat));
@@ -67,7 +68,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
                         conversations[convIndex!].body = msg.body;
                     }
 				})
-			}
+			}*/
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -78,15 +79,21 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 		if (mount) {
 				requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
                     console.log(response)
-					response.messages.map((msg: any) =>
-						property.push({ property: msg.property, sender: msg.sender, reciver: msg.reciver })
+					response.messages.map((msg: any) => {
+                        let conv: MessageType[];
+                        let supervar: any;
+                        conversations.push({property: msg.property, sender: msg.send, reciver: msg.receive});
+                        console.log(conversations[0].sender[0].date)
+                      
+                        console.log(conversations[0]);
+                    }
 					);
 					forceUpdate();
 				})
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cookies, property]);
+	}, [cookies]);
     
     function handleSendMessage(e: any) {
         if (messageInput) {
@@ -107,7 +114,6 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
         setMessages([]);
         setisConvOpen(true);
     }
-    console.log(property);
 
     return (
         <div id="Message" >
@@ -118,24 +124,25 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
             <div className="scrollMessageContainer">
             {
                 isConvOpen === false ? conversations?.map((message: any) => (
-                    <article key={message.id} id='message-container' onClick={(e) => handleSelectConversation(message.receiver)}>
+                    <article key={message.property.id} id='message-container' onClick={(e) => handleSelectConversation(message.receiver)}>
                             <div>
-                                <img id="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
+                                <img id="message-image" style={{ backgroundImage: `url(${message.property.profileImage})` }} alt="" />
                             </div>
                             <div id="message-body" >
                                 <header id='message-header'>
-                                    <h4 id='message-sender'>{message.receiver}</h4>
+                                    <h4 id='message-sender'>{message.property.username}</h4>
                                     <span id='message-time'>
-                                        {new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
+                                        {new Date(message.sender[0].date).toLocaleTimeString(undefined, { timeStyle: 'short' })}
                                     </span>
                                 </header>
-                                <p id='message-text'>{message.body}</p>
+                                <p id='message-text'>{message.sender[0].content}</p>
                             </div>
                     </article>
                     
                 )) :
                     <div>
                         <section className='discussion' >
+                            {console.log(messages)}
                             <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
                             {
                                 messages.map((messages: any) => (
