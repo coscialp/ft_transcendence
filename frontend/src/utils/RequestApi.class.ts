@@ -29,15 +29,12 @@ export class RequestApi {
         return url;
     }
 
-    private async call(method: string, endpoint: string,  data: {params?: {}, body?: {}, contentType?: string}) {
+    private async call(method: string, endpoint: string,  data: {params?: {}, body?: {}, contentType?: string}): Promise<any> {
         if (data.contentType) {
             this.setContentType(data.contentType);
         }
         
         let url: string = this.getUrl(endpoint, data.params);
-
-        console.log(this.headers.get('Content-Type'));
-        console.log(url);
 
         const request = new Request(
             url,
@@ -47,29 +44,28 @@ export class RequestApi {
                 body: data.body ? JSON.stringify(data.body) : undefined,
             })
 
-        await fetch(request)
-        .then((response) => {
-                if (response.status === 200) {
-                    return response.json;
-                }
-          })
-          .then(response => {
-            console.debug(response);
-          }).catch(error => {
-            console.error(error);
-          });
+        const response = await fetch(request);
+        if (response.status === 200) {
+          return response.json();
+        } else {
+            return response.status;
+        }
     }
 
-    async get(endpoint: string, data: {params?: {}, body?: {}, contentType?: string}) {
+    async get(endpoint: string, data: {params?: {}, body?: {}, contentType?: string} = {}): Promise<any> {
         return await this.call('GET', endpoint, data);
     }
 
-    async post(endpoint: string, data: {params?: {}, body?: {}, contentType?: string}) {
+    async post(endpoint: string, data: {params?: {}, body?: {}, contentType?: string} = {}): Promise<any> {
         return await this.call('POST', endpoint, data);
     }
 
-    async delete(endpoint: string, data: {params?: {}, body?: {}, contentType?: string}) {
+    async delete(endpoint: string, data: {params?: {}, body?: {}, contentType?: string} = {}): Promise<any> {
         return await this.call('DELETE', endpoint, data);
+    }
+
+    async patch(endpoint: string, data: {params?: {}, body?: {}, contentType?: string} = {}): Promise<any> {
+        return await this.call('PATCH', endpoint, data);
     }
 
 }

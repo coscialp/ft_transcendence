@@ -46,7 +46,6 @@ export class AuthService {
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { username };
       const accessToken: string = this.jwtService.sign(payload);
-      console.log(accessToken);
       return { accessToken };
     } else {
       throw new UnauthorizedException('Please check your login credentials');
@@ -62,15 +61,10 @@ export class AuthService {
       this.accessToken = (await lastValueFrom(token)).data.access_token;
       this.headers = { Authorization: `Bearer ${this.accessToken}` };
 
-      console.log(this.accessToken);
       const response$ = this.http.get(`${this.endpoint}/me`, {
         headers: this.headers,
       });
       const { status, data } = await lastValueFrom(response$);
-
-      console.log(`status: ${status}`);
-
-      console.log(auth42Dto.nickName);
 
       const authCredentialsDto: AuthCredentialsDto = {
         username: data.login,
@@ -93,7 +87,7 @@ export class AuthService {
       const payload: JwtPayload = { username };
       const accessToken: string = this.jwtService.sign(payload);
       user = await this.usersRepository.findOne({ username });
-      user.isLogged = true;
+      user.isLogged = 'true';
       await this.usersRepository.save(user);
       return { accessToken: accessToken };
     } catch (error) {
@@ -102,7 +96,7 @@ export class AuthService {
   }
 
   async logout(user: User): Promise<void> {
-    user.isLogged = false;
+    user.isLogged = 'false';
     await this.usersRepository.save(user);
   }
 

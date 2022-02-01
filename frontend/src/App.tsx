@@ -13,6 +13,7 @@ import { NotFound } from './components/notFound';
 import { Settings } from './components/settings/settings';
 import { Notification } from './components/profile/notification';
 import { TwoFA } from './components/login/TwoFA';
+import { InGame } from './components/play/game';
 
 export const ip = window.location.hostname;
 
@@ -30,7 +31,7 @@ function App() {
 					<Route exact path={"/play"} component={ Play } />
 					<Route exact path={"/alerts"} component={ Notification } />
 					<Route path={"/settings"} component={ Settings } />
-
+					<Route path={"/game"} component={ InGame } />
 					<Route path={"/:id/profile"} component={ Profile } />
 
 					<Route component={ NotFound } />

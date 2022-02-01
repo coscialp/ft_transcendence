@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { io, Socket } from "socket.io-client";
 import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
 
 import { useHistory } from "react-router";
 import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
-import { MessageType } from "../../utils/message.type";
+import { useForceUpdate } from "../../utils/forceUpdate";
 import { ip } from "../../App";
-
-function useForceUpdate() {
-	// eslint-disable-next-line
-	const [value, setValue] = useState(0);
-	return () => setValue(value => ++value);
-}
+import { MessageType } from "../../utils/message.type";
 
 export function MainMenu(data: any) {
 	let history = useHistory();
@@ -21,35 +15,35 @@ export function MainMenu(data: any) {
 	const [messages, setMessages] = useState<MessageType[]>([]);
 	const [messageInput, setMessageInput] = useState<string>('');
 	const [current_channel, setCurrent_Channel] = useState<string>('');
-	// eslint-disable-next-line
-	const [channels, setChannels] = useState<string[]>([]);
+	const [channels] = useState<string[]>([]);
 	const [channelName, setChannelName] = useState<string>('');
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
-	// eslint-disable-next-line
-	const [scrollTarget, setScrollTarget] = useState();
-	const [socket, setSocket] = useState<Socket>();
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
 
 	const forceUpdate = useForceUpdate();
 
-
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
+			requestApi.get('user/channels/connected').then((response) => {
+				response.channelsConnected.map((chan: any) => 
+					channels.push(chan.name)
+				)
+			})
 		}
 		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cookies]);
 
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			if (socket) {
+			if (data.socket) {
 
-				socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
+				data.socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
 					console.log(`msg: ${msg}`);
 					messages.push({ id: messages.length, sentAt: msg.sentAt, sender: msg.sender.username, body: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
@@ -58,7 +52,7 @@ export function MainMenu(data: any) {
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [socket, cookies, messages]);
+	}, [data.socket, cookies, messages]);
 
 
 
@@ -66,7 +60,7 @@ export function MainMenu(data: any) {
 		setShowPopup(!showPopup);
 	}
 
-	function handleCreateNewChannel(e: any) {
+ 	function handleCreateNewChannel(e: any) {
 		if (channelName === "") {
 			window.alert("Channel's name cannot be empty !")
 		}
@@ -75,13 +69,18 @@ export function MainMenu(data: any) {
 				window.alert("Channel's name already taken !")
 			}
 			else {
-				const data = {
+				const channelInfo = {
 					name: channelName,
 					password: channelPassword,
 				}
-				requestApi.post('channel/create', { body: data, contentType: 'application/json' });
+				requestApi.post('channel/create', { body: channelInfo, contentType: 'application/json' });
 
 				channels.push(channelName);
+				if (data.socket) {
+					data.socket.emit('change_channel', { channelName: channelName });
+					setCurrent_Channel(channelName);
+				}
+				setMessages([]);
 				togglePopup();
 				setChannelName('');
 				setChannelPassword('');
@@ -96,13 +95,18 @@ export function MainMenu(data: any) {
 			window.alert("Channel's name cannot be empty !")
 		}
 		else {
-			const data = {
+			const channelInfo = {
 				name: channelName,
 				password: channelPassword,
 			}
-			requestApi.post('channel/create', { body: data, contentType: 'application/json' });
+			requestApi.patch('channel/join', { body: channelInfo, contentType: 'application/json' });
 
 			channels.push(channelName);
+			if (data.socket) {
+				data.socket.emit('change_channel', { channelName: channelName });
+				setCurrent_Channel(channelName);
+			}
+			setMessages([]);
 			togglePopup();
 			setChannelName('');
 			setChannelPassword('');
@@ -114,8 +118,8 @@ export function MainMenu(data: any) {
 	function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
 		if (messageInput) {
 			console.log(messageInput);
-			if (socket) {
-				socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
+			if (data.socket) {
+				data.socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
 				console.log(`msg_toClient/${current_channel}`);
 			}
 			setMessageInput('');
@@ -124,10 +128,28 @@ export function MainMenu(data: any) {
 	}
 
 
+	useEffect(() => {
+		let mount = true;
+		if (mount) {
+			if (current_channel) {
+				console.log(current_channel);
+				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
+					console.log(`res: ${response}`);
+					response.messages.map((msg: any) =>
+						messages.push({ id: messages.length, sentAt: msg.date, sender: msg.sender.username, body: msg.content, avatar: msg.sender.profileImage })
+					);
+					forceUpdate();
+				})
+			}
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cookies, messages, current_channel]);
+
 	function changeChannel(e: any) {
 		console.log(e.target.innerText);
-		if (socket) {
-			socket.emit('change_channel', { channelName: e.target.innerText });
+		if (data.socket) {
+			data.socket.emit('change_channel', { channelName: e.target.innerText });
 			setCurrent_Channel(e.target.innerText);
 		}
 		setMessages([]);
@@ -147,7 +169,9 @@ export function MainMenu(data: any) {
 				<button className="addChannel" onClick={togglePopup}>+</button>
 			</div>
 			<div className="Message Container" >
-				{messages.map((message: any) => (
+				{console.log(messages)}
+				{messages.map((message: any) =>
+				(
 					<article key={message.id} className='message-container'>
 						<div className="img-content" >
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
@@ -170,6 +194,13 @@ export function MainMenu(data: any) {
 								<VolumeOff className="chatUserParam" />
 								<Trash className="chatUserParam" />
 							</div>
+						<div className="scrollingMenu container">
+        					<UserCircle className="chatUserParam" />
+        					<Challenge className="chatUserParam" />
+        					<ChevronDoubleUp className="chatUserParam" />
+        					<VolumeOff className="chatUserParam" />
+        					<Trash className="chatUserParam" />
+      					</div >
 						</div>
 					</article>
 				))}

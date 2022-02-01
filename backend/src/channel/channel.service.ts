@@ -1,7 +1,10 @@
-import { Injectable, NotFoundException, UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UseGuards,
+} from '@nestjs/common';
 import { Socket } from 'socket.io';
 import { parse } from 'cookie';
-import { WsException } from '@nestjs/websockets';
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/user/user.entity';
@@ -9,9 +12,9 @@ import { ChannelsRepository } from './channels.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
 import { Channel } from './channel.entity';
-import { UserController } from 'src/user/user.controller';
 import { MessagesDto } from './dto/messages.dto';
 import { MessagesRepository } from './messages.repository';
+import { Message } from './message.entity';
 
 @Injectable()
 @UseGuards(AuthGuard())
@@ -19,9 +22,15 @@ export class ChannelService {
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
-    @InjectRepository(ChannelsRepository) private readonly channelsRepository: ChannelsRepository,
-    @InjectRepository(MessagesRepository) private readonly messagesRepository: MessagesRepository
-    ) {}
+    @InjectRepository(ChannelsRepository)
+    private readonly channelsRepository: ChannelsRepository,
+    @InjectRepository(MessagesRepository)
+    private readonly messagesRepository: MessagesRepository,
+  ) {}
+
+  async getChannel() {
+    return await this.channelsRepository.getChannel();
+  }
 
   async getUserFromSocket(socket: Socket): Promise<User> {
     const cookies = socket.handshake.headers.cookie;
@@ -34,7 +43,12 @@ export class ChannelService {
     name: string,
     password: string,
   ): Promise<void> {
-    return this.channelsRepository.createChannel(user, name, password, this.userService);
+    return this.channelsRepository.createChannel(
+      user,
+      name,
+      password,
+      this.userService,
+    );
   }
 
   private isUUID(id: string): Boolean {
@@ -45,14 +59,97 @@ export class ChannelService {
 
   async getOneChannel(id: string): Promise<Channel> {
     let found: Channel = this.isUUID(id)
-        ? await this.channelsRepository.findOne(id)
-        : await this.channelsRepository.findOne({ name: id });
-      if (!found) throw new NotFoundException(`Channel ${id} not found`);
+      ? (await this.getChannel()).find((channel) => channel.id === id)
+      : (await this.getChannel()).find((channel) => channel.name === id);
+    if (!found) throw new NotFoundException(`Channel ${id} not found`);
 
-      return found;
+    return found;
   }
 
   async createMessage(user: User, message: MessagesDto): Promise<void> {
-    return this.messagesRepository.createMessage(user, message, this.userService);
+    return await this.messagesRepository.createMessage(user, message, this.userService, this);
+  }
+
+  async joinChannel(user: User, name: string, password: string): Promise<void> {
+    let channel = await this.getOneChannel(name);
+
+    return await this.channelsRepository.joinChannel(
+      await this.userService.getUserById(user.id, user),
+      channel, this.userService
+    );
+  }
+
+  async getMessageByChannel(name: string): Promise<{ messages: Message[] }> {
+    const allMessages = await this.messagesRepository.getMessages();
+
+    let messages: Message[] = [];
+    for (let message of allMessages) {
+      if (message.channel && message.channel.name === name) {
+        messages.push(message);
+      }
+    }
+    return { messages };
+  }
+
+  async getMessageByUser(
+    user: User,
+  ): Promise<{
+    messages: { property: User; send: Message[]; receive: Message[] }[];
+  }> {
+    const allMessages = await this.messagesRepository.getMessages();
+
+    const messages: { property: User; send: Message[]; receive: Message[] }[] =
+      [];
+
+    for (let message of allMessages) {
+      if (
+        message.sender &&
+        message.receiver &&
+        message.sender.username === user.username &&
+        !messages.find(
+          (msg) => msg.property.username === message.receiver.username,
+        )
+      ) {
+        messages.push({ property: message.receiver, send: [], receive: [] });
+      }
+
+      if (
+        message.receiver &&
+        message.sender &&
+        message.receiver.username === user.username &&
+        !messages.find(
+          (msg) => msg.property.username === message.sender.username,
+        )
+      ) {
+        messages.push({ property: message.sender, send: [], receive: [] });
+      }
+    }
+
+    for (let message of allMessages) {
+      if (message.sender && message.sender.username === user.username) {
+        for (let conv of messages) {
+          if (
+            message.receiver &&
+            message.receiver.username === conv.property.username
+          ) {
+            conv.send.push(message);
+          }
+        }
+      } else if (
+        message.receiver &&
+        message.receiver.username === user.username
+      ) {
+        for (let conv of messages) {
+          if (
+            message.sender &&
+            message.sender.username === conv.property.username
+          ) {
+            conv.receive.push(message);
+          }
+        }
+      }
+    }
+
+    return { messages };
   }
 }

@@ -280,7 +280,11 @@ span.cancel-cross:hover label.cancel{
   }
 }
 
-
+.game_screen{
+  height:80vh;
+  width:80vw;
+  position: absolute;
+}
 @media screen and (orientation: portrait) {
 
   .duelElement {
@@ -296,4 +300,14 @@ span.cancel-cross:hover label.cancel{
     box-shadow: rgb(12 73 181 / 54%) 0px 54px 55px, rgb(5 72 177 / 38%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
+}
+
+.testing
+{
+  position:absolute;
+  height:20%;
+  width:20%;
+  background: white;
+  right:0;
+  bottom:0;
 }

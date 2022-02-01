@@ -7,7 +7,7 @@ import { GetUserFilterDto } from 'src/user/dto/user-filter.dto';
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
   async getUser(filterDto: GetUserFilterDto): Promise<User[]> {
-    const query = this.createQueryBuilder('user');
+    const query = this.createQueryBuilder('user')
 
     const { search } = filterDto;
 
@@ -46,7 +46,7 @@ export class UsersRepository extends Repository<User> {
       nickName: nickName,
       profileImage: '/img/beluga.jpeg',
       email: email,
-      isLogged: false,
+      isLogged: 'false',
       friends: [],
       blackList: [],
       twoFactorAuth: 0,
@@ -82,12 +82,12 @@ export class UsersRepository extends Repository<User> {
       nickName: nickName,
       profileImage: profileImage,
       email: email,
-      isLogged: false,
+      isLogged: 'false',
       isAdmin: admin,
       friends: [],
-      // channels: [],
-      // channelsAdmin: [],
-      // channelsConnected: [],
+      channels: [],
+      channelsAdmin: [],
+      channelsConnected: [],
       blackList: [],
       twoFactorAuth: 0,
     });
