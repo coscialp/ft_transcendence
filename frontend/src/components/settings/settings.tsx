@@ -5,6 +5,7 @@ import { Redirect } from "react-router";
 import { ip } from "../../App";
 import { isLogged } from "../../utils/isLogged";
 import { NavBar } from "../navbar/navbar";
+import { useForm } from "react-hook-form";
 import './settings.css'
 
 export function Settings() {
@@ -13,6 +14,12 @@ export function Settings() {
 	const [me, setMe]: any = useState({});
 	const [newNick, setNewNick] = useState("");
 	const [newEmail, setNewEmail] = useState("");
+	const { handleSubmit } = useForm({
+		mode: "onChange"
+	});
+	const onSubmit = (data:any) => {
+		console.log(data);
+	};
 
 	useEffect(() => {
 		let mount = true;
@@ -104,6 +111,17 @@ export function Settings() {
 						<div className="change Nick input" >
 							<input type="text" className="changeNickPlaceholder" placeholder="New Email..." value={newEmail} onChange={(e) => { setNewEmail(e.target.value) }} />
 							<button className="changeNickbtn" onClick={handleNewEmail} >Change !</button>
+						</div>
+					</div>
+					<div className="change Nickname">
+						Change your Icon !
+						<div className="change Nick input" >
+							<form onSubmit={handleSubmit(onSubmit)}>
+								<label form="file">
+									<div className='changeNickbtn iconButton'>Change !</div>
+									<input id="file" type="file" className='file-uploaded' name="myImage" accept='image/png' onChange={handleSubmit(onSubmit)} />
+								</label>
+							</form>
 						</div>
 					</div>
 					<div className="2FA">

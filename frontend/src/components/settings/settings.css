@@ -44,7 +44,8 @@ input.changeNickPlaceholder {
     color: antiquewhite;
     border-radius: 10px;
 }
-button.changeNickbtn {
+
+.changeNickbtn {
     border: 0;
     border-radius: 10px;
     background-color: antiquewhite;
@@ -146,4 +147,18 @@ input.ToggleSwitchON:checked + label:after {
 
 label.ToggleSLabelON:active:after {
 	width: calc(100% - 10px);
+}
+
+.file-uploaded {
+    display: none;
+}
+
+.iconButton {
+    padding-left: 6px;
+    padding-right: 6px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    color: #000;
+    font-family: sans-serif;
+    font-size: 15px;
 }
