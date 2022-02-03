@@ -14,6 +14,7 @@ export function Settings() {
 	const [me, setMe]: any = useState({});
 	const [newNick, setNewNick] = useState("");
 	const [newEmail, setNewEmail] = useState("");
+	const [newAvatar, setNewAvatar] = useState("");
 	const { handleSubmit } = useForm({
 		mode: "onChange"
 	});
@@ -72,6 +73,25 @@ export function Settings() {
 		}
 	}
 
+	function handleNewAvatar(e: any) {
+		if (newAvatar !== "") {
+			axios.request({
+				url: '/user/me/avatar',
+				method: 'patch',
+				baseURL: `http://${ip}:5000`,
+				headers: {
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				data: {
+					"avatar": newAvatar,
+				}
+			})
+			window.alert("Avatar successfully changed to " + newAvatar + " !")
+			setNewAvatar("");
+			e.preventDefault();
+		}
+	}
+
 	function handle2FA() {
 
 		me.twoFactorAuth ?
@@ -114,15 +134,14 @@ export function Settings() {
 						</div>
 					</div>
 					<div className="change Nickname">
-						Change your Icon !
-						<div className="change Nick input" >
-							<form onSubmit={handleSubmit(onSubmit)}>
-								<label form="file">
-									<div className='changeNickbtn iconButton'>Change !</div>
-									<input id="file" type="file" className='file-uploaded' name="myImage" accept='image/png' onChange={handleSubmit(onSubmit)} />
-								</label>
-							</form>
-						</div>
+						Change your Avatar !
+						<form className="change Nick input">
+							<label form="file" className="avatarLabel" onSubmit={handleSubmit(onSubmit)}>
+								New Avatar...
+								<input type="file" className="avatarInput" accept='image/png' value={newAvatar} onChange={(e) => {setNewAvatar(e.target.value); console.log(newAvatar)}} />
+							</label>
+							<button className="changeNickbtn" onClick={handleNewAvatar} >Change !</button>
+						</form>
 					</div>
 					<div className="2FA">
 						{me.twoFactorAuth ?
