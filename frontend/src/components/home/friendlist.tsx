@@ -18,6 +18,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
     }).then((response: any) => {
+      console.log(response)
         setFriends(response.data.friends);
     })
   }
@@ -31,7 +32,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
     const interval = setInterval(() => {
       let mounted = true;
 
-      if (mounted) { FriendRequest(); console.log(friends) }
+      if (mounted) { FriendRequest() }
 
       return () => { mounted = false }
     }, 5000);
@@ -69,6 +70,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
     }).then(response => FriendRequest())
   }
 
+  console.log(friends)
 
   return (
     <div className="FriendElement" >
