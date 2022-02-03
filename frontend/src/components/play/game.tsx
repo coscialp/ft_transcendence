@@ -9,18 +9,6 @@ import { useCookies } from "react-cookie";
 import { io } from "socket.io-client";
 import { ip } from "../../App";
 
-const onFocus = (player: GameManager, leave: any, setLeave: any) => {
-};
-
-// User has switched away from the tab (AKA tab is hidden)
-const onBlur = (player: GameManager, leave: any, setLeave: any) => {
-  setLeave(leave + 1);
-  console.log('test');
-  console.log(`${leave}`);
-  if (leave === 3)
-    player.Socket.emit('warning');
-};
-
 export function InGame() {
 
   let history = useHistory();
@@ -30,6 +18,7 @@ export function InGame() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
   const [reload, setReload] = useState<boolean>(false);
+  // eslint-disable-next-line
   const [gameFinish, setGameFinish] = useState<boolean>(false);
   const [leaveTime, setLeaveTime] = useState<number>(0);
   const leaveTimeRef = useRef(leaveTime);

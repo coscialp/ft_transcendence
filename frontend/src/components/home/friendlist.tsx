@@ -21,8 +21,8 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
     }).then((response: any) => {
-        console.log(response.data.friends);
-        setFriends(response.data.friends)
+      console.log(response)
+        setFriends(response.data.friends);
     })
   }
 
@@ -44,7 +44,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
   }, [cookies])
 
   function handleDeleteFriends(friendToDelete: any) {
-    console.log(friendToDelete)
+    console.log("here")
     axios.request({
       url: '/user/friends/remove',
       method: 'delete',
