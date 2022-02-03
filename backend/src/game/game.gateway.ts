@@ -79,11 +79,11 @@ export class GameGateway
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         const user: User = await this.gameService.getUserFromSocket(socket);
-        this.server.emit(`finishGame/${data.gameId}`, data.player);
         let gameToDelete = this.MatchInProgress.findIndex(u => u.user1.username === user.username);
         if (gameToDelete === -1){
             gameToDelete = this.MatchInProgress.findIndex(u => u.user2.username === user.username);
         }
+        this.server.emit(`finishGame/${data.gameId}`, data.score1, data.score2, this.MatchInProgress[gameToDelete].user1, this.MatchInProgress[gameToDelete].user2, false);
         if (gameToDelete !== -1){
             this.MatchInProgress.splice(gameToDelete, 1);
         }

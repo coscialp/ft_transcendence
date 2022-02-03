@@ -89,7 +89,7 @@ export function InGame() {
     player.receive_player_position();
     player.receive_point();
     player.receive_ready_up();
-    player.receive_endGame();
+    player.receive_endGame(cookies);
   }, [reload, player]);
 
   function check_ready(player: any) {

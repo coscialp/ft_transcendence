@@ -1,5 +1,7 @@
+import axios from "axios";
 import { UnityContext } from "react-unity-webgl";
 import { io, Socket } from "socket.io-client";
+import { ip } from "../../App";
 
 
 
@@ -117,9 +119,25 @@ export class GameManager {
             }
         })
     }
-    receive_endGame()
+    receive_endGame(cookies: any)
     {
-        this._Socket.on(`finishgame/${this._GameID}`, (Player: string, score1: number, score2: number) => {
+        this._Socket.on(`finishgame/${this._GameID}`, (Player: string, score1: number, score2: number, user1: any, user2: any, isRanked: boolean) => {
+            axios.request({
+                url: '/game',
+                method: 'post',
+                baseURL: `http://${ip}:5000`,
+                headers: {
+                  "Authorization": `Bearer ${cookies.access_token}`,
+                },
+                data: {
+                    "player1": user1.username,
+                    "player2": user2.username,
+                    "score1": score1,
+                    "score2": score2,
+                    "date": "A CHANGER DANS GM.tsx",
+                    "ranked": isRanked,
+                }
+              });
             this._GameState = true;
         })
     }
