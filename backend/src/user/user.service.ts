@@ -119,10 +119,12 @@ export class UserService {
     const allUser: User[] = await this.userRepository.find({
       relations: ['friends'],
     });
+
     const friends: User[] = allUser.find((user) => {
       return user.username === currentUser.username;
     }).friends;
 
+    console.log(friends);
     return { friends: friends };
   }
 

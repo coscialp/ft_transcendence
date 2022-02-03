@@ -35,7 +35,6 @@
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    overflow-x: scroll;
 }
 
 
@@ -175,6 +174,7 @@ p.FriendTitle {
     text-align: center;
     transition: 0.2s;
     display: flex;
+    overflow: hidden;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
@@ -269,6 +269,7 @@ p.FriendTitle {
     border-bottom: 2px solid rgba(0, 0, 0, 0.1);
     text-decoration: none;
     text-align: center;
+    overflow: hidden;
     transition: 0.2s;
     justify-content: space-around;
   }
@@ -367,7 +368,6 @@ nav.menuFriendList {
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
-    overflow-x: scroll;
     
 }
 
@@ -381,6 +381,15 @@ nav.menuFriendList {
     background-color: rgb(128 128 128 / 42%);
     border-radius: 50px;
     width: 5px;
+}
+
+.imgFriendList {
+    position: relative;
+    top: 5px;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #0fa, 0 0 42px #0fa;
 }
 
 .gradientRight {
@@ -431,4 +440,128 @@ nav.menuFriendList {
     background-color: rgb(128 128 128 / 42%);
     border-radius: 50px;
     height: 5px;
+}
+
+#gamemodeMini {
+    display:none;
+}
+
+#friendListMini {
+    display:none;
+}
+
+@media screen and (orientation: portrait) {
+
+
+    #OpenGamemode {
+        background-color: #454545;
+        height: 50px;
+        width: 100%;
+        display: flex;
+        border-radius: 10px 10px 0 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        z-index: 1000;
+    }
+
+    #gamemodeMini {
+        display: flex;
+        position: absolute;
+        left: -23.5vh;
+        bottom: 50vh;
+        height: 50px;
+        width: 50vh;
+        border-radius: 10px 10px 0 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        transform: rotate(90deg);
+        z-index: 1000;
+        flex-direction: column;
+    }
+    
+    .GMElement {
+        background-color: rgba(0, 0, 0, 0.0);
+        box-shadow: none;
+    }
+
+    .GMBody {
+        display:none;
+    }
+
+    .GMTitle {
+        display:none;
+    }
+
+    #GMBodyOpen {
+        display: none;
+    }
+
+
+    #gamemodeMini::-webkit-scrollbar-thumb {
+        background-color: wheat;
+        border-radius: 50px;
+    }
+    #gamemodeMini::-webkit-scrollbar {
+        /* display: none; */
+        background-color: rgb(128 128 128 / 42%);
+        border-radius: 50px;
+        width: 5px;
+    }
+    
+
+    #OpenFriendList {
+        background-color: #454545;
+        height: 50px;
+        width: 100%;
+        display: flex;
+        border-radius: 10px 10px 0 0;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        z-index: 1000;
+    }
+
+    #friendListMini {
+        display: flex;
+        position: absolute;
+        right: -23.5vh;
+        bottom: 50vh;
+        height: 50px;
+        width: 50vh;
+        border-radius: 10px 10px 0 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        transform: rotate(-90deg);
+        z-index: 1000;
+        flex-direction: column;
+    }
+    
+    .FriendElement {
+        background-color: rgba(0, 0, 0, 0.0);
+        box-shadow: none;
+    }
+
+    .allFriendList {
+        display:none;
+    }
+
+    .FriendTitle {
+        display:none;
+    }
+
+    #allFriendListOpen {
+        display: none;
+    }
+
+    #friendListMini::-webkit-scrollbar-thumb {
+        background-color: wheat;
+        border-radius: 50px;
+    }
+    #friendListMini::-webkit-scrollbar {
+        /* display: none; */
+        background-color: rgb(128 128 128 / 42%);
+        border-radius: 50px;
+        width: 5px;
+    }
 }

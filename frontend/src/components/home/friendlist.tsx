@@ -4,10 +4,13 @@ import { useCookies } from "react-cookie";
 import { ip } from "../../App";
 import './home.css'
 import { Open_Message } from "./privateMessage";
+import { ArrowSmUp, Backspace } from 'heroicons-react'
+
 
 export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
-  const [friends, setFriends] = useState([]);
+  const [friends, setFriends]: any = useState([]);
+  const forceUpdate = useForceUpdate();
 
   function FriendRequest() {
     axios.request({
@@ -18,6 +21,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
     }).then((response: any) => {
+      console.log(response)
         setFriends(response.data.friends);
     })
   }
@@ -31,7 +35,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
     const interval = setInterval(() => {
       let mounted = true;
 
-      if (mounted) { FriendRequest(); console.log(friends) }
+      if (mounted) { FriendRequest() }
 
       return () => { mounted = false }
     }, 5000);
@@ -69,13 +73,78 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
     }).then(response => FriendRequest())
   }
 
+  function useForceUpdate() {
+    // eslint-disable-next-line
+    const [value, setValue] = useState(0);
+    return () => setValue(value => ++value);
+  }
+
+  function Open_FriendList() {
+    var FriendList: any = document.getElementById('friendListMini')
+    var allFriendListOpen: any = document.getElementById('allFriendListOpen')
+    var arrowR: any = document.getElementById('friendArrowR')
+    var arrowL: any = document.getElementById('friendArrowL')
+    if (FriendList.style.height === '52vh') {
+        FriendList.style.transition = 'all .5s ease-in-out'
+        FriendList.style.height = '50px'
+        FriendList.style.overflowY = 'hidden'
+        FriendList.style.transform = 'rotate(-90deg)'
+        FriendList.style.right = '-23.5vh'
+        FriendList.style.bottom = '50vh'
+        FriendList.style.zindex = '1000'
+        FriendList.style.width = '50vh'
+        arrowR.style.transition = 'transform 0.5s ease-in-out'
+        arrowR.style.transform = 'rotate(0deg)'
+        arrowL.style.transition = 'transform 0.5s ease-in-out'
+        arrowL.style.transform = 'rotate(0deg)'
+        allFriendListOpen.style.display = 'none'     
+    }
+    else {
+        FriendList.style.transition = 'all .5s ease-in-out'
+        FriendList.style.height = '52vh'
+        FriendList.style.overflowY = 'scroll'
+        FriendList.style.overflowX = 'hidden'
+        FriendList.style.transform = 'rotate(0deg)'
+        FriendList.style.right = '0'
+        FriendList.style.bottom = '28vh'
+        FriendList.style.zindex = '1000'
+        FriendList.style.width = '50vw'
+        arrowR.style.transition = 'transform 0.5s ease-in-out'
+        arrowR.style.transform = 'rotate(180deg)'
+        arrowL.style.transition = 'transform 0.5s ease-in-out'
+        arrowL.style.transform = 'rotate(-180deg)'
+        allFriendListOpen.style.display = 'flex'
+        allFriendListOpen.style.flexDirection = 'column'
+      }
+
+}
+
 
   return (
     <div className="FriendElement" >
+      <div id="friendListMini">
+          <div id="OpenFriendList" onClick={() => { Open_FriendList()}}>
+            <ArrowSmUp id="friendArrowR" onClick={() => Open_FriendList()} />FriendList
+            <ArrowSmUp id="friendArrowL" onClick={() => Open_FriendList()} />
+          </div>
+          <div id="allFriendListOpen">{friends.map((friend: any) => (
+            <details key={friend.id} id={friend.id} >
+              <summary className="FriendList"><img className="imgFriendList" src={friend.profileImage} alt=""></img> {friend.username}</summary>
+              <nav className="menuFriendList">
+                <button className="friendBtn" onClick={e => {document.getElementById(friend.id)?.removeAttribute("open") ; Open_Message(); setCurrentChat(friend.username)}} ><span /><span /><span /><span />Send message</button>
+                <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>
+                <button className="friendBtnOut friendBorder" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
+                <button className="friendBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
+              </nav>
+            </details>
+          ))}
+          </div>
+      </div>
+      
       <p className="FriendTitle" >Friend List</p>
       <div className="allFriendList">{friends.map((friend: any) => (
         <details key={friend.id} id={friend.id} >
-          <summary className="FriendList">{friend.username}</summary>
+          <summary className="FriendList"><img className="imgFriendList" src={friend.profileImage} alt=""></img> {friend.username}</summary>
           <nav className="menuFriendList">
             <button className="friendBtn" onClick={e => {document.getElementById(friend.id)?.removeAttribute("open") ; Open_Message(); setCurrentChat(friend.username)}} ><span /><span /><span /><span />Send message</button>
             <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>

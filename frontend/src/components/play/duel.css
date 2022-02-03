@@ -117,7 +117,7 @@ input.duelSearchBar {
     backdrop-filter: blur(4px);
   }
 
-  .box {
+  .duelBox {
     position: fixed;
     width: 40vw;
     left: 30vw;
@@ -132,7 +132,7 @@ input.duelSearchBar {
     text-align: center;
   }
   
-  .button-box {
+  .button-duelBox {
     font-size: 1em;
     padding: 10px;
     color: #fff;
