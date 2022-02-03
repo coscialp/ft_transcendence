@@ -53,6 +53,11 @@ export class UserController {
         return await this.userService.patchNickname(id, user, nickname);
     }
 
+    @Patch('/:id/avatar')
+    async patchAvatar(@Param('id') id: string, @GetUser() user: User, @Body('avatar') avatar: string): Promise<User> {
+        return await this.userService.patchAvatar(id, user, avatar);
+    }
+
     @Get('/:id/avatar')
     async getAvatar(@Param('id') id: string, @GetUser() user: User): Promise<{ avatar: string }> {
         return await this.userService.getAvatar(id, user);
@@ -147,4 +152,4 @@ export class UserController {
     async demoteAdmin(@GetUser() user: User) {
         return await this.userService.demoteAdmin(user);
     }
-}
+} 
