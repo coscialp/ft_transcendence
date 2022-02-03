@@ -9,15 +9,6 @@ import { useCookies } from "react-cookie";
 import { io } from "socket.io-client";
 import { ip } from "../../App";
 
-const onFocus = (player: GameManager, leave: any, setLeave: any) => {
-};
-
-// User has switched away from the tab (AKA tab is hidden)
-const onBlur = (player: GameManager, leave: any, setLeave: any) => {
-  setLeave(leave + 1);
-  if (leave === 3)
-    player.Socket.emit('warning');
-};
 
 export function InGame() {
 
@@ -77,10 +68,13 @@ export function InGame() {
   }, [cookies, player]);
 
   useEffect(function () {
-    player.send_ready_up();
-    player.send_point();
-    player.send_ball_position();
-    player.send_player_position();
+    if (player.Spectator === false)
+    {
+      player.send_ready_up();
+      player.send_point();
+      player.send_ball_position();
+      player.send_player_position();
+    }
   }, [player]);
 
   useEffect(function () {
@@ -101,16 +95,25 @@ export function InGame() {
     if (ready) {
       ready.style.display = 'none';
     }
-
   }
 
   useEffect(function () {
-    player.receive_ball_position();
-    player.receive_player_position();
-    player.receive_point();
-    player.receive_ready_up();
-    player.receive_endGame();
-    player.receive_warning(setGameFinish);
+    if (player.Spectator)
+    {
+      player.receive_ball_position();
+      player.receive_player_position();
+      player.receive_point();
+      player.receive_ready_up();
+      player.receive_endGame();
+      player.receive_warning(setGameFinish);
+    }
+    else
+    {
+      player.receive_ball_pos_specate();
+      player.receive_pos_specate();
+      player.receive_endGame();
+      player.receive_warning(setGameFinish);
+    }
   }, [reload, player]);
 
   function handleResize()

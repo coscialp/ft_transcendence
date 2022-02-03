@@ -206,12 +206,19 @@ export class UserService {
     userToDelete.friends = [];
 
     for (let friend of friends) {
+      console.log(`${friend.username} || ${userToDelete.username}`)
       if (friend.id !== userToDelete.id) {
         user.friends.push(friend);
         userToDelete.friends.push(user);
       }
     }
-
+    for (let friend of userToDelete.friends) {
+      console.log(`${friend.username} || ${userToDelete.username}`)
+      if (friend.id !== userToDelete.id) {
+        user.friends.push(friend);
+        userToDelete.friends.push(user);
+      }
+    }
     this.userRepository.save(user);
     this.userRepository.save(userToDelete);
   }

@@ -94,11 +94,11 @@ export class ChannelService {
   async getMessageByUser(
     user: User,
   ): Promise<{
-    messages: { property: User; send: Message[]; receive: Message[] }[];
+    messages: { property: User, conversations: Message[] }[];
   }> {
     const allMessages = await this.messagesRepository.getMessages();
 
-    const messages: { property: User; send: Message[]; receive: Message[] }[] =
+    const messages: { property: User, conversations: Message[] }[] =
       [];
 
     for (let message of allMessages) {
@@ -110,7 +110,7 @@ export class ChannelService {
           (msg) => msg.property.username === message.receiver.username,
         )
       ) {
-        messages.push({ property: message.receiver, send: [], receive: [] });
+        messages.push({ property: message.receiver, conversations: [] });
       }
 
       if (
@@ -121,7 +121,7 @@ export class ChannelService {
           (msg) => msg.property.username === message.sender.username,
         )
       ) {
-        messages.push({ property: message.sender, send: [], receive: [] });
+        messages.push({ property: message.sender, conversations: [] });
       }
     }
 
@@ -132,7 +132,7 @@ export class ChannelService {
             message.receiver &&
             message.receiver.username === conv.property.username
           ) {
-            conv.send.push(message);
+            conv.conversations.push(message);
           }
         }
       } else if (
@@ -144,7 +144,7 @@ export class ChannelService {
             message.sender &&
             message.sender.username === conv.property.username
           ) {
-            conv.receive.push(message);
+            conv.conversations.push(message);
           }
         }
       }

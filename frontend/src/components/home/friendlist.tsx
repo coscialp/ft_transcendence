@@ -7,7 +7,7 @@ import { Open_Message } from "./privateMessage";
 
 export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
-  const [friends, setFriends]: any = useState([]);
+  const [friends, setFriends] = useState([]);
 
   function FriendRequest() {
     axios.request({
@@ -18,7 +18,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
     }).then((response: any) => {
-        setFriends(response.data.friends)
+        setFriends(response.data.friends);
     })
   }
 
@@ -31,7 +31,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
     const interval = setInterval(() => {
       let mounted = true;
 
-      if (mounted) { FriendRequest() }
+      if (mounted) { FriendRequest(); }
 
       return () => { mounted = false }
     }, 5000);
@@ -40,7 +40,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
   }, [cookies])
 
   function handleDeleteFriends(friendToDelete: any) {
-    console.log(friendToDelete)
+      console.log(friendToDelete);
     axios.request({
       url: '/user/friends/remove',
       method: 'delete',
