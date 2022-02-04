@@ -7,22 +7,6 @@ import { isLogged } from '../../utils/isLogged';
 import { scoreDifferenceLooser, scoreDifferenceWinner } from '../../utils/scoreDifference';
 import './resume.css'
 
-/*let game = {
-    player1: {
-        profileImage: "https://cdn.intra.42.fr/users/akerdeka.jpg",
-        username: "akerdeka"
-    },
-    score1: "11",
-    player2: {
-        profileImage: "https://cdn.intra.42.fr/users/wasayad.jpg",
-        username: "wasayad"
-    },
-    score2: "2",
-    winner: "wasayad",
-    scoreDifference: 10,
-    ranked: true,
-}*/
-
 
 export default function Resume() {
   
@@ -31,13 +15,11 @@ export default function Resume() {
 	const [me, setMe]: any = useState({});
     const [cookies, setCookies] = useCookies();
     const [scoreDifference, setScoreDifference] = useState("");
-    // eslint-disable-next-line
-    const [game, setGame]: any = useState({});
+    const [game, setGame]: any = useState();
 	
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-            console.log("Test de Julien a nouveau")
 			isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
 		}
 		return (() => { mount = false; });
@@ -46,7 +28,6 @@ export default function Resume() {
     useEffect(() => {
 		let mount = true;
 		if (mount) {
-            
             axios.request({
                 url: '/game/me/last',
                 method: 'get',
@@ -55,7 +36,6 @@ export default function Resume() {
                   "Authorization": `Bearer ${cookies.access_token}`,
                 }
               }).then((response: any) => {
-                  console.log(response);
                     setGame(response.data);
               })
 		}
@@ -71,6 +51,7 @@ export default function Resume() {
                 setScoreDifference(scoreDifferenceWinner[game?.scoreDifference]);
                 document.getElementById("score-difference")!.style.color = "rgb(54 143 194)";
             } else {
+                document.getElementById("resume-all-score")!.style.backgroundColor = "rgb(147 63 63 / 39%)";
                 setScoreDifference(scoreDifferenceLooser[game?.scoreDifference]);
                 document.getElementById("score-difference")!.style.color = "#fd5454f0";
             }
@@ -95,9 +76,10 @@ export default function Resume() {
         history.push("/");
       }
       console.log(game);
+
     return (
         <div>
-            {/* <div className="ResumeElement">
+            <div className="ResumeElement">
                 <div id="ResumeMain">
                     <div id='resume-all-score' >
                         <img className="resume-image" style={{ backgroundImage: `url(${game?.game.player1.profileImage})` }} alt="" />
@@ -105,18 +87,18 @@ export default function Resume() {
                         <img className="resume-image" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />
                     </div>
                     <p id='score-difference' > {scoreDifference} </p>
-                    {game?.game.ranked ?
+                    {game?.game.ranked === "false" ?
                     <div id="ranked-points">
                         <p id="actual-points" >{me.PP} PP</p>
-                        <p id="new-points" >+18 PP</p>
+                        <p id="new-points" > {game?.winner === me.username ? `+` : `-` } {game?.PPaverage} PP</p>
                     </div> : null }
                     {game?.scoreDifference === 10 && game?.winner !== me.username ?
                         <button className="resume-go-home" onClick={ logout }>Logout</button>
                      :
-                        <button className="resume-go-home" onClick={ () => { return history.push("/") } }>Go home !</button>
+                        <button className="resume-go-home" onClick={ () => { return history.push("/home") } }>Go home !</button>
                      }
                 </div>
-            </div> */}
+            </div>
         </div>
     );
 }

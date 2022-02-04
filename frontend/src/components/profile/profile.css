@@ -90,6 +90,8 @@ img.HistoryImage {
 
 p.Score {
     font-family: 'neon';
+    margin: 0;
+    height: 8vh;
 }
 
 #Achivements {

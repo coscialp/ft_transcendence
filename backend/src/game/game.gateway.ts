@@ -118,7 +118,7 @@ export class GameGateway
                 score1: data.score1,
                 score2: data.score2,
                 date: Date(),
-                ranked: String(this.MatchInProgress[gameToDelete].ranked),
+                ranked: "false",
             })
             this.MatchInProgress.splice(gameToDelete, 1);
         }

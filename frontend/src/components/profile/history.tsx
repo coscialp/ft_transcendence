@@ -1,20 +1,50 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router-dom';
+import { ip } from '../../App';
 import './profile.css'
 
-export function History(data : any) {
-	let history = useHistory();
+export function History(data: any) {
+    let history = useHistory();
     const [game, setGame]: any = useState({});
+    const [cookies] = useCookies();
 
-    /*if (game.winner === data.me.username) {
+    useEffect(() => {
+        let mount = true;
+        if (mount) {
+
+            axios.request({
+                url: '/game/me/last',
+                method: 'get',
+                baseURL: `http://${ip}:5000`,
+                headers: {
+                    "Authorization": `Bearer ${cookies.access_token}`,
+                }
+            }).then((response: any) => {
+                setGame(response.data);
+            })
+        }
+        return (() => { mount = false; });
+    }, [cookies, data.me])
+
+    if (game.game !== undefined && game?.winner === data.me.username) {
         document.getElementById("History")!.style.backgroundColor = "rgba(0, 141, 177, 0.39)";
-    }*/
-    
+    }
+
     return (
-            <div id="History" onClick={() => {return history.push("/history") } } >
-			</div>
+        <div>
+            {game.game !== undefined ?
+                <div id="History" onClick={() => { return history.push("/history") }} >
+                    <img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player1.profileImage})` }} alt="" />
+                    <p className="Score"> {game?.game.score1} : {game?.game.score2} <br /> {game?.winner === data.me.username ? <p>WIN</p> : <p>LOSE</p>} </p>
+                    <img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />
+                </div>
+                :
+                <div>
+                    This is your match history ! Launch your first game to see it !
+                </div>
+            }
+        </div>
     )
 }
-/*<img className="HistoryImage" style={{backgroundImage: `url(${ game.game.player1.profileImage })`}} alt="" />
-<p className="Score"> {game.game.score1} : {game.game.score2} <br/> {game.winner === data.me.username ? <p>WIN</p> : <p>LOSE</p> } </p>
-<img className="HistoryImage" style={{backgroundImage: `url(${ game.game.player2.profileImage })`}} alt="" />*/

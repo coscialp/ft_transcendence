@@ -214,7 +214,7 @@ export class GameManager {
                 }
             }
             console.log(`${this._Score1} || ${this._Score2}`)
-            if (score1 === 10 || score2 === 10 || this._Score1 === 1) {
+            if (score1 === 10 || score2 === 10) {
                 console.log('test');
                 this._UnityContext.send("LocalPaddle", "setGameStarted", 0);
                 this._UnityContext.send("RemotePaddle", "setGameStarted", 0);
