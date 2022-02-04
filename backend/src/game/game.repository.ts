@@ -25,7 +25,7 @@ export class GameRepository extends Repository<Game> {
             player1.RankedGameNumber += 1;
             player2.RankedGameNumber += 1;
 
-            if (game.score1 === 10) {
+            if (game.score1 > game.score2) {
                 player1.RankedWinNumber += 1;
             } else {
                 player2.RankedWinNumber += 1;
@@ -34,7 +34,7 @@ export class GameRepository extends Repository<Game> {
             player1.NormalGameNumber += 1;
             player2.NormalGameNumber += 1;
 
-            if (game.score1 === 10) {
+            if (game.score1 < game.score2) {
                 player1.NormalGameNumber += 1;
             } else {
                 player2.NormalGameNumber += 1;
