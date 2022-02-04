@@ -13,6 +13,7 @@ import { FriendRequestDto } from './dto/friend-request.dto';
 import { FriendRequest } from './friend-request.entity';
 import { Channel } from 'src/channel/channel.entity';
 import { Message } from 'src/channel/message.entity';
+import { Game } from 'src/game/game.entity';
 
 @Injectable()
 export class UserService {
@@ -96,6 +97,16 @@ export class UserService {
     return found;
   }
 
+  async patchAvatar(id: string, user: User, avatar: string): Promise<User> {
+    const found = await this.getUserById(id, user);
+
+    found.profileImage = avatar;
+
+    await this.userRepository.save(found);
+
+    return found;
+  }
+
   async getAvatar(id: string, user: User): Promise<{ avatar: string }> {
     const { profileImage } = await this.getUserById(id, user);
 
@@ -108,10 +119,12 @@ export class UserService {
     const allUser: User[] = await this.userRepository.find({
       relations: ['friends'],
     });
+
     const friends: User[] = allUser.find((user) => {
       return user.username === currentUser.username;
     }).friends;
 
+    console.log(friends);
     return { friends: friends };
   }
 
@@ -243,7 +256,7 @@ export class UserService {
 
     this.userRepository.save(user);
   }
-
+ 
   async deleteBlackList(user: User, idToDelete: string): Promise<void> {
     const userToDelete: User = await this.getUserById(idToDelete);
 
@@ -360,5 +373,17 @@ export class UserService {
     } else {
       throw new UnauthorizedException('You are not admin');
     }
+  }
+
+  async getGames(user: User): Promise<{ games: Game[] }> {
+    const allCreator = await this.userRepository.find({
+      relations: ['games'],
+    });
+
+    const games = allCreator.find(
+      (u) => u.username === user.username,
+    ).games;
+
+    return { games };
   }
 }

@@ -50,6 +50,7 @@ export class UsersRepository extends Repository<User> {
       friends: [],
       blackList: [],
       twoFactorAuth: 0,
+      PP: 800,
     });
 
 
@@ -90,6 +91,7 @@ export class UsersRepository extends Repository<User> {
       channelsConnected: [],
       blackList: [],
       twoFactorAuth: 0,
+      PP: 800,
     });
 
     try {

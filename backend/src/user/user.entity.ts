@@ -1,5 +1,6 @@
 import { Channel } from "src/channel/channel.entity";
 import { Message } from "src/channel/message.entity";
+import { Game } from "src/game/game.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { FriendRequest } from "./friend-request.entity";
 
@@ -35,6 +36,9 @@ export class User {
     @Column({nullable: false, default: false})
     isAdmin: boolean;
 
+    @Column()
+    PP: number;
+
     @Column({nullable: false, default: 0})
     twoFactorAuth: number;
 
@@ -48,6 +52,9 @@ export class User {
     // ]
     // })
     // achievements: Achievement[]
+
+    @OneToMany(type => Game, game => game.player1 || game.player2)
+    games: Game[];
 
     @OneToMany(type => FriendRequest, request => request.from)
     requestFrom: FriendRequest[];

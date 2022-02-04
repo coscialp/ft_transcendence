@@ -25,7 +25,7 @@ export function NavBar(props: any) {
     return (() => { mount = false; });
   }, [cookies])
 
-  const [avatar, setAvatar] = useState(me.data ? me.data.profileImage : '/img/beluga.jpeg');
+  const [avatar, setAvatar] = useState(localStorage.getItem('ProfilePicture') ? localStorage.getItem('ProfilePicture') : '/img/beluga.jpeg');
 
   useEffect(() => {
     const interval = setInterval(() => {
