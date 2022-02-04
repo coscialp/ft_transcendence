@@ -44,7 +44,6 @@ export function MainMenu(data: any) {
 			if (data.socket) {
 
 				data.socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
-					console.log(`msg: ${msg}`);
 					messages.push({ id: messages.length, date: msg.sentAt, sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
 				})
@@ -117,10 +116,8 @@ export function MainMenu(data: any) {
 
 	function handleSendMessage(e: React.FormEvent<HTMLFormElement>) {
 		if (messageInput) {
-			console.log(messageInput);
 			if (data.socket) {
 				data.socket.emit('msg_toServer', { sentAt: Date(), body: messageInput, receiver: null });
-				console.log(`msg_toClient/${current_channel}`);
 			}
 			setMessageInput('');
 		}
@@ -132,12 +129,10 @@ export function MainMenu(data: any) {
 		let mount = true;
 		if (mount) {
 			if (current_channel) {
-				console.log(current_channel);
 				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
-					console.log(`res: ${response}`);
-					response.messages.map((msg: any) =>
+					response.messages.map((msg: any) => {
 						messages.push({ id: messages.length, date: msg.date, sender: msg.sender.username, content: msg.content, avatar: msg.sender.profileImage })
-					);
+				});
 					forceUpdate();
 				})
 			}
@@ -147,7 +142,6 @@ export function MainMenu(data: any) {
 	}, [cookies, messages, current_channel]);
 
 	function changeChannel(e: any) {
-		console.log(e.target.innerText);
 		if (data.socket) {
 			data.socket.emit('change_channel', { channelName: e.target.innerText });
 			setCurrent_Channel(e.target.innerText);
@@ -161,6 +155,7 @@ export function MainMenu(data: any) {
 	}
 
 
+
 	return (
 		<div className="MainElement" >
 			<div className="Channel List" >{channels.map((channel: any) => (
@@ -169,7 +164,6 @@ export function MainMenu(data: any) {
 				<button className="addChannel" onClick={togglePopup}>+</button>
 			</div>
 			<div className="Message Container" >
-				{console.log(messages)}
 				{messages.map((message: any) =>
 				(
 					<article key={message.id} className='message-container'>
@@ -179,10 +173,10 @@ export function MainMenu(data: any) {
 								<header className='message-header'>
 									<h4 className='message-sender' onClick={e => handleRedirectToProfile(message.sender)} >{(data.me && message.sender === data.me.username) ? 'You' : message.sender}</h4>
 									<span className='message-time'>
-										{new Date(message.sentAt).toLocaleTimeString(undefined, { timeStyle: 'short' })}
+										{new Date(message.date).toLocaleTimeString(undefined, { timeStyle: 'short' })}
 									</span>
 								</header>
-								<p className='message-text'>{message.body}</p>
+								<p className='message-text'>{message.content}</p>
 							</div>
 						</div>
 						<div className="dropdown" >

@@ -1,15 +1,21 @@
 import axios from "axios"
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { useHistory } from "react-router";
+import { io, Socket } from "socket.io-client";
 import { ip } from "../../App";
 import './home.css'
 import { Open_Message } from "./privateMessage";
 import { ArrowSmUp, Backspace } from 'heroicons-react'
+import { useForceUpdate } from "../../utils/forceUpdate";
 
 
-export function Friendlist({currentChat, setCurrentChat}: any) {
+export function Friendlist({ currentChat, setCurrentChat }: any) {
   const [cookies] = useCookies();
-  const [friends, setFriends]: any = useState([]);
+  const [friends, setFriends] = useState([]);
+  const [socket, setSocket] = useState<Socket>();
+  const [random, setRandom] = useState<number>();
+  let history = useHistory();
   const forceUpdate = useForceUpdate();
 
   function FriendRequest() {
@@ -22,7 +28,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
       }
     }).then((response: any) => {
       console.log(response)
-        setFriends(response.data.friends);
+      setFriends(response.data.friends);
     })
   }
 
@@ -30,8 +36,12 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
   useEffect(() => {
     let mounted = true;
 
-    if (mounted) { FriendRequest() }
-    
+    if (mounted) {
+      FriendRequest()
+      setSocket(io(`ws://${ip}:5002`, { transports: ['websocket'] }));
+      setRandom(Math.floor(Math.random() * 2000000000 - 1));
+    }
+
     const interval = setInterval(() => {
       let mounted = true;
 
@@ -44,7 +54,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
   }, [cookies])
 
   function handleDeleteFriends(friendToDelete: any) {
-    console.log("here")
+    console.log(friendToDelete);
     axios.request({
       url: '/user/friends/remove',
       method: 'delete',
@@ -73,6 +83,23 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
     }).then(response => FriendRequest())
   }
 
+  console.log(friends)
+  useEffect(() => {
+    if (socket) {
+      socket.on(`getSpectateID/${random}`, (gameID: number) => {
+        console.log('test');
+        localStorage.setItem('GameID', String(gameID));
+        localStorage.setItem('playerID', "spectator");
+        return history.push('/game');
+      });
+    }
+  }, [random]);
+
+  function goGame(friend: any) {
+    if (socket) {
+      socket.emit('getSpectateID', { username: friend.username, id: random });
+    }
+  }
   function useForceUpdate() {
     // eslint-disable-next-line
     const [value, setValue] = useState(0);
@@ -146,10 +173,11 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         <details key={friend.id} id={friend.id} >
           <summary className="FriendList"><img className="imgFriendList" src={friend.profileImage} alt=""></img> {friend.username}</summary>
           <nav className="menuFriendList">
-            <button className="friendBtn" onClick={e => {document.getElementById(friend.id)?.removeAttribute("open") ; Open_Message(); setCurrentChat(friend.username)}} ><span /><span /><span /><span />Send message</button>
+            <button className="friendBtn" onClick={e => { document.getElementById(friend.id)?.removeAttribute("open"); Open_Message(); setCurrentChat(friend.username) }} ><span /><span /><span /><span />Send message</button>
             <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>
-            <button className="friendBtnOut friendBorder" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
-            <button className="friendBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
+            <button className="friendBtnOut friendBorder" onClick={() => { handleDeleteFriends(friend) }}><span /><span /><span /><span />Delete friend</button>
+            <button className="friendBtnOut" onClick={() => { handleDeleteFriends(friend); handleBlacklist(friend) }}><span /><span /><span /><span />Blacklist</button>
+            <button className="friendBtn" onClick={() => goGame(friend)}><span /><span /><span /><span />Spectate Game</button>
           </nav>
         </details>
       ))}

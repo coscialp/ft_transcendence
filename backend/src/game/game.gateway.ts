@@ -10,7 +10,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { GameService } from './game.service';
 
 @WebSocketGateway(5002, { transports: ['websocket'], "pingInterval":5000,"pingTimeout":20000 })
@@ -55,6 +55,24 @@ export class GameGateway
             }
         }
     }
+    @SubscribeMessage('matchmakingRanked')
+    async MatchMakingRanked(
+        @ConnectedSocket() socket: Socket,
+    ): Promise<void> {
+        const user: User = await this.gameService.getUserFromSocket(socket);
+        if (!this.usersInQueue.find((u) => u.id === user.id)) {
+            this.usersInQueue.push(user);
+        }
+        for (let u of this.usersInQueue) {
+            if (user.username !== u.username) {
+                this.server.emit(`startgame/${user.username}`, 'Player1');
+                this.server.emit(`startgame/${u.username}`, 'Player2');
+                this.MatchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1) });
+                this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
+                this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
+            }
+        }
+    }
     @SubscribeMessage('ReadyUp')
     ReadyUp(
         @ConnectedSocket() socket: Socket,
@@ -72,24 +90,40 @@ export class GameGateway
                 this.server.emit(`getGameID/${user.username}`, gameID);
             }
         }
-
+    }
+    @SubscribeMessage('getSpectateID')
+    getSpectateID(
+        @MessageBody() data: any) {
+        for (let { user1, user2, gameID } of this.MatchInProgress) {
+            if (user1.username === data.username || user2.username === data.username) {
+                this.server.emit(`getSpectateID/${data.id}`, gameID);
+            }
+        }
     }
     @SubscribeMessage('finishGame')
     async finishGame(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         const user: User = await this.gameService.getUserFromSocket(socket);
-        this.server.emit(`finishGame/${data.gameId}`, data.player);
         let gameToDelete = this.MatchInProgress.findIndex(u => u.user1.username === user.username);
+        this.server.emit(`finishGame/${data.gameId}`, data.player, data.score1, data.score2, this.MatchInProgress[gameToDelete].user1, this.MatchInProgress[gameToDelete].user2);
         if (gameToDelete === -1){
             gameToDelete = this.MatchInProgress.findIndex(u => u.user2.username === user.username);
         }
+        this.server.emit(`finishGame/${data.gameId}`, data.score1, data.score2, this.MatchInProgress[gameToDelete].user1, this.MatchInProgress[gameToDelete].user2, false);
+        this.gameService.createGame({
+            player1: this.MatchInProgress[gameToDelete].user1,
+            player2: this.MatchInProgress[gameToDelete].user2,
+            score1: data.score1,
+            score2: data.score2,
+            date: Date(),
+            ranked: "false",
+        })
         if (gameToDelete !== -1){
             this.MatchInProgress.splice(gameToDelete, 1);
         }
     }
 
-    //add point and game stat
     @SubscribeMessage('warning')
     async warning(
         @ConnectedSocket() socket: Socket,
@@ -120,6 +154,21 @@ export class GameGateway
         this.server.emit(`SetPosition/${data.gameId}`, data.pos, data.id);
     }
 
+    @SubscribeMessage('SetPosSpectate')
+    SetPosSpectate(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+
+        this.server.emit(`SetPosSpectate/${data.gameId}`, data.pos, data.id);
+    }
+
+
+    @SubscribeMessage('SetBallPosSpectate')
+    SetBallPosSpectate(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+        this.server.emit(`SetBallPosSpectate/${data.id}`, data.posx, data.posy);
+    }
 
     @SubscribeMessage('SetBallPos')
     SetBallPos(
@@ -136,14 +185,15 @@ export class GameGateway
         const user: User = await this.gameService.getUserFromSocket(socket);
         try {
           this.logger.log(`Client ${user.username} disconnected`);
-          let index = this.MatchInProgress.findIndex(m => m.user1 === user)
+          let index = this.MatchInProgress.findIndex(m => m.user1.username === user.username)
           let winner = "Player1";
           if (index === -1)
           {
-            index = this.MatchInProgress.findIndex(m => m.user2 === user)
-            winner = "Player2";
-          }
-          this.server.emit(`finishGame/${this.MatchInProgress[index].gameID}`, winner, -5, -5);
+              index = this.MatchInProgress.findIndex(m => m.user2.username === user.username)
+              winner = "Player2";
+            }
+            console.log(this.MatchInProgress[index].gameID);
+          this.server.emit(`warning/${this.MatchInProgress[index].gameID}`, winner, -5, -5);
           this.MatchInProgress.slice(index, 1);
         } catch (error) {
           this.logger.error(error);

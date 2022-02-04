@@ -1,0 +1,74 @@
+.ResumeElement {
+    color: aliceblue;
+    display: flex;
+    justify-content: space-around;
+    height: 86vh;
+    text-align: center;
+    padding-bottom: 7vh;
+    flex-direction: row;
+    align-items: center;
+}
+
+#ResumeMain {
+    width: 70%;
+    display: flex;
+    position: relative;
+    height: 80vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    box-shadow: rgb(0 0 0) 0px 30px 60px -12px inset, rgb(0 0 0) 0px 18px 36px -18px inset;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#resume-all-score {
+    width: 70%;
+    height: 30%;
+    padding: 10px;
+    display: flex;
+    margin-top: 5%;
+    border-radius: 20px;
+    background-color: rgb(147 63 63 / 39%);
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+img.resume-image {
+    height: 20vh;
+    width: 20vh;
+    background-size: cover;
+    border-radius: 50%;
+    background-position: center;
+}
+
+p.resume-score {
+    font-size: 3vw;
+}
+
+button.resume-go-home {
+    background: transparent;
+    border: 0;
+    font-family: 'neon';
+    font-size: 2em;
+    cursor: pointer;
+    color: antiquewhite;
+}
+
+p#score-difference {
+    font-size: 5vw;
+    color: black;
+}
+
+p#actual-points {
+    margin: 0;
+    font-family: fantasy;
+    font-size: 5vw;
+}
+
+p#new-points {
+    font-size: 3vw;
+    margin: 5px 0 20px 0;
+    font-family: fantasy;
+}

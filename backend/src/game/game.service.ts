@@ -3,12 +3,12 @@ import { Socket } from 'socket.io';
 import { parse } from 'cookie';
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GameHistoryDto } from './dto/game-history.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GameRepository } from './game.repository';
-import { Game } from './game.entity';
+import { Game } from '../entities/game.entity';
 
 @Injectable()
 @UseGuards(AuthGuard())
@@ -41,7 +41,7 @@ export class GameService {
     const result: {game: Game, winner: string, scoreDifference: number,  PPaverage: number}[] = []
     for (let game of allGames) {
       if (game.player1.username === user.username || game.player2.username === user.username) {
-        let r = {game, winner: (game.score1 === 10 ? game.player1.username : game.player2.username), scoreDifference: Math.abs(game.score1 - game.score2), PPaverage: game.ranked === 'true' ? 10 + Math.abs(game.score1 - game.score2) : 0};
+        let r = {game, winner: (game.score1 > game.score2 ? game.player1.username : game.player2.username), scoreDifference: Math.abs(game.score1 - game.score2), PPaverage: game.ranked === 'true' ? 10 + Math.abs(game.score1 - game.score2) : 0};
         if (game.player1.username === r.winner) {
           game.player1.PP += r.PPaverage;
           game.player2.PP -= r.PPaverage;

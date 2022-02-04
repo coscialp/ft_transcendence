@@ -1,5 +1,5 @@
-import { User } from "src/user/user.entity";
-import { Channel } from "../channel.entity";
+import { User } from "src/entities/user.entity";
+import { Channel } from "../../entities/channel.entity";
 
 export class MessagesDto {
     sentAt: string;

@@ -1,6 +1,6 @@
 import {EntityRepository, Repository } from 'typeorm';
 import { FriendRequestDto } from './dto/friend-request.dto';
-import { FriendRequest } from './friend-request.entity';
+import { FriendRequest } from '../entities/friend-request.entity';
 import { UsersRepository } from './user.repository';
 
 

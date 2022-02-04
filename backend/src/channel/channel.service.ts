@@ -7,14 +7,14 @@ import { Socket } from 'socket.io';
 import { parse } from 'cookie';
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { ChannelsRepository } from './channels.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
-import { Channel } from './channel.entity';
+import { Channel } from '../entities/channel.entity';
 import { MessagesDto } from './dto/messages.dto';
 import { MessagesRepository } from './messages.repository';
-import { Message } from './message.entity';
+import { Message } from '../entities/message.entity';
 
 @Injectable()
 @UseGuards(AuthGuard())

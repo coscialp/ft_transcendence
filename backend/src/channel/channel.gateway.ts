@@ -11,10 +11,10 @@ import {
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import { ChannelService } from './channel.service';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { MessagesDto } from './dto/messages.dto';
-import { Channel } from './channel.entity';
+import { Channel } from '../entities/channel.entity';
 
 @WebSocketGateway(5001, { transports: ['websocket'] })
 export class ChannelGateway
