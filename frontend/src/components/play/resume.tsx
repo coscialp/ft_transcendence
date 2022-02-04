@@ -7,7 +7,7 @@ import { isLogged } from '../../utils/isLogged';
 import { scoreDifferenceLooser, scoreDifferenceWinner } from '../../utils/scoreDifference';
 import './resume.css'
 
-let game = {
+/*let game = {
     player1: {
         profileImage: "https://cdn.intra.42.fr/users/akerdeka.jpg",
         username: "akerdeka"
@@ -21,22 +21,23 @@ let game = {
     winner: "wasayad",
     scoreDifference: 10,
     ranked: true,
-}
+}*/
 
 
 export default function Resume() {
-
+  
     let history = useHistory();
     const [unauthorized, setUnauthorized] = useState(false);
 	const [me, setMe]: any = useState({});
     const [cookies, setCookies] = useCookies();
     const [scoreDifference, setScoreDifference] = useState("");
     // eslint-disable-next-line
-    const [games, setGame]: any = useState({});
+    const [game, setGame]: any = useState({});
 	
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
+            console.log("Test de Julien a nouveau")
 			isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
 		}
 		return (() => { mount = false; });
@@ -45,6 +46,7 @@ export default function Resume() {
     useEffect(() => {
 		let mount = true;
 		if (mount) {
+            
             axios.request({
                 url: '/game/me/last',
                 method: 'get',
@@ -54,27 +56,27 @@ export default function Resume() {
                 }
               }).then((response: any) => {
                   console.log(response);
-                setGame(response);
+                    setGame(response.data);
               })
 		}
 		return (() => { mount = false; });
-	}, [cookies])
+	}, [cookies, me])
 
 
     useEffect(() => {
 		let mount = true;
 		if (mount) {
-			if (game.winner === me.username) {
+			if (game?.winner === me.username) {
                 document.getElementById("resume-all-score")!.style.backgroundColor = "rgba(0, 141, 177, 0.39)";
-                setScoreDifference(scoreDifferenceWinner[game.scoreDifference]);
+                setScoreDifference(scoreDifferenceWinner[game?.scoreDifference]);
                 document.getElementById("score-difference")!.style.color = "rgb(54 143 194)";
             } else {
-                setScoreDifference(scoreDifferenceLooser[game.scoreDifference]);
+                setScoreDifference(scoreDifferenceLooser[game?.scoreDifference]);
                 document.getElementById("score-difference")!.style.color = "#fd5454f0";
             }
 		}
 		return (() => { mount = false; });
-	}, [me])
+	}, [me, game])
 
     if (!cookies.access_token || unauthorized) {
 		return (<Redirect to="/" />);
@@ -92,29 +94,29 @@ export default function Resume() {
         setCookies("access_token", "");
         history.push("/");
       }
-
+      console.log(game);
     return (
         <div>
-            <div className="ResumeElement">
+            {/* <div className="ResumeElement">
                 <div id="ResumeMain">
                     <div id='resume-all-score' >
-                        <img className="resume-image" style={{ backgroundImage: `url(${game.player1.profileImage})` }} alt="" />
-                        <p className="resume-score"> {game.score1} : {game.score2} </p>
-                        <img className="resume-image" style={{ backgroundImage: `url(${game.player2.profileImage})` }} alt="" />
+                        <img className="resume-image" style={{ backgroundImage: `url(${game?.game.player1.profileImage})` }} alt="" />
+                        <p className="resume-score"> {game?.game.score1} : {game?.game.score2} </p>
+                        <img className="resume-image" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />
                     </div>
                     <p id='score-difference' > {scoreDifference} </p>
-                    {game.ranked ?
+                    {game?.game.ranked ?
                     <div id="ranked-points">
                         <p id="actual-points" >{me.PP} PP</p>
                         <p id="new-points" >+18 PP</p>
                     </div> : null }
-                    {game.scoreDifference === 10 && game.winner !== me.username ?
+                    {game?.scoreDifference === 10 && game?.winner !== me.username ?
                         <button className="resume-go-home" onClick={ logout }>Logout</button>
                      :
                         <button className="resume-go-home" onClick={ () => { return history.push("/") } }>Go home !</button>
                      }
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }
