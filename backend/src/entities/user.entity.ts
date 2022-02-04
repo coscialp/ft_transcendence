@@ -1,6 +1,6 @@
-import { Channel } from "src/channel/channel.entity";
-import { Message } from "src/channel/message.entity";
-import { Game } from "src/game/game.entity";
+import { Channel } from "src/entities/channel.entity";
+import { Message } from "src/entities/message.entity";
+import { Game } from "src/entities/game.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { FriendRequest } from "./friend-request.entity";
 
@@ -15,11 +15,11 @@ export class User {
     @Column({nullable: true})
     password?: string | null;
 
-    @Column({nullable: true})
-    firstName?: string | null;
+    @Column()
+    firstName: string;
 
-    @Column({nullable: true})
-    lastName?: string | null;
+    @Column()
+    lastName: string;
 
     @Column({nullable: true})
     nickName?: string | null;
@@ -27,20 +27,38 @@ export class User {
     @Column({nullable: true})
     profileImage?: string | null;
 
-    @Column({nullable: true})
-    email?: string | null;
+    @Column()
+    email: string;
 
-    @Column({nullable: true, default: false})
-    isLogged: string;
+    @Column({default: false})
+    isLogged: boolean;
 
-    @Column({nullable: false, default: false})
+    @Column()
     isAdmin: boolean;
+
+    @Column()
+    GoalTaken: number;
+
+    @Column()
+    GoalSet: number;
+
+    @Column()
+    NormalGameNumber: number;
+
+    @Column()
+    RankedGameNumber: number;
+
+    @Column()
+    NormalWinNumber: number;
+
+    @Column()
+    RankedWinNumber: number;
 
     @Column()
     PP: number;
 
-    @Column({nullable: false, default: 0})
-    twoFactorAuth: number;
+    @Column({default: false})
+    twoFactorAuth: boolean;
 
     // @Column({default: [
     //     {name: 'authentifier', lvl: 1, value: 0, max: 5, ratio: 2},

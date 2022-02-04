@@ -7,5 +7,11 @@
   "database": "postgres",
   "entities": ["dist/**/*.entity{.ts,.js}"],
   "autoLoadEntities": true,
-  "synchronize": true
+  "synchronize": false,
+  "migrationsTableName": "custom_migration_table",
+  "migrations": ["migrations/*.ts"],
+  "cli": {
+      "migrationsDir": "migrations",
+      "entitiesDir": "src/entities"
+  }
 }

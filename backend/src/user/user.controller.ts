@@ -1,12 +1,12 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from './user.entity';
+import { User } from '../entities/user.entity';
 import { GetUserFilterDto } from './dto/user-filter.dto';
 import { UserService } from './user.service';
-import { FriendRequest } from './friend-request.entity';
-import { Channel } from 'src/channel/channel.entity';
-import { Message } from 'src/channel/message.entity';
+import { FriendRequest } from '../entities/friend-request.entity';
+import { Channel } from 'src/entities/channel.entity';
+import { Message } from 'src/entities/message.entity';
 
 @Controller('user')
 @UseGuards(AuthGuard())
@@ -109,7 +109,7 @@ export class UserController {
     }
 
     @Get('2FA/active')
-    async get2FA(@GetUser() user: User): Promise<{twoFactorAuth: number}> {
+    async get2FA(@GetUser() user: User): Promise<{twoFactorAuth: boolean}> {
         return await this.userService.get2FA(user);
     }
 

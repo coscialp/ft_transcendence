@@ -3,12 +3,12 @@ import { Socket } from 'socket.io';
 import { parse } from 'cookie';
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GameHistoryDto } from './dto/game-history.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GameRepository } from './game.repository';
-import { Game } from './game.entity';
+import { Game } from '../entities/game.entity';
 
 @Injectable()
 @UseGuards(AuthGuard())

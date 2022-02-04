@@ -17,10 +17,10 @@ export class AuthCredentialsDto {
   password: string;
 
   // @IsString()
-  firstName?: string | null;
+  firstName: string;
 
   // @IsString()
-  lastName?: string | null;
+  lastName: string;
 
   // @IsString()
   nickName?: string | null;
@@ -29,7 +29,7 @@ export class AuthCredentialsDto {
   profileImage?: string | null;
 
   // @IsString()
-  email?: string | null;
+  email: string;
 
   admin: boolean = false;
 }

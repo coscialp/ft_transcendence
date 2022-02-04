@@ -1,10 +1,10 @@
 import { Inject, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "src/user/user.entity";
+import { User } from "src/entities/user.entity";
 import { UsersRepository } from "src/user/user.repository";
 import { UserService } from "src/user/user.service";
 import { EntityRepository, Repository } from "typeorm";
-import { Channel } from "./channel.entity";
+import { Channel } from "../entities/channel.entity";
 
 @EntityRepository(Channel)
 export class ChannelsRepository extends Repository<Channel> {

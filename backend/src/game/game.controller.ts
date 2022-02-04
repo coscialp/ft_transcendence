@@ -1,7 +1,7 @@
 import {Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { UserService } from 'src/user/user.service';
 import { GameHistoryDto } from './dto/game-history.dto';
 import { GameService } from './game.service';

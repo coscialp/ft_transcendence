@@ -3,7 +3,7 @@ import { UsersRepository } from "src/user/user.repository";
 import { UserService } from "src/user/user.service";
 import { EntityRepository, Repository } from "typeorm";
 import { GameHistoryDto } from "./dto/game-history.dto";
-import { Game } from "./game.entity";
+import { Game } from "../entities/game.entity";
 
 @EntityRepository(Game)
 export class GameRepository extends Repository<Game> {

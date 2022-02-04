@@ -1,5 +1,5 @@
 import { IsNotEmpty } from "class-validator";
-import { User } from "../user.entity";
+import { User } from "../../entities/user.entity";
 
 export class FriendRequestDto {
     @IsNotEmpty()

@@ -1,12 +1,12 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { UsersRepository } from 'src/user/user.repository';
 import { UserService } from 'src/user/user.service';
 import { EntityRepository, Repository } from 'typeorm';
 import { ChannelService } from './channel.service';
 import { ChannelsRepository } from './channels.repository';
 import { MessagesDto } from './dto/messages.dto';
-import { Message } from './message.entity';
+import { Message } from '../entities/message.entity';
 
 @EntityRepository(Message)
 export class MessagesRepository extends Repository<Message> {

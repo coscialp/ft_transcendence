@@ -6,14 +6,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './user.repository';
-import { User } from './user.entity';
+import { User } from '../entities/user.entity';
 import { GetUserFilterDto } from './dto/user-filter.dto';
 import { FriendRequestRepository } from './friend-request.repository';
 import { FriendRequestDto } from './dto/friend-request.dto';
-import { FriendRequest } from './friend-request.entity';
-import { Channel } from 'src/channel/channel.entity';
-import { Message } from 'src/channel/message.entity';
-import { Game } from 'src/game/game.entity';
+import { FriendRequest } from '../entities/friend-request.entity';
+import { Channel } from '../entities/channel.entity';
+import { Message } from '../entities/message.entity';
+import { Game } from '../entities/game.entity';
 
 @Injectable()
 export class UserService {
@@ -275,16 +275,16 @@ export class UserService {
   }
 
   async activate2FA(user: User): Promise<void> {
-    user.twoFactorAuth = 1;
+    user.twoFactorAuth = true;
     this.userRepository.save(user);
   }
 
   async deactivate2FA(user: User): Promise<void> {
-    user.twoFactorAuth = 0;
+    user.twoFactorAuth = false;
     this.userRepository.save(user);
   }
 
-  async get2FA(user: User): Promise<{ twoFactorAuth: number }> {
+  async get2FA(user: User): Promise<{ twoFactorAuth: boolean }> {
     return { twoFactorAuth: user.twoFactorAuth };
   }
 

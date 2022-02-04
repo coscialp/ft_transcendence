@@ -10,7 +10,7 @@ import {
 } from '@nestjs/websockets';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { GameService } from './game.service';
 
 @WebSocketGateway(5002, { transports: ['websocket'], "pingInterval":5000,"pingTimeout":20000 })

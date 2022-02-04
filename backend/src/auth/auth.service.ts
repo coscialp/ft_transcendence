@@ -9,7 +9,7 @@ import { UsersRepository } from '../user/user.repository';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
-import { User } from '../user/user.entity';
+import { User } from '../entities/user.entity';
 import { HttpService } from '@nestjs/axios';
 import { lastValueFrom } from 'rxjs';
 import { Auth42Dto } from './dto/auth-42.dto';
@@ -87,7 +87,7 @@ export class AuthService {
       const payload: JwtPayload = { username };
       const accessToken: string = this.jwtService.sign(payload);
       user = await this.usersRepository.findOne({ username });
-      user.isLogged = 'true';
+      user.isLogged = true;
       await this.usersRepository.save(user);
       return { accessToken: accessToken };
     } catch (error) {
@@ -96,7 +96,7 @@ export class AuthService {
   }
 
   async logout(user: User): Promise<void> {
-    user.isLogged = 'false';
+    user.isLogged = false;
     await this.usersRepository.save(user);
   }
 
