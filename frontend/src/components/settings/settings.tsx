@@ -7,6 +7,9 @@ import { isLogged } from "../../utils/isLogged";
 import { NavBar } from "../navbar/navbar";
 import { useForm } from "react-hook-form";
 import './settings.css'
+import Uploady from "@rpldy/uploady";
+import UploadButton from "@rpldy/upload-button";
+import UploadPreview from "@rpldy/upload-preview";
 
 export function Settings() {
 	const [cookies] = useCookies();
@@ -15,12 +18,33 @@ export function Settings() {
 	const [newNick, setNewNick] = useState("");
 	const [newEmail, setNewEmail] = useState("");
 	const [newAvatar, setNewAvatar] = useState("");
+	const [previewAvatar, setPreviewAvatar] = useState<File>();
 	const { handleSubmit } = useForm({
 		mode: "onChange"
 	});
 	const onSubmit = (data:any) => {
 		console.log(data);
 	};
+
+	function avatarChange(e:any, avatar:any) {
+		let fileInput = document.getElementById(avatar) as HTMLInputElement;
+		let file;
+		if (fileInput){
+			let files = fileInput.files;
+		
+			if (files)
+			{
+				for (var i = 0; i < files.length; i++) {
+					file = files.item(i);
+				}
+				if (file)
+					setNewAvatar(file.name);
+			}
+		}
+		if (e.target.files && e.target.files.length > 0) {
+			setPreviewAvatar(e.target.files[0]);
+		  }
+	  };
 
 	useEffect(() => {
 		let mount = true;
@@ -74,6 +98,7 @@ export function Settings() {
 	}
 
 	function handleNewAvatar(e: any) {
+		
 		if (newAvatar !== "") {
 			axios.request({
 				url: '/user/me/avatar',
@@ -83,11 +108,12 @@ export function Settings() {
 					"Authorization": `Bearer ${cookies.access_token}`,
 				},
 				data: {
-					"avatar": newAvatar,
+					"avatar": "/img/" + newAvatar,
 				}
 			})
 			window.alert("Avatar successfully changed to " + newAvatar + " !")
 			setNewAvatar("");
+			setPreviewAvatar(e.target.null);
 			e.preventDefault();
 		}
 	}
@@ -136,12 +162,20 @@ export function Settings() {
 					<div className="change Nickname">
 						Change your Avatar !
 						<form className="change Nick input">
-							<label form="file" className="avatarLabel" onSubmit={handleSubmit(onSubmit)}>
+							<label form="file" className="avatarLabel">
 								New Avatar...
-								<input type="file" className="avatarInput" accept='image/png' value={newAvatar} onChange={(e) => {setNewAvatar(e.target.value); console.log(newAvatar)}} />
+								<input id="avatar" type="file" className="avatarInput" accept='image/png' value="" onChange={(e) => avatarChange(e, 'avatar')} />
 							</label>
 							<button className="changeNickbtn" onClick={handleNewAvatar} >Change !</button>
 						</form>
+						{previewAvatar && (
+								<img
+								src={URL.createObjectURL(previewAvatar)}
+								alt="Thumb"
+								width="64px"
+								height="64px"
+							  />
+							)}
 					</div>
 					<div className="2FA">
 						{me.twoFactorAuth ?

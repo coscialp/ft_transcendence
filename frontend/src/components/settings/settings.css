@@ -162,6 +162,7 @@ label.ToggleSLabelON:active:after {
     font-size: 14px;
     color: grey;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 .avatarInput {
