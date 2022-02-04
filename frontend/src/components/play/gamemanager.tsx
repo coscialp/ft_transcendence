@@ -1,5 +1,7 @@
+import axios from "axios";
 import { UnityContext } from "react-unity-webgl";
 import { io, Socket } from "socket.io-client";
+import { ip } from "../../App";
 
 
 
@@ -149,11 +151,9 @@ export class GameManager {
             }
         })
     }
-    receive_endGame() {
-        this._Socket.on(`finishgame/${this._GameID}`, (player: string, score1: number, score2: number, user: any) => {
-            if (player === 'Player1') {
-                //send end game stat (user1, user2, score1, score2, date)
-            }
+    receive_endGame()
+    {
+        this._Socket.on(`finishgame/${this._GameID}`, (Player: string, score1: number, score2: number, user1: any, user2: any, isRanked: boolean) => {
             this._GameState = true;
         })
     }

@@ -46,3 +46,29 @@ img.resume-image {
 p.resume-score {
     font-size: 3vw;
 }
+
+button.resume-go-home {
+    background: transparent;
+    border: 0;
+    font-family: 'neon';
+    font-size: 2em;
+    cursor: pointer;
+    color: antiquewhite;
+}
+
+p#score-difference {
+    font-size: 5vw;
+    color: black;
+}
+
+p#actual-points {
+    margin: 0;
+    font-family: fantasy;
+    font-size: 5vw;
+}
+
+p#new-points {
+    font-size: 3vw;
+    margin: 5px 0 20px 0;
+    font-family: fantasy;
+}
