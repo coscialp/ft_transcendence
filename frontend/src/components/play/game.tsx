@@ -110,11 +110,11 @@ export function InGame() {
       setTabTime(0);
     }
     if (tabTime === 10)
-      console.log("you've left the game");
+      //console.log("you've left the game");
     if (player.GameState === true || leaveRef.current === 2)
-      console.log("leave page");
+      //console.log("leave page");
     check_ready(player);
-  }, 1000);
+  }, 1000, []);
 
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
