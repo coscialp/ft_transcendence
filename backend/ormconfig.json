@@ -7,5 +7,5 @@
   "database": "postgres",
   "entities": ["dist/**/*.entity{.ts,.js}"],
   "autoLoadEntities": true,
-  "synchronize": true
+  "synchronize": false
 }

@@ -110,6 +110,15 @@ export class GameGateway
         if (gameToDelete === -1){
             gameToDelete = this.MatchInProgress.findIndex(u => u.user2.username === user.username);
         }
+        this.server.emit(`finishGame/${data.gameId}`, data.score1, data.score2, this.MatchInProgress[gameToDelete].user1, this.MatchInProgress[gameToDelete].user2, false);
+        this.gameService.createGame({
+            player1: this.MatchInProgress[gameToDelete].user1,
+            player2: this.MatchInProgress[gameToDelete].user2,
+            score1: data.score1,
+            score2: data.score2,
+            date: Date(),
+            ranked: "false",
+        })
         if (gameToDelete !== -1){
             this.MatchInProgress.splice(gameToDelete, 1);
         }

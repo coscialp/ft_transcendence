@@ -158,7 +158,6 @@ export function InGame() {
     }, 1000);
   }, []);
 
-
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
   }

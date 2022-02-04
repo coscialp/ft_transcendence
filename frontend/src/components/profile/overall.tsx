@@ -144,6 +144,7 @@ export function Overall(data: any) {
 				</div>
 			}
 			<p className="ProfileName" > {data.user.firstName} "{data.user.nickName}" {data.user.lastName} </p>
+			<p id="my-pong-points">{data.user.PP} PP</p>
 			<p className="Stats" >
 				Rank : (insert rank)<br />
 				Winrate : (insert winrate ratio)%<br />
