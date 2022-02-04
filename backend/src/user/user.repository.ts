@@ -1,6 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { AuthCredentialsDto } from '../auth/dto/auth-credentials.dto';
-import { User } from './user.entity';
+import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { GetUserFilterDto } from 'src/user/dto/user-filter.dto';
 
@@ -46,11 +46,20 @@ export class UsersRepository extends Repository<User> {
       nickName: nickName,
       profileImage: '/img/beluga.jpeg',
       email: email,
-      isLogged: 'false',
+      isLogged: false,
       friends: [],
+      channels: [],
+      channelsAdmin: [],
+      channelsConnected: [],
       blackList: [],
-      twoFactorAuth: 0,
+      twoFactorAuth: false,
       PP: 800,
+      RankedGameNumber: 0,
+      NormalGameNumber: 0,
+      RankedWinNumber: 0,
+      NormalWinNumber: 0,
+      GoalSet: 0,
+      GoalTaken: 0,
     });
 
 
@@ -83,15 +92,21 @@ export class UsersRepository extends Repository<User> {
       nickName: nickName,
       profileImage: profileImage,
       email: email,
-      isLogged: 'false',
+      isLogged: false,
       isAdmin: admin,
       friends: [],
       channels: [],
       channelsAdmin: [],
       channelsConnected: [],
       blackList: [],
-      twoFactorAuth: 0,
+      twoFactorAuth: false,
       PP: 800,
+      RankedGameNumber: 0,
+      NormalGameNumber: 0,
+      RankedWinNumber: 0,
+      NormalWinNumber: 0,
+      GoalSet: 0,
+      GoalTaken: 0,
     });
 
     try {

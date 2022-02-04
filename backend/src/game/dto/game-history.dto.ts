@@ -1,4 +1,4 @@
-import { User } from "src/user/user.entity";
+import { User } from "src/entities/user.entity";
 
 export class GameHistoryDto {
     player1: User;

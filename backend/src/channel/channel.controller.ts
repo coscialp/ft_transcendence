@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { ChannelService } from './channel.service';
 import { MessagesDto } from './dto/messages.dto';
 

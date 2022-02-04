@@ -3,7 +3,8 @@ import { UsersRepository } from "src/user/user.repository";
 import { UserService } from "src/user/user.service";
 import { EntityRepository, Repository } from "typeorm";
 import { GameHistoryDto } from "./dto/game-history.dto";
-import { Game } from "./game.entity";
+import { Game } from "../entities/game.entity";
+import { User } from "src/entities/user.entity";
 
 @EntityRepository(Game)
 export class GameRepository extends Repository<Game> {
@@ -11,6 +12,41 @@ export class GameRepository extends Repository<Game> {
         @InjectRepository(UsersRepository) private readonly usersRepository: UsersRepository,
     ) {
         super();
+      }
+
+      async updatePlayer(game: Game, player1: User, player2: User, userService: UserService) {
+        player1.games = (await userService.getGames(player1)).games;
+        player1.games.push(game);
+
+        player2.games = (await userService.getGames(player2)).games;
+        player2.games.push(game);
+
+        if (game.ranked) {
+            player1.RankedGameNumber += 1;
+            player2.RankedGameNumber += 1;
+
+            if (game.score1 > game.score2) {
+                player1.RankedWinNumber += 1;
+            } else {
+                player2.RankedWinNumber += 1;
+            }
+        } else {
+            player1.NormalGameNumber += 1;
+            player2.NormalGameNumber += 1;
+
+            if (game.score1 < game.score2) {
+                player1.NormalGameNumber += 1;
+            } else {
+                player2.NormalGameNumber += 1;
+            }
+        }
+
+        player1.GoalSet += game.score1;
+        player1.GoalTaken += game.score2;
+
+        player2.GoalSet += game.score2;
+        player2.GoalTaken += game.score1;
+
       }
 
       async createGame(
@@ -39,11 +75,7 @@ export class GameRepository extends Repository<Game> {
             ranked,
         });
 
-        player1.games = (await userService.getGames(player1)).games;
-        player1.games.push(game);
-
-        player2.games = (await userService.getGames(player2)).games;
-        player2.games.push(game);
+        this.updatePlayer(game, player1, player2, userService);
 
         try {
             await this.save(game);

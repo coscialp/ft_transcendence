@@ -5,9 +5,10 @@ import { UserModule } from './user/user.module';
 import { ChannelModule } from './channel/channel.module';
 import { GameModule } from './game/game.module';
 import { AppLoggerMiddleware } from './app.middleware';
+import { ImageModule } from './image/image.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(), AuthModule, UserModule, ChannelModule, GameModule],
+  imports: [TypeOrmModule.forRoot(), AuthModule, UserModule, ChannelModule, GameModule, ImageModule],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer): void {

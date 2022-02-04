@@ -1,6 +1,6 @@
 import { Body, Controller, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { User } from 'src/user/user.entity';
+import { User } from 'src/entities/user.entity';
 import { AuthService } from './auth.service';
 import { Auth42Dto } from './dto/auth-42.dto';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
