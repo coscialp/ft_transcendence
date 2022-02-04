@@ -22,7 +22,8 @@ export class GameGateway
     private MatchInProgress: {
         user1: User,
         user2: User,
-        gameID: number
+        gameID: number,
+        ranked: boolean,
     }[];
     constructor(
         private readonly gameService: GameService,
@@ -49,7 +50,7 @@ export class GameGateway
             if (user.username !== u.username) {
                 this.server.emit(`startgame/${user.username}`, 'Player1');
                 this.server.emit(`startgame/${u.username}`, 'Player2');
-                this.MatchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1) });
+                this.MatchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: false });
                 this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
                 this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
             }
@@ -67,7 +68,7 @@ export class GameGateway
             if (user.username !== u.username) {
                 this.server.emit(`startgame/${user.username}`, 'Player1');
                 this.server.emit(`startgame/${u.username}`, 'Player2');
-                this.MatchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1) });
+                this.MatchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: true });
                 this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
                 this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
             }

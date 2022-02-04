@@ -17,7 +17,7 @@ export class GameManager {
     private _GameDate: string;
     private _Ranked: boolean;
     private _SpeedSecurity: number;
-    private _SpeedSecurityBall: number;
+    private _BallSpeedSecurity: number;
     constructor() {
         this._P1ready = false;
         this._P2ready = false;
@@ -30,7 +30,7 @@ export class GameManager {
         this._Spectator = false;
         this._Ranked = false;
         this._SpeedSecurity = 0;
-        this._SpeedSecurityBall = 0;
+        this._BallSpeedSecurity = 0;
         this._GameDate = new Date().toLocaleDateString();
         this._UnityContext = new UnityContext({
             loaderUrl: "./Build/webgl.loader.js",
@@ -167,10 +167,10 @@ export class GameManager {
     send_ball_position() {
         this._UnityContext.on("SetBallPos", (posx: number, posy: number) => {
             if (this._ID === "Player1") {
-                this._SpeedSecurity += 1;
-                if (this._SpeedSecurity === 10)
+                this._BallSpeedSecurity += 1;
+                if (this._BallSpeedSecurity === 10)
                 {
-                    this._SpeedSecurity = 0;
+                    this._BallSpeedSecurity = 0;
                     this._Socket.emit('SetBallPos', { posx: posx, posy: posy, id: this._GameID });
                     this._Socket.emit('SetBallPosSpectate', { posx: posx, posy: posy, id: this._GameID });
                 }
@@ -199,7 +199,7 @@ export class GameManager {
             if (score1 === 10 || score2 === 10) {
                 this._UnityContext.send("LocalPaddle", "setGameStarted", 0);
                 this._UnityContext.send("RemotePaddle", "setGameStarted", 0);
-                this._Socket.emit('finishGame', { gameId: this._GameID, player: this._ID, score1: score1, score2: score2 })
+                this._Socket.emit('finishGame', { gameId: this._GameID, player: this._ID, score1: score1, score2: score2, date: this._GameDate})
                 this._GameState = true;
             }
         });
