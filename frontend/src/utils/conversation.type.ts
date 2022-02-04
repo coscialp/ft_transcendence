@@ -1,5 +1,5 @@
 import { User } from "./user.type";
-import { MessageType } from "./message.type";
+import { MessageType, PrivateMessageType } from "./message.type";
 
 export type Conversation = {
     property: User;

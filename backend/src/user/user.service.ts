@@ -231,7 +231,6 @@ export class UserService {
         userToDelete.friends.push(friend);
       }
     }
-
     this.userRepository.save(user);
     this.userRepository.save(userToDelete);
   }

@@ -14,6 +14,7 @@ import { Settings } from './components/settings/settings';
 import { Notification } from './components/profile/notification';
 import { TwoFA } from './components/login/TwoFA';
 import { InGame } from './components/play/game';
+import Resume from './components/play/resume';
 
 export const ip = window.location.hostname;
 
@@ -33,6 +34,7 @@ function App() {
 					<Route path={"/settings"} component={ Settings } />
 					<Route path={"/game"} component={ InGame } />
 					<Route path={"/:id/profile"} component={ Profile } />
+					<Route path={"/resume"} component={ Resume } />
 
 					<Route component={ NotFound } />
 			</Switch>

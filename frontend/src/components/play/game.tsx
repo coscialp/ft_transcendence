@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Unity from "react-unity-webgl";
 import { GameManager } from "./gamemanager";
-import './duel.css'
+import './game.css'
 import { Redirect, useHistory } from "react-router-dom";
 import { isLogged } from "../../utils/isLogged";
 import { User } from "../../utils/user.type";
@@ -18,12 +18,17 @@ export function InGame() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
   const [reload, setReload] = useState<boolean>(false);
-  // eslint-disable-next-line
   const [gameFinish, setGameFinish] = useState<boolean>(false);
   const [leaveTime, setLeaveTime] = useState<number>(0);
   const leaveTimeRef = useRef(leaveTime);
   const [tabTime, setTabTime] = useState<number>(0);
+  const tabTimeRef = useRef(tabTime);
   const leaveRef = useRef(leave);
+
+  const setMyTabTime = (data: any) => {
+    tabTimeRef.current = data;
+    setTabTime(data);
+  }
   const setMyState = (data: any) => {
     leaveRef.current = data;
     setLeave(data);
@@ -36,19 +41,19 @@ export function InGame() {
 
 
   const onBlur = () => {
-      setMyState(leaveRef.current + 1);
-      setMyLeaveTime(1);
+    setMyState(leaveRef.current + 1);
+    setMyLeaveTime(1);
   };
   const onFocus = () => {
     setMyLeaveTime(0);
-};
+  };
 
-    useEffect(() => {
-        window.addEventListener("blur", onBlur);
-        window.addEventListener("focus", onFocus);
-        return () => {
-            window.removeEventListener("blur", onBlur);
-            window.removeEventListener("focus", onFocus);
+  useEffect(() => {
+    window.addEventListener("blur", onBlur);
+    window.addEventListener("focus", onFocus);
+    return () => {
+      window.removeEventListener("blur", onBlur);
+      window.removeEventListener("focus", onFocus);
     };
   });
 
@@ -56,16 +61,22 @@ export function InGame() {
     let mount = true;
     if (mount) {
       isLogged(cookies).then((res: any) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+      player.Spectator = String(localStorage.getItem('playerID')) === 'spectator' ? true : false;
+      if (player.Spectator === true) {
+        player.GameID = Number(localStorage.getItem('GameID'));
+      }
       player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
     }
     return (() => { mount = false; });
   }, [cookies, player]);
 
   useEffect(function () {
-    player.send_ready_up();
-    player.send_point();
-    player.send_ball_position();
-    player.send_player_position();
+    if (player.Spectator === false) {
+      player.send_ready_up();
+      player.send_point();
+      player.send_ball_position();
+      player.send_player_position();
+    }
   }, [player]);
 
   useEffect(function () {
@@ -81,48 +92,79 @@ export function InGame() {
   }, [me, player]);
 
   function setReady(id: string, gameid: number) {
-    player.Socket.emit('ReadyUp', { player: id, gameId: gameid });
+    console.log(player.GameID);
+    player.Socket.emit('ReadyUp', { player: player.ID, gameId: player.GameID });
+    let ready: HTMLElement | null = document.getElementById('button_ready');
+    if (ready) {
+      ready.style.display = 'none';
+    }
   }
 
   useEffect(function () {
-    player.receive_ball_position();
-    player.receive_player_position();
-    player.receive_point();
-    player.receive_ready_up();
-    player.receive_endGame();
+    if (player.Spectator === false) {
+      console.log('test');
+      player.receive_ball_position();
+      player.receive_player_position();
+      player.receive_point();
+      player.receive_ready_up();
+      player.receive_endGame();
+      player.receive_warning(setGameFinish);
+    }
+    else {
+      player.receive_ball_pos_spectate();
+      player.receive_pos_specate();
+      player.receive_endGame();
+      player.receive_warning(setGameFinish);
+    }
   }, [reload, player]);
 
-  function check_ready(player: any) {
-    console.log(gameFinish);
-    if (gameFinish === true) {
+  function handleResize() {
+    let game: any = document.getElementsByClassName('game_screen')[0];
+    if ((window.innerHeight / 900) > (window.innerWidth / 2300) && game) {
+      game.style.height = '40vw';
+      game.style.width = '100vw';
+    }
+    else if (game) {
+      game.style.height = `${window.innerHeight * 0.5}px`;
+      game.style.width = `${window.innerWidth}px`;
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+  });
+
+  function check_ready() {
+    if (leaveTimeRef.current === 1) {
+      setMyTabTime(tabTimeRef.current + 1);
+    }
+    else {
+      setTabTime(0);
+    }
+    if (tabTimeRef.current === 1000) {
+      player.Socket.emit('warning', { player: player.ID, gameId: player.GameID });
+    }
+    if (player.GameState === true || leaveRef.current === 300) {
+      player.Socket.emit('warning', { player: player.ID, gameId: player.GameID });
+    }
+    if (gameFinish === true || player.Warning === true) {
       return history.push('/resume');
     }
     player.ready_checker();
   }
-
-  setInterval(() => {
-    if (leaveTimeRef.current === 1)
-    {
-      setTabTime(tabTime + 1);
-    }
-    else
-    {
-      setTabTime(0);
-    }
-    if (tabTime === 10)
-      console.log("you've left the game");
-    if (player.GameState === true || leaveRef.current === 2)
-      console.log("leave page");
-    check_ready(player);
-  }, 1000);
+  useEffect(() => {
+    setInterval(() => {
+      check_ready();
+    }, 1000);
+  }, []);
 
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
   }
   return (
-    <div>
+    <div className="game_body">
       <Unity className="game_screen" unityContext={player.UnityContext} />
-      <div className="testing" onClick={() => setReady(player.ID, player.GameID)}></div>
+      <button id="button_ready" onClick={() => setReady(player.ID, player.GameID)}>Ready up</button>
     </div>
   );
 }
