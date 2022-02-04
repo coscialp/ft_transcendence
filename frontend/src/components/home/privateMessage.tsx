@@ -37,9 +37,11 @@ export function Open_Message() {
 
 export default function PrivateMessage({currentChat, setCurrentChat, me, socket}: any) {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
+    // eslint-disable-next-line
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [messageInput, setMessageInput] = useState("");
     const [cookies] = useCookies();
+    // eslint-disable-next-line
     const [messages, setMessages] = useState<MessageType[]>([]);
     const [receiver, setReceiver] = useState<string>("");
 
@@ -105,9 +107,9 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 		let mount = true;
 		if (mount) {
             const indexOfConv = conversations.findIndex(obj => obj.property.username === receiver)
-            conversations[indexOfConv]?.conversations.map((allMessages: any) => {
+            conversations[indexOfConv]?.conversations.map((allMessages: any) => (
                 messages.push({ id: allMessages.id, date: new Date(allMessages.date).toLocaleTimeString(undefined, { timeStyle: 'short' }), sender: allMessages.sender.username, content: allMessages.content , avatar: allMessages.sender.profileImage, receiver: allMessages.receiver.username })
-            })
+            ))
             forceUpdate();
 		}
 		return (() => { mount = false; });

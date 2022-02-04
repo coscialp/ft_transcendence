@@ -40,6 +40,7 @@ export function NavBar(props: any) {
           },
         }).then((response: any) => {
           if (mount) {
+            if (response)
             if (response.data.from.length > 0) {
               setNotification(true);
             }

@@ -14,6 +14,10 @@ export class GameManager {
     private _Ballpos: string;
     private _Warning: boolean;
     private _Spectator: boolean;
+    private _GameDate: string;
+    private _Ranked: boolean;
+    private _SpeedSecurity: number;
+    private _SpeedSecurityBall: number;
     constructor() {
         this._P1ready = false;
         this._P2ready = false;
@@ -24,6 +28,10 @@ export class GameManager {
         this._Ballpos = '';
         this._Warning = false;
         this._Spectator = false;
+        this._Ranked = false;
+        this._SpeedSecurity = 0;
+        this._SpeedSecurityBall = 0;
+        this._GameDate = new Date().toLocaleDateString();
         this._UnityContext = new UnityContext({
             loaderUrl: "./Build/webgl.loader.js",
             dataUrl: "./Build/webgl.data",
@@ -59,7 +67,13 @@ export class GameManager {
     public get Spectator() {
         return this._Spectator;
     }
+    public get Ranked() {
+        return this._Ranked;
+    }
 
+    public set Ranked(value: boolean) {
+        this._Ranked = value;
+    }
     public set Spectator(value: boolean) {
         this._Spectator = value;
     }
@@ -116,6 +130,7 @@ export class GameManager {
         })
     }
     receive_ready_up() {
+        console.log(`ReadyUp/${this._GameID}`)
         this._Socket.on(`ReadyUp/${this._GameID}`, (playerID: string) => {
             console.log('test1');
             if (playerID === 'Player1')
@@ -134,9 +149,11 @@ export class GameManager {
             }
         })
     }
-    receive_endGame()
-    {
-        this._Socket.on(`finishgame/${this._GameID}`, (Player: string, score1: number, score2: number) => {
+    receive_endGame() {
+        this._Socket.on(`finishgame/${this._GameID}`, (player: string, score1: number, score2: number, user: any) => {
+            if (player === 'Player1') {
+                //send end game stat (user1, user2, score1, score2, date)
+            }
             this._GameState = true;
         })
     }
@@ -150,15 +167,25 @@ export class GameManager {
     send_ball_position() {
         this._UnityContext.on("SetBallPos", (posx: number, posy: number) => {
             if (this._ID === "Player1") {
-                this._Socket.emit('SetBallPos', { posx: posx, posy: posy, id: this._GameID });
-                this._Socket.emit('SetBallPosSpecate', { posx: posx, posy: posy, id: this._GameID });
+                this._SpeedSecurity += 1;
+                if (this._SpeedSecurity === 10)
+                {
+                    this._SpeedSecurity = 0;
+                    this._Socket.emit('SetBallPos', { posx: posx, posy: posy, id: this._GameID });
+                    this._Socket.emit('SetBallPosSpectate', { posx: posx, posy: posy, id: this._GameID });
+                }
             }
         });
     }
     send_player_position() {
         this._UnityContext.on("SendPosition", (Position: number) => {
-            this._Socket.emit('SetPosition', { pos: Position, id: this._ID, gameId: this._GameID })
-            this._Socket.emit('SetPosSpecate', { pos: Position, id: this._ID, gameId: this._GameID });
+            this._SpeedSecurity += 1;
+            if (this._SpeedSecurity === 10)
+            {
+                this._SpeedSecurity = 0;
+                this._Socket.emit('SetPosition', { pos: Position, id: this._ID, gameId: this._GameID })
+                this._Socket.emit('SetPosSpectate', { pos: Position, id: this._ID, gameId: this._GameID });
+            }
         });
     }
     send_point() {
@@ -172,7 +199,7 @@ export class GameManager {
             if (score1 === 10 || score2 === 10) {
                 this._UnityContext.send("LocalPaddle", "setGameStarted", 0);
                 this._UnityContext.send("RemotePaddle", "setGameStarted", 0);
-                this._Socket.emit('finishGame', {gameId: this._GameID, player: this._ID, score1: score1, score2: score2})
+                this._Socket.emit('finishGame', { gameId: this._GameID, player: this._ID, score1: score1, score2: score2 })
                 this._GameState = true;
             }
         });
@@ -182,6 +209,7 @@ export class GameManager {
     }
 
     ready_checker() {
+        console.log(`${this._P1ready} || ${this._P2ready}`);
         if (this._P1ready === true && this._P2ready === true) {
             if (this._ID === "Player2") {
                 this._UnityContext.send("RemotePaddle", "setID", this._ID);
@@ -198,8 +226,9 @@ export class GameManager {
             this._P1ready = false;
             this._P2ready = false;
         }
-        else if (this._Spectator === true)
-        {
+        else if (this._Spectator === true) {
+            this._UnityContext.send("LocalPaddle", "setID", "Player2");
+            this._UnityContext.send("HUD", "setID", "Player2");
             this._UnityContext.send("HUD", "gameInit");
             this._UnityContext.send("Ball", "setID", "Player2");
             this._UnityContext.send("LocalPaddle", "setGameStarted", 0);
@@ -208,20 +237,20 @@ export class GameManager {
             this._P2ready = false;
         }
     }
-    receive_pos_specate()
-    {
-        this._Socket.on(`SetPositionSpectate/${this._GameID}`, (Position: number, Player: string) => {
-            if (Player === "Player1")
+    receive_pos_specate() {
+        console.log(`SetPosSpectate/${this._GameID}`);
+        this._Socket.on(`SetPosSpectate/${this._GameID}`, (Position: number, Player: string) => {
+            console.log(`test : ${Player}`);
+            if (Player === "Player2")
                 this._UnityContext.send("RemotePaddle", "SetPosition", Position);
             else
                 this._UnityContext.send("LocalPaddle", "SetPosition", Position);
         })
     }
-    receive_ball_pos_specate()
-    {
-        this._Socket.on(`SetBallPosSpecate/${this._GameID}`, (posx: number, posy: number) => {
+    receive_ball_pos_spectate() {
+        this._Socket.on(`SetBallPosSpectate/${this._GameID}`, (posx: number, posy: number) => {
             this._Ballpos = `${posx} ${posy}`;
-                this._UnityContext.send("Ball", 'setPos', this._Ballpos);
+            this._UnityContext.send("Ball", 'setPos', this._Ballpos);
         })
     }
 }

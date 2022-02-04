@@ -55,6 +55,24 @@ export class GameGateway
             }
         }
     }
+    @SubscribeMessage('matchmakingRanked')
+    async MatchMakingRanked(
+        @ConnectedSocket() socket: Socket,
+    ): Promise<void> {
+        const user: User = await this.gameService.getUserFromSocket(socket);
+        if (!this.usersInQueue.find((u) => u.id === user.id)) {
+            this.usersInQueue.push(user);
+        }
+        for (let u of this.usersInQueue) {
+            if (user.username !== u.username) {
+                this.server.emit(`startgame/${user.username}`, 'Player1');
+                this.server.emit(`startgame/${u.username}`, 'Player2');
+                this.MatchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1) });
+                this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
+                this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
+            }
+        }
+    }
     @SubscribeMessage('ReadyUp')
     ReadyUp(
         @ConnectedSocket() socket: Socket,
@@ -72,15 +90,23 @@ export class GameGateway
                 this.server.emit(`getGameID/${user.username}`, gameID);
             }
         }
-
+    }
+    @SubscribeMessage('getSpectateID')
+    getSpectateID(
+        @MessageBody() data: any) {
+        for (let { user1, user2, gameID } of this.MatchInProgress) {
+            if (user1.username === data.username || user2.username === data.username) {
+                this.server.emit(`getSpectateID/${data.id}`, gameID);
+            }
+        }
     }
     @SubscribeMessage('finishGame')
     async finishGame(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         const user: User = await this.gameService.getUserFromSocket(socket);
-        this.server.emit(`finishGame/${data.gameId}`, data.player);
         let gameToDelete = this.MatchInProgress.findIndex(u => u.user1.username === user.username);
+        this.server.emit(`finishGame/${data.gameId}`, data.player, data.score1, data.score2, this.MatchInProgress[gameToDelete].user1, this.MatchInProgress[gameToDelete].user2);
         if (gameToDelete === -1){
             gameToDelete = this.MatchInProgress.findIndex(u => u.user2.username === user.username);
         }
@@ -89,7 +115,6 @@ export class GameGateway
         }
     }
 
-    //add point and game stat
     @SubscribeMessage('warning')
     async warning(
         @ConnectedSocket() socket: Socket,
@@ -120,6 +145,21 @@ export class GameGateway
         this.server.emit(`SetPosition/${data.gameId}`, data.pos, data.id);
     }
 
+    @SubscribeMessage('SetPosSpectate')
+    SetPosSpectate(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+
+        this.server.emit(`SetPosSpectate/${data.gameId}`, data.pos, data.id);
+    }
+
+
+    @SubscribeMessage('SetBallPosSpectate')
+    SetBallPosSpectate(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+        this.server.emit(`SetBallPosSpectate/${data.id}`, data.posx, data.posy);
+    }
 
     @SubscribeMessage('SetBallPos')
     SetBallPos(
