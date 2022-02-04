@@ -152,4 +152,9 @@ export class UserController {
     async demoteAdmin(@GetUser() user: User) {
         return await this.userService.demoteAdmin(user);
     }
+
+    @Get(':id/statistics')
+    async getStat(@Param('id') id: string, @GetUser() user: User) {
+        return await this.userService.getStat(id, user);
+    }
 } 

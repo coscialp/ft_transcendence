@@ -14,6 +14,7 @@ import { FriendRequest } from '../entities/friend-request.entity';
 import { Channel } from '../entities/channel.entity';
 import { Message } from '../entities/message.entity';
 import { Game } from '../entities/game.entity';
+import { StatDto } from './dto/stat.dto';
 
 @Injectable()
 export class UserService {
@@ -385,5 +386,21 @@ export class UserService {
     ).games;
 
     return { games };
+  }
+
+  async getStat(id: string, user: User): Promise<{ranked: StatDto, normal: StatDto, GA: number}> {
+    const currentUser = await this.getUserById(id, user);
+
+    const ranked: StatDto = {
+      winrate: String((currentUser.RankedWinNumber / currentUser.RankedGameNumber) * 100) + '%',
+      played: currentUser.RankedGameNumber,
+    }
+
+    const normal: StatDto = {
+      winrate: String((currentUser.NormalWinNumber / currentUser.NormalGameNumber) * 100) + '%',
+      played: currentUser.NormalGameNumber,
+    }
+
+    return { ranked, normal, GA: currentUser.GoalSet - currentUser.GoalTaken };
   }
 }

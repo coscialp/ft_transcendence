@@ -1,7 +1,7 @@
 import { Channel } from "src/entities/channel.entity";
 import { Message } from "src/entities/message.entity";
 import { Game } from "src/entities/game.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { FriendRequest } from "./friend-request.entity";
 
 @Entity()
