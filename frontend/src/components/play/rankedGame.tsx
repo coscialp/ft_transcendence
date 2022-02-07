@@ -21,8 +21,6 @@ type User = {
 }
 
 export function Ranked() {
-    // const [cookies] = useCookies();
-  
     const [cookies] = useCookies();
     let history = useHistory();
     const [player, setPlayer] = useState<GameManager>();

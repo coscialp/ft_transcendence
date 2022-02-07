@@ -8,6 +8,7 @@ import { ip } from "../../App";
 export class GameManager {
     private _P1ready: boolean;
     private _P2ready: boolean;
+    private _GameMod: number;
     private _ID: string;
     private _Socket: Socket;
     private _GameID: number;
@@ -37,6 +38,7 @@ export class GameManager {
         this._BallSpeedSecurity = 0;
         this._Score1 = 0;
         this._Score2 = 0;
+        this._GameMod = 0;
         this._GameDate = new Date().toLocaleDateString();
         this._UnityContext = new UnityContext({
             loaderUrl: "./Build/webgl.loader.js",
@@ -85,7 +87,13 @@ export class GameManager {
     public get Date() {
         return this._GameDate;
     }
+    public get GameMod() {
+        return this._GameMod;
+    }
 
+    public set GameMod(value: number) {
+        this._GameMod = value;
+    }
     public set Ranked(value: boolean) {
         this._Ranked = value;
     }
@@ -139,11 +147,6 @@ export class GameManager {
             }
         })
     }
-    receive_warning(setGameFinish: any) {
-        this._Socket.on(`warning/${this._GameID}`, () => {
-            this._Warning = true;
-        })
-    }
     receive_ready_up() {
         console.log(`ReadyUp/${this._GameID}`)
         this._Socket.on(`ReadyUp/${this._GameID}`, (playerID: string) => {
@@ -152,6 +155,13 @@ export class GameManager {
                 this._P1ready = true;
             else if (playerID === 'Player2')
                 this._P2ready = true;
+        })
+    }
+    receive_particle() {
+        console.log(`StartParticle/${this._GameID}`);
+        this._Socket.on(`StartParticle/${this._GameID}`, () => {
+            console.log('error');
+            this._UnityContext.send("ParticleEffectBait", "StartParticlebait");
         })
     }
     receive_point() {
@@ -164,11 +174,16 @@ export class GameManager {
             }
         })
     }
-    receive_endGame()
-    {
-        this._Socket.on(`finishgame/${this._GameID}`, (Player: string, score1: number, score2: number, user1: any, user2: any, isRanked: boolean) => {
+    receive_endGame() {
+        this._Socket.on(`finishGame/${this._GameID}`, (loser: string) => {
             this._GameState = true;
             this._Warning = true;
+            if (loser === 'Player1') {
+                this.Socket.emit(`finishGame`, { gameId: this._GameID, player: this._ID, score1: 0, score2: 10, date: this._GameDate });
+            }
+            else {
+                this.Socket.emit(`finishGame`, { gameId: this._GameID, player: this._ID, score1: 10, score2: 0, date: this._GameDate });
+            }
         })
     }
 
@@ -182,8 +197,7 @@ export class GameManager {
         this._UnityContext.on("SetBallPos", (posx: number, posy: number) => {
             if (this._ID === "Player1") {
                 this._BallSpeedSecurity += 1;
-                if (this._BallSpeedSecurity === 5)
-                {
+                if (this._BallSpeedSecurity === 4) {
                     this._BallSpeedSecurity = 0;
                     this._Socket.emit('SetBallPos', { posx: posx, posy: posy, id: this._GameID });
                     this._Socket.emit('SetBallPosSpectate', { posx: posx, posy: posy, id: this._GameID });
@@ -194,8 +208,7 @@ export class GameManager {
     send_player_position() {
         this._UnityContext.on("SendPosition", (Position: number) => {
             this._SpeedSecurity += 1;
-            if (this._SpeedSecurity === 10)
-            {
+            if (this._SpeedSecurity === 4) {
                 this._SpeedSecurity = 0;
                 this._Socket.emit('SetPosition', { pos: Position, id: this._ID, gameId: this._GameID })
                 this._Socket.emit('SetPosSpectate', { pos: Position, id: this._ID, gameId: this._GameID });
@@ -229,8 +242,10 @@ export class GameManager {
     }
 
     ready_checker() {
-        console.log(`${this._P1ready} || ${this._P2ready}`);
         if (this._P1ready === true && this._P2ready === true) {
+            if (this._GameMod === 0) {
+                this._GameMod = 2;
+            }
             if (this._ID === "Player2") {
                 this._UnityContext.send("RemotePaddle", "setID", this._ID);
                 this._UnityContext.send("HUD", "setID", this._ID);

@@ -38,13 +38,14 @@ export function Normal() {
 
   useEffect(() => {
     let mount = true;
-    if (mount && player) {
+    if (mount && player && cookies && history) {
       player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
       if (player?.Socket) {
         console.log(`startgame/${me?.username}`);
         player.Socket.on(`startgame/${me?.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
+          player.Socket.disconnect();
           return history.push(`/game`)
         })
       }

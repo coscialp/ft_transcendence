@@ -26,8 +26,6 @@ export class GameService {
   }
 
   async createGame(gameHistoryDto: GameHistoryDto) {
-    console.log(gameHistoryDto.player1.username);
-    console.log(gameHistoryDto.player2.username);
       return this.gameRepository.createGame(gameHistoryDto, this.userService);
     }
 
