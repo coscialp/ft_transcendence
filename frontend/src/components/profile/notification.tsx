@@ -1,13 +1,24 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { Redirect } from "react-router-dom";
 import { ip } from "../../App";
+import { isLogged } from "../../utils/isLogged";
 import { NavBar } from "../navbar/navbar";
 import './notifications.css'
 
 export function Notification() {
     const [cookies] = useCookies();
     const [fromRequest, setFromRequest]: any = useState([]);
+	const [unauthorized, setUnauthorized] = useState(false);
+
+    useEffect(() => {
+		let mount = true;
+		if (mount) {
+			isLogged(cookies).then((res) => { setUnauthorized(res.unauthorized) });
+		}
+		return (() => { mount = false; });
+	}, [cookies])
 
     function NotifRequest() {
         axios.request({
@@ -71,6 +82,10 @@ export function Notification() {
             NotifRequest();
         })
     }
+
+    if (!cookies.access_token || unauthorized) {
+		return (<Redirect to="/" />);
+	}
 
     return (
         <div>

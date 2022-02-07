@@ -132,8 +132,8 @@ export function Overall(data: any) {
 
 	return (
 		<div className="ImgName" >
-			{(data.user.isAdmin) ? <BadgeCheck /> : null}
-			{(data.user.username === data.me.username) ?
+			{(data.user?.isAdmin) ? <BadgeCheck /> : null}
+			{(data.user?.username === data.me?.username) ?
 				<div className='profile-imgpencil'>
 					<img className="ProfileImage" style={{ backgroundImage: `url(${data.user.profileImage})` }} alt="" onClick={e => { return history.push(`/settings`) }} ></img>
 					<Pencil className='profile-pencil' onClick={e => { return history.push(`/settings`) }} />
@@ -151,9 +151,9 @@ export function Overall(data: any) {
 				Point Average : (insert KDA ratio)
 			</p>
 			<div className="user management">
-				{(data.user.username !== data.me.username) ? (myBlackList.find((users) => users.username === data.user.username) ? <CheckCircle onClick={e => {handleWhitelist(data.user.username)}} /> : <><UserAdd onClick={handleAddfriend} /><Ban onClick={e => { handleBlacklist(data.user.username); } } /></>) : null }
-				{(data.me.isAdmin && data.user.isAdmin === false && (data.user.username !== data.me.username)) ? <ChevronDoubleUp onClick={handlePromoteAdmin} /> : null }
-				{(data.me.isAdmin && (data.user.username === data.me.username)) ? <ChevronDoubleDown onClick={handleDemoteAdmin} /> : null }
+				{(data.user?.username !== data.me?.username) ? (myBlackList.find((users) => users.username === data.user.username) ? <CheckCircle onClick={e => {handleWhitelist(data.user.username)}} /> : <><UserAdd onClick={handleAddfriend} /><Ban onClick={e => { handleBlacklist(data.user.username); } } /></>) : null }
+				{(data.me?.isAdmin && data.user.isAdmin === false && (data.user.username !== data.me?.username)) ? <ChevronDoubleUp onClick={handlePromoteAdmin} /> : null }
+				{(data.me?.isAdmin && (data.user.username === data.me?.username)) ? <ChevronDoubleDown onClick={handleDemoteAdmin} /> : null }
 			</div>
 		</div>
 	)

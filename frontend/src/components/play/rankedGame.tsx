@@ -31,7 +31,7 @@ export function Ranked() {
     useEffect(() => {
       let mount = true;
       if (mount) {
-        isLogged(cookies).then((res) => { setMe(res.me.data); });
+        isLogged(cookies).then((res) => { setMe(res.me?.data); });
         setPlayer(new GameManager());
       }
       return (() => { mount = false; });

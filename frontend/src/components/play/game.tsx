@@ -60,7 +60,7 @@ export function InGame() {
   useEffect(() => {
     let mount = true;
     if (mount) {
-      isLogged(cookies).then((res: any) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+      isLogged(cookies).then((res: any) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
       player.Spectator = String(localStorage.getItem('playerID')) === 'spectator' ? true : false;
       if (player.Spectator === true) {
         player.GameID = Number(localStorage.getItem('GameID'));
@@ -159,7 +159,7 @@ export function InGame() {
     setInterval(() => {
       check_ready();
     }, 1000);
-  }, []);
+  });
 
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);

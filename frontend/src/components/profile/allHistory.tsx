@@ -4,12 +4,23 @@ import { useCookies } from 'react-cookie';
 import { ip } from '../../App';
 import './profile.css'
 import './allHistory.css'
+import { isLogged } from '../../utils/isLogged';
+import { Redirect } from 'react-router-dom';
 
 export default function AllHistory() {
 
     const [cookies] = useCookies();
     const userHistory = window.location.pathname.split('/')[1];
     const [game, setGame]: any = useState([]);
+    const [unauthorized, setUnauthorized] = useState(false);
+	
+	useEffect(() => {
+		let mount = true;
+		if (mount) {
+			isLogged(cookies).then((res) => { setUnauthorized(res.unauthorized) });
+		}
+		return (() => { mount = false; });
+	}, [cookies])
 
     useEffect(() => {
         let mount = true;
@@ -27,7 +38,11 @@ export default function AllHistory() {
             })
         }
         return (() => { mount = false; });
-    }, [cookies])
+    }, [cookies, userHistory])
+
+    if (!cookies.access_token || unauthorized) {
+		return (<Redirect to="/" />);
+	}
 
     return (
         <div className='ALlHistoryElement' >

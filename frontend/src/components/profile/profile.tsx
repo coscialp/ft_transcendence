@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
 import { isLogged } from "../../utils/isLogged";
@@ -22,7 +22,7 @@ export function Profile() {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+			isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
 		}
 		return (() => { mount = false; });
 	}, [cookies])

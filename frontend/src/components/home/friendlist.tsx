@@ -6,17 +6,15 @@ import { io, Socket } from "socket.io-client";
 import { ip } from "../../App";
 import './home.css'
 import { Open_Message } from "./privateMessage";
-import { ArrowSmUp, Backspace } from 'heroicons-react'
-import { useForceUpdate } from "../../utils/forceUpdate";
+import { ArrowSmUp } from 'heroicons-react'
 
 
-export function Friendlist({ currentChat, setCurrentChat }: any) {
+export function Friendlist(setCurrentChat: any) {
   const [cookies] = useCookies();
   const [friends, setFriends] = useState([]);
   const [socket, setSocket] = useState<Socket>();
   const [random, setRandom] = useState<number>();
   let history = useHistory();
-  const forceUpdate = useForceUpdate();
 
   function FriendRequest() {
     axios.request({
@@ -83,7 +81,6 @@ export function Friendlist({ currentChat, setCurrentChat }: any) {
     }).then(response => FriendRequest())
   }
 
-  console.log(friends)
   useEffect(() => {
     if (socket) {
       socket.on(`getSpectateID/${random}`, (gameID: number) => {
@@ -93,17 +90,12 @@ export function Friendlist({ currentChat, setCurrentChat }: any) {
         return history.push('/game');
       });
     }
-  }, [random]);
+  }, [random, socket, history]);
 
   function goGame(friend: any) {
     if (socket) {
       socket.emit('getSpectateID', { username: friend.username, id: random });
     }
-  }
-  function useForceUpdate() {
-    // eslint-disable-next-line
-    const [value, setValue] = useState(0);
-    return () => setValue(value => ++value);
   }
 
   function Open_FriendList() {

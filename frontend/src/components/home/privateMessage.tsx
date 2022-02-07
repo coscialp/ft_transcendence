@@ -4,11 +4,10 @@ import './mainMenu.css'
 import { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForceUpdate } from '../../utils/forceUpdate'
-import { MessageType, PrivateMessageType } from '../../utils/message.type'
+import { MessageType } from '../../utils/message.type'
 import { RequestApi } from '../../utils/RequestApi.class'
 import { ip } from '../../App'
 import { Conversation } from '../../utils/conversation.type'
-import { User } from '../../utils/user.type'
 
 export function Open_Message() {
     var Message: any = document.getElementById('Message')
@@ -61,7 +60,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 		if (mount) {
 				requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
                     console.log(response)
-					response.messages.map((msg: any) =>
+					response.messages?.map((msg: any) =>
 						conversations.push({ property: msg.property, conversations: msg.conversations })
 					);
 					forceUpdate();

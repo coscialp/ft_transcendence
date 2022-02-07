@@ -16,7 +16,7 @@ export function TwoFA() {
     useEffect(() => {
         let mount = true;
         if (mount) {
-            isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+            isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
         }
         return (() => { mount = false; });
     }, [cookies])
@@ -25,7 +25,7 @@ export function TwoFA() {
 
         TwoFA.current = new DoubleAuth();
         
-        if (unauthorized === false && me.email !== undefined) {
+        if (unauthorized === false && me?.email !== undefined) {
             TwoFA.current.generate_token();
             console.log(me)
             TwoFA.current.sendAuthToken(me.email);
