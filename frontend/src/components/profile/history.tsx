@@ -37,7 +37,7 @@ export function History(data: any) {
             {game.game !== undefined ?
                 <div id="History" onClick={() => { return history.push(`/${data.user.username}/history`) }} >
                     <img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player1.profileImage})` }} alt="" />
-                    <p className="Score"> {game?.game.score1} : {game?.game.score2} <br /> {game?.winner === data.me.username ? <p>WIN</p> : <p>LOSE</p>} </p>
+                    <p className="Score"> {game?.game.score1} : {game?.game.score2} <br /> {game?.winner === data.me.username ? "WIN" : "LOSE"} </p>
                     <img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />
                 </div>
                 :

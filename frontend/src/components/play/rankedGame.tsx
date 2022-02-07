@@ -20,18 +20,15 @@ type User = {
   email: string,
 }
 
-export function Ranked() {
-    // const [cookies] = useCookies();
-  
+export function Ranked(data: any) {
+
     const [cookies] = useCookies();
     let history = useHistory();
     const [player, setPlayer] = useState<GameManager>();
-    const [me, setMe] = useState<User>();
   
     useEffect(() => {
       let mount = true;
       if (mount) {
-        isLogged(cookies).then((res) => { setMe(res.me?.data); });
         setPlayer(new GameManager());
       }
       return (() => { mount = false; });
@@ -43,7 +40,7 @@ export function Ranked() {
         player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
         if (player?.Socket) {
           
-          player.Socket.on(`startgame/${me?.username}`, (msg: any) => {
+          player.Socket.on(`startgame/${data.me?.username}`, (msg: any) => {
             player.ID = msg;
             localStorage.setItem('playerID', player.ID);
             return history.push(`/game`)
@@ -51,7 +48,7 @@ export function Ranked() {
         }
       }
       return (() => { mount = false; });
-    }, [player, cookies, me, history]);
+    }, [player, cookies, data.me, history]);
   
     function play(): void {
       if (player?.Socket)
@@ -63,7 +60,7 @@ export function Ranked() {
       <div className="rankedElement" >
         <p className="rankedTitle" >Ranked Game</p>
         <PlayOutline className="playBtn" onClick={play}/>
-        <p> Game played : 20 (12W/8L) 518PP</p>
+        <p> Game played : {data.stats?.ranked?.played} <br/> {data.me?.PP} PP </p>
       </div>
     )
   }

@@ -112,8 +112,26 @@ p.ProfileName {
     font-size: 2vw;
 }
 
-p.Stats {
-    font-size: 1vw;
+.Stats {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    background-color: #00000063;
+    font-size: 1.5vw;
+    border-radius: 10px;
+}
+
+p.normal-Stats {
+    border-right: 1px solid white;
+    padding: 10px;
+    flex: 1 1 auto;
+}
+
+p.ranked-Stats {
+    padding: 10px;
+    flex: 1 1 auto;
 }
 
 img.Add.friend {
