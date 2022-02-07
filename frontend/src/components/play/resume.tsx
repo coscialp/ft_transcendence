@@ -75,7 +75,7 @@ export default function Resume() {
         setCookies("access_token", "");
         history.push("/");
       }
-      console.log(game);
+      
 
     return (
         <div>

@@ -42,7 +42,7 @@ export function Ranked() {
       if (mount && player) {
         player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
         if (player?.Socket) {
-          console.log(`startgame/${me?.username}`);
+          
           player.Socket.on(`startgame/${me?.username}`, (msg: any) => {
             player.ID = msg;
             localStorage.setItem('playerID', player.ID);

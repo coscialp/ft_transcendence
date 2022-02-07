@@ -13,7 +13,7 @@ export function Overall(data: any) {
 	let history = useHistory();
 	const [myBlackList, setMyBlackList] = useState<User[]>([]);
 
-	console.log(data.me)
+	
 	useEffect(() => {
 		let mount = true;
 	
@@ -25,7 +25,7 @@ export function Overall(data: any) {
 				"Authorization": `Bearer ${cookies.access_token}`,
 			},
 		}).then((response: any) => {
-			console.log(response)
+			
 			if (mount) { setMyBlackList(response.data.blackList) }
 		})
 		return (() => { mount = false; });
@@ -43,7 +43,7 @@ export function Overall(data: any) {
 				'newFriendId': data.user.username,
 			}
 		}).then((response: any) => {
-			console.log(response);
+			
 		})
 	}
 

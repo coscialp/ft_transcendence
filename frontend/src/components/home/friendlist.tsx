@@ -25,7 +25,6 @@ export function Friendlist(setCurrentChat: any) {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
     }).then((response: any) => {
-      console.log(response)
       setFriends(response.data.friends);
     })
   }
@@ -52,7 +51,6 @@ export function Friendlist(setCurrentChat: any) {
   }, [cookies])
 
   function handleDeleteFriends(friendToDelete: any) {
-    console.log(friendToDelete);
     axios.request({
       url: '/user/friends/remove',
       method: 'delete',
@@ -67,7 +65,7 @@ export function Friendlist(setCurrentChat: any) {
   }
 
   function handleBlacklist(friendToDelete: any) {
-    console.log(friendToDelete)
+    
     axios.request({
       url: '/user/blacklist/add',
       method: 'patch',
@@ -84,7 +82,7 @@ export function Friendlist(setCurrentChat: any) {
   useEffect(() => {
     if (socket) {
       socket.on(`getSpectateID/${random}`, (gameID: number) => {
-        console.log('test');
+        
         localStorage.setItem('GameID', String(gameID));
         localStorage.setItem('playerID', "spectator");
         return history.push('/game');

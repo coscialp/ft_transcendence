@@ -37,7 +37,7 @@ export function Profile() {
 				"Authorization": `Bearer ${cookies.access_token}`,
 			}
 		}).then((response: any) => {
-			console.log(response)
+			
 			setUser(response.data);
 		})
 	}, [userProfile, cookies]);
@@ -53,7 +53,7 @@ export function Profile() {
 				"Authorization": `Bearer ${cookies.access_token}`,
 			},
 		}).then((response: any) => {
-			console.log(response)
+			
 			if (mount) { setBlackList(response.data.blackList) }
 		})
 		return (() => { mount = false; });

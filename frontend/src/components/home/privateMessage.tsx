@@ -59,7 +59,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 		let mount = true;
 		if (mount) {
 				requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
-                    console.log(response)
+                    
 					response.messages?.map((msg: any) =>
 						conversations.push({ property: msg.property, conversations: msg.conversations })
 					);
@@ -74,10 +74,10 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
         let mount = true;
 		if (mount) {
             if (socket) {
-                console.log(me?.username)
+                
 				socket.on(`private_message/${me?.username}`, (msg: any) => {
                     const convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
-                    console.log(convIndex)
+                    
                     if (conversations && convIndex !== -1) {
                         conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
                         messages.push({ id: messages.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
@@ -93,7 +93,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
     function handleSendMessage(e: any) {
         if (messageInput) {
 			if (socket) {
-                console.log(receiver);
+                
 				socket.emit('private_message', { sentAt: Date(), sender: me , body: messageInput, receiver: receiver });
                 messages.push({ id: messages.length, date: Date(), sender: me?.username, content: messageInput, avatar: me?.profileImage, receiver: receiver })
             }
@@ -146,7 +146,6 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
                     )) :
                     <div>
                         <section className='discussion' >
-                            {console.log(messages)}
                             <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
                             {
                                 messages.map((message: any) => (

@@ -118,7 +118,7 @@ export function NavBar(props: any) {
   }
 
   useEffect(() => {
-    console.log(avatar);
+    
     let mounted: boolean = true;
     axios.request({
       url: '/user/me/avatar',

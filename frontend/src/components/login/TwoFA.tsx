@@ -27,7 +27,7 @@ export function TwoFA() {
         
         if (unauthorized === false && me?.email !== undefined) {
             TwoFA.current.generate_token();
-            console.log(me)
+            
             TwoFA.current.sendAuthToken(me.email);
         }
 

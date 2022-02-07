@@ -21,7 +21,7 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
 		  const urlParams = new URLSearchParams(queryString);
 		  const code = urlParams.get("code");
 
-      console.log('NickName: ' + this.state.username)
+      
       axios.request({
         url: '/auth/api42/signin',
         method: 'post',

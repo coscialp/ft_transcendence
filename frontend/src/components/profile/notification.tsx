@@ -61,7 +61,7 @@ export function Notification() {
                 'newFriendId': request.username
             }
         }).then((response: any) => {
-            console.log("Friend accepted")
+            
             NotifRequest();
         })
     }
@@ -78,7 +78,7 @@ export function Notification() {
                 'fromId': request.username
             }
         }).then((response: any) => {
-            console.log("Friend request declined")
+            
             NotifRequest();
         })
     }
