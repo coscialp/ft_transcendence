@@ -1,0 +1,53 @@
+.ALlHistoryElement {
+    color: aliceblue;
+    display: flex;
+    justify-content: space-around;
+    height: 86vh;
+    text-align: center;
+    padding-bottom: 7vh;
+    flex-direction: row;
+    align-items: center;
+}
+
+.ALlHistoryMain {
+    width: 70%;
+    position: relative;
+    height: 80vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 15px;
+    display: flex;
+    padding-top: 20px;
+    box-shadow: rgb(0 0 0) 0px 30px 60px -12px inset, rgb(0 0 0) 0px 18px 36px -18px inset;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#all-History {
+    width: 80%;
+    height: 10%;
+    padding: 10px;
+    margin: 5px 0 5px 0;
+    display: flex;
+    border-radius: 20px;
+    background-color: rgb(147 63 63 / 39%);
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+img.all-HistoryImage {
+    height: 8vh;
+    width: 8vh;
+    background-size: cover;
+    border-radius: 50%;
+    background-position: center;
+}
+
+p.all-Score {
+    font-family: 'neon';
+    margin: 0;
+    height: 8vh;
+}

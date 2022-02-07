@@ -35,13 +35,13 @@ export function History(data: any) {
     return (
         <div>
             {game.game !== undefined ?
-                <div id="History" onClick={() => { return history.push("/history") }} >
+                <div id="History" onClick={() => { return history.push(`/${data.user.username}/history`) }} >
                     <img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player1.profileImage})` }} alt="" />
                     <p className="Score"> {game?.game.score1} : {game?.game.score2} <br /> {game?.winner === data.me.username ? <p>WIN</p> : <p>LOSE</p>} </p>
                     <img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />
                 </div>
                 :
-                <div>
+                <div id="History" onClick={() => { return history.push(`/${data.user.username}/history`) }}>
                     This is your match history ! Launch your first game to see it !
                 </div>
             }

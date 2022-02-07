@@ -145,10 +145,10 @@ export function InGame() {
       setTabTime(0);
     }
     if (tabTimeRef.current === 1000) {
-      player.Socket.emit('warning', { gameId: player.GameID, player: player.ID, score1: player.Score1, score2: player.Score2, date: player.Date });
+      player.Socket.emit('finishgame', { gameId: player.GameID, player: player.ID, score1: player.Score1, score2: player.Score2, date: player.Date });
     }
-    if (player.GameState === true || leaveRef.current === 300) {
-      player.Socket.emit('warning', { gameId: player.GameID, player: player.ID, score1: player.Score1, score2: player.Score2, date: player.Date });
+    if (player.GameState === true || leaveRef.current === 3) {
+      player.Socket.emit('finishgame', { gameId: player.GameID, player: player.ID, score1: player.Score1, score2: player.Score2, date: player.Date });
     }
     if (gameFinish === true || player.Warning === true) {
       return history.push('/resume');

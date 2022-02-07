@@ -168,6 +168,7 @@ export class GameManager {
     {
         this._Socket.on(`finishgame/${this._GameID}`, (Player: string, score1: number, score2: number, user1: any, user2: any, isRanked: boolean) => {
             this._GameState = true;
+            this._Warning = true;
         })
     }
 

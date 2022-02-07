@@ -87,7 +87,7 @@ export default function Resume() {
                         <img className="resume-image" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />
                     </div>
                     <p id='score-difference' > {scoreDifference} </p>
-                    {game?.game.ranked === "false" ?
+                    {game?.game.ranked === true ?
                     <div id="ranked-points">
                         <p id="actual-points" >{me.PP} PP</p>
                         <p id="new-points" > {game?.winner === me.username ? `+` : `-` } {game?.PPaverage} PP</p>
