@@ -98,7 +98,8 @@ export function Settings() {
 	}
 
 	function handleNewAvatar(e: any) {
-		
+		console.log(newAvatar)
+		console.log(previewAvatar)
 		if (newAvatar !== "") {
 			axios.request({
 				url: '/user/me/avatar',
@@ -108,7 +109,18 @@ export function Settings() {
 					"Authorization": `Bearer ${cookies.access_token}`,
 				},
 				data: {
-					"avatar": "/img/" + newAvatar,
+					"avatar":  newAvatar,
+				}
+			})
+			axios.request({
+				url: '/img/',
+				method: 'post',
+				baseURL: `http://${ip}:5000`,
+				headers: {
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				data: {
+					"file": previewAvatar,
 				}
 			})
 			window.alert("Avatar successfully changed to " + newAvatar + " !")

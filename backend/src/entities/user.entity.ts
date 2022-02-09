@@ -33,7 +33,7 @@ export class User {
     @Column({default: false})
     isLogged: boolean;
 
-    @Column()
+    @Column({default: false})
     isAdmin: boolean;
 
     @Column()
