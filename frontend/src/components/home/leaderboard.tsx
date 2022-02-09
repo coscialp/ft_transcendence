@@ -47,8 +47,11 @@ export function Open_Leaderboard() {
 
 export function Leaderboard() {
     const [leaders, setLeaders]: any = useState([]);
-    const [cookies, setCookie] = useCookies();
+    const [friends, setFriends]: any = useState([]);
+    const [cookies] = useCookies();
     const [me, setMe]: any = useState({});
+    let rankAll:number = 0;
+    let rankFriend:number = 0;
     
     useEffect(() => {
         let mount = true;
@@ -62,11 +65,26 @@ export function Leaderboard() {
         }).then((response: any) => {
                 setLeaders(response.data);
         })
+        axios.request({
+            url: '/user/me/friends',
+            method: 'get',
+            baseURL: `http://${ip}:5000`,
+            headers: {
+              "Authorization": `Bearer ${cookies.access_token}`,
+            }
+          }).then((response: any) => {
+            setFriends(response.data.friends);
+          })
         if (mount) {
           isLogged(cookies).then((res) => { setMe(res.me?.data) });
         }
         return (() => { mount = false; });
       }, [cookies])
+
+      function rankUser(rank:number):number {
+        rank = rank + 1;
+        return rank;
+      }
 
     return (
         <div className="LBElement" >
@@ -75,26 +93,52 @@ export function Leaderboard() {
                     <ArrowSmUp id="leadArrowR" onClick={() => Open_Leaderboard()} />Leaderboard
                     <ArrowSmUp id="leadArrowL" onClick={() => Open_Leaderboard()} />
                 </div>
-                <div id="LBBodyOpen" >{leaders.map((users: any) => (
-                    <details key={users.username} id={users.username}>
-                        <summary className="leaderboardList">{users.username}</summary>
-                        <nav className="menuLeaderboard">
-                            <p className="rules">Rules:</p>
-                            <p className="rules ">This is a solo player mode, you will play against a wall, the goal is to train yourself and to beat your highscore !</p>
-                            <div className="leaderboardBorder"></div>
-                            <button className="friendBtn"><span /><span /><span /><span />go survival mode</button>
-                        </nav>
+                <div id="LBBodyOpen" >
+                    <details className="leaderboardList"> 
+                        <summary>Leaderboard</summary>
+                        <div className="leaderboardMainList">
+                        {leaders.map((users: any) => (
+                            <div className="leaderboardList theList">
+                                <p className="lbSeparateList">{rankAll=rankUser(rankAll)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
+                            </div>
+                        ))}
+                        </div>
                     </details>
-                    ))}
+                    <details className="leaderboardList"> 
+                        <summary>Friendboard</summary>
+                        <div className="leaderboardMainList">
+                        {friends.map((users: any) => (
+                            <div className="leaderboardList theList">
+                                <p className="lbSeparateList">{rankFriend=rankUser(rankFriend)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
+                            </div>
+                        ))}
+                        </div>
+                    </details>
                 </div>
             </div>
             
             <p className="LBTitle" >Leaderboard</p>
-            <div className="LBBody" >{leaders.map((users: any) => (
-                <details key={users.username} id={users.username}>
-                    <summary className="leaderboardList"><img className="imgFriendList" src={users.profileImage} alt=""></img>{users.username}</summary>
+            <div className="LBBody" >
+                <details className="leaderboardList"> 
+                    <summary>Leaderboard</summary>
+                    <div className="leaderboardMainList">
+                    {leaders.map((users: any) => (
+                        <div className="leaderboardList theList">
+                            <p className="lbSeparateList">{rankAll=rankUser(rankAll)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
+                        </div>
+                    ))}
+                    </div>
                 </details>
-                ))}
+                <details className="leaderboardList"> 
+                    <summary>Friendboard</summary>
+                    <div className="leaderboardMainList">
+                    {friends.map((users: any) => (
+                        <div className="leaderboardList theList">
+                            <p className="lbSeparateList">{rankFriend=rankUser(rankFriend)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
+                        </div>
+                    ))}
+                    </div>
+                </details>
             </div>
         </div>
     )
