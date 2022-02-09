@@ -11,5 +11,5 @@ export class GameHistoryDto {
 
     date: string;
 
-    ranked: string;
+    ranked: boolean;
 }
