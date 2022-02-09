@@ -29,7 +29,7 @@ export function MainMenu(data: any) {
 		let mount = true;
 		if (mount) {
 			requestApi.get('user/channels/connected').then((response) => {
-				response.channelsConnected.map((chan: any) => 
+				response.channelsConnected?.map((chan: any) => 
 					channels.push(chan.name)
 				)
 			})
@@ -130,9 +130,9 @@ export function MainMenu(data: any) {
 		if (mount) {
 			if (current_channel) {
 				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
-					response.messages.map((msg: any) => {
+					response.messages.map((msg: any) => (
 						messages.push({ id: messages.length, date: msg.date, sender: msg.sender.username, content: msg.content, avatar: msg.sender.profileImage })
-				});
+					));
 					forceUpdate();
 				})
 			}

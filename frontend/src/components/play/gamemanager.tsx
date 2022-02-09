@@ -1,7 +1,5 @@
-import axios from "axios";
 import { UnityContext } from "react-unity-webgl";
 import { io, Socket } from "socket.io-client";
-import { ip } from "../../App";
 
 
 
@@ -19,7 +17,9 @@ export class GameManager {
     private _GameDate: string;
     private _Ranked: boolean;
     private _SpeedSecurity: number;
-    private _SpeedSecurityBall: number;
+    private _Score1: number;
+    private _Score2: number;
+    private _BallSpeedSecurity: number;
     constructor() {
         this._P1ready = false;
         this._P2ready = false;
@@ -32,7 +32,9 @@ export class GameManager {
         this._Spectator = false;
         this._Ranked = false;
         this._SpeedSecurity = 0;
-        this._SpeedSecurityBall = 0;
+        this._BallSpeedSecurity = 0;
+        this._Score1 = 0;
+        this._Score2 = 0;
         this._GameDate = new Date().toLocaleDateString();
         this._UnityContext = new UnityContext({
             loaderUrl: "./Build/webgl.loader.js",
@@ -71,6 +73,15 @@ export class GameManager {
     }
     public get Ranked() {
         return this._Ranked;
+    }
+    public get Score1() {
+        return this._Score1;
+    }
+    public get Score2() {
+        return this._Score2;
+    }
+    public get Date() {
+        return this._GameDate;
     }
 
     public set Ranked(value: boolean) {
@@ -155,6 +166,7 @@ export class GameManager {
     {
         this._Socket.on(`finishgame/${this._GameID}`, (Player: string, score1: number, score2: number, user1: any, user2: any, isRanked: boolean) => {
             this._GameState = true;
+            this._Warning = true;
         })
     }
 
@@ -167,10 +179,10 @@ export class GameManager {
     send_ball_position() {
         this._UnityContext.on("SetBallPos", (posx: number, posy: number) => {
             if (this._ID === "Player1") {
-                this._SpeedSecurity += 1;
-                if (this._SpeedSecurity === 10)
+                this._BallSpeedSecurity += 1;
+                if (this._BallSpeedSecurity === 5)
                 {
-                    this._SpeedSecurity = 0;
+                    this._BallSpeedSecurity = 0;
                     this._Socket.emit('SetBallPos', { posx: posx, posy: posy, id: this._GameID });
                     this._Socket.emit('SetBallPosSpectate', { posx: posx, posy: posy, id: this._GameID });
                 }
@@ -191,15 +203,21 @@ export class GameManager {
     send_point() {
         this._UnityContext.on("GameResult", (PointToAdd: string, score1: number, score2: number) => {
             if (this._ID === "Player1") {
-                if (score1 === 15 && score2 !== 10)
+                if (score1 === 15 && score2 !== 10) {
                     this._Socket.emit('AddPoint', { gameId: this._GameID, point: "player1" });
-                else if (score1 !== 10 && score2 !== 10)
+                    this._Score1++;
+                }
+                else if (score1 !== 10 && score2 !== 10) {
                     this._Socket.emit('AddPoint', { gameId: this._GameID, point: 'player2' });
+                    this._Score2++;
+                }
             }
+            console.log(`${this._Score1} || ${this._Score2}`)
             if (score1 === 10 || score2 === 10) {
+                console.log('test');
                 this._UnityContext.send("LocalPaddle", "setGameStarted", 0);
                 this._UnityContext.send("RemotePaddle", "setGameStarted", 0);
-                this._Socket.emit('finishGame', { gameId: this._GameID, player: this._ID, score1: score1, score2: score2 })
+                this._Socket.emit('finishGame', { gameId: this._GameID, player: this._ID, score1: this._Score1, score2: this._Score2, date: this._GameDate })
                 this._GameState = true;
             }
         });

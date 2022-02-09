@@ -20,7 +20,7 @@ export function NavBar(props: any) {
   useEffect(() => {
     let mount = true;
     if (mount) {
-      isLogged(cookies).then((res) => { setMe(res.me.data) });
+      isLogged(cookies).then((res) => { setMe(res.me?.data) });
     }
     return (() => { mount = false; });
   }, [cookies])
@@ -30,7 +30,7 @@ export function NavBar(props: any) {
   useEffect(() => {
     const interval = setInterval(() => {
       let mount = true;
-      if (me.username !== undefined) {
+      if (me?.username !== undefined) {
         axios.request({
           url: `/user/${me.username}/friends/request`,
           method: 'get',
@@ -118,7 +118,7 @@ export function NavBar(props: any) {
   }
 
   useEffect(() => {
-    console.log(avatar);
+    
     let mounted: boolean = true;
     axios.request({
       url: '/user/me/avatar',

@@ -56,7 +56,7 @@ export function Duel() {
     }
 
     function PopUpDuel() {
-      console.log(popUp);
+      
       /*if (e.target.value) {
         axios.request({
           url: `/user`,

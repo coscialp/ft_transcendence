@@ -21,7 +21,7 @@ export function Login() {
 	if (unauthorized === false) {
 		return (<Redirect to="/home" />);
 	}
-	// console.log(unauthorized);
+	// 
 	return (
 		<div className="bg">
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />

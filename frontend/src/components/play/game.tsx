@@ -60,7 +60,7 @@ export function InGame() {
   useEffect(() => {
     let mount = true;
     if (mount) {
-      isLogged(cookies).then((res: any) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+      isLogged(cookies).then((res: any) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
       player.Spectator = String(localStorage.getItem('playerID')) === 'spectator' ? true : false;
       if (player.Spectator === true) {
         player.GameID = Number(localStorage.getItem('GameID'));
@@ -73,12 +73,15 @@ export function InGame() {
   useEffect(function () {
     if (player.Spectator === false) {
       player.send_ready_up();
-      player.send_point();
       player.send_ball_position();
       player.send_player_position();
     }
   }, [player]);
-
+  useEffect(() => {
+    if (player.Spectator === false) {
+      player.send_point();
+    }
+  })
   useEffect(function () {
     let mount = true;
     if (mount) {
@@ -142,10 +145,10 @@ export function InGame() {
       setTabTime(0);
     }
     if (tabTimeRef.current === 1000) {
-      player.Socket.emit('warning', { player: player.ID, gameId: player.GameID });
+      player.Socket.emit('finishgame', { gameId: player.GameID, player: player.ID, score1: player.Score1, score2: player.Score2, date: player.Date });
     }
-    if (player.GameState === true || leaveRef.current === 300) {
-      player.Socket.emit('warning', { player: player.ID, gameId: player.GameID });
+    if (player.GameState === true || leaveRef.current === 3) {
+      player.Socket.emit('finishgame', { gameId: player.GameID, player: player.ID, score1: player.Score1, score2: player.Score2, date: player.Date });
     }
     if (gameFinish === true || player.Warning === true) {
       return history.push('/resume');
@@ -156,7 +159,7 @@ export function InGame() {
     setInterval(() => {
       check_ready();
     }, 1000);
-  }, []);
+  });
 
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
