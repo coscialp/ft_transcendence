@@ -16,6 +16,7 @@ import { TwoFA } from './components/login/TwoFA';
 import { InGame } from './components/play/game';
 import Resume from './components/play/resume';
 import AllHistory from './components/profile/allHistory';
+import Connect from './components/login/connect';
 
 export const ip = window.location.hostname;
 
@@ -25,7 +26,8 @@ function App() {
 		<Router>
 			<Switch>
 					<Route exact path={'/'} component={ Login } />
-					<Route path={"/oauth/redirect"} component={ Register } />
+					<Route path={"/oauth/redirect"} component={ Connect } />
+					<Route path={"/register"} component={ Register } />
 					<Route exact path={"/signup"} component={ SignUp } />
 					<Route path={"/cookies"} component={ Cookies } />
 					<Route path={"/2fa"} component={ TwoFA } />

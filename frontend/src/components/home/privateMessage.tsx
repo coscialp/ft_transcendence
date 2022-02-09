@@ -43,6 +43,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
     // eslint-disable-next-line
     const [messages, setMessages] = useState<MessageType[]>([]);
     const [receiver, setReceiver] = useState<string>("");
+    const [newDmNotif, setNewDmNotif] = useState<boolean>();
 
     const forceUpdate = useForceUpdate();
 
@@ -77,7 +78,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
                 
 				socket.on(`private_message/${me?.username}`, (msg: any) => {
                     const convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
-                    
+                    setNewDmNotif(true);
                     if (conversations && convIndex !== -1) {
                         conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
                         messages.push({ id: messages.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
@@ -120,10 +121,12 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
         setisConvOpen(true);
     }
 
+    console.log(newDmNotif);
+
     return (
         <div id="Message" >
-            <div id="OpenMsg" onClick={() => { Open_Message(); setCurrentChat(""); setisConvOpen(false) }}>
-                <ArrowSmUp id="arrowR" />Message
+            <div id="OpenMsg" onClick={() => { Open_Message(); setNewDmNotif(false); setCurrentChat(""); setisConvOpen(false) }}>
+                <ArrowSmUp id="arrowR" /><span>Message { newDmNotif ? <span id="DmNotif">●</span> : null}</span>
                 <ArrowSmUp id="arrowL" />
             </div>
             <div className="scrollMessageContainer">
