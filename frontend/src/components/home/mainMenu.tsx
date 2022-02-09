@@ -188,13 +188,6 @@ export function MainMenu(data: any) {
 								<VolumeOff className="chatUserParam" />
 								<Trash className="chatUserParam" />
 							</div>
-						<div className="scrollingMenu container">
-        					<UserCircle className="chatUserParam" />
-        					<Challenge className="chatUserParam" />
-        					<ChevronDoubleUp className="chatUserParam" />
-        					<VolumeOff className="chatUserParam" />
-        					<Trash className="chatUserParam" />
-      					</div >
 						</div>
 					</article>
 				))}
