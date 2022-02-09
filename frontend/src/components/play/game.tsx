@@ -55,33 +55,36 @@ export function InGame() {
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
     };
-  });
+  }, []);
 
   useEffect(() => {
     let mount = true;
     if (mount) {
       isLogged(cookies).then((res: any) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
       player.Spectator = String(localStorage.getItem('playerID')) === 'spectator' ? true : false;
+      player.GameMod = String(localStorage.getItem('playerID')) === 'gameMode' ? 1 : 0;
       if (player.Spectator === true) {
         player.GameID = Number(localStorage.getItem('GameID'));
       }
-      player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
+
     }
     return (() => { mount = false; });
   }, [cookies, player]);
 
   useEffect(function () {
-    if (player.Spectator === false) {
-      player.send_ready_up();
-      player.send_ball_position();
-      player.send_player_position();
+    if (player.GameID !== 0) {
+      if (player.Spectator === false) {
+        player.send_ready_up();
+        player.send_ball_position();
+        player.send_player_position();
+      }
     }
-  }, [player]);
+  }, [player, player.GameID]);
   useEffect(() => {
-    if (player.Spectator === false) {
+    if (player.Spectator === false && player.GameID) {
       player.send_point();
     }
-  })
+  }, [player.GameID])
   useEffect(function () {
     let mount = true;
     if (mount) {
@@ -104,22 +107,24 @@ export function InGame() {
   }
 
   useEffect(function () {
-    if (player.Spectator === false) {
-      console.log('test');
-      player.receive_ball_position();
-      player.receive_player_position();
-      player.receive_point();
-      player.receive_ready_up();
-      player.receive_endGame();
-      player.receive_warning(setGameFinish);
+    if (player.GameID !== 0) {
+      if (player.Spectator === false) {
+        player.receive_ball_position();
+        player.receive_player_position();
+        player.receive_point();
+        player.receive_ready_up();
+        player.receive_endGame();
+        player.receive_particle();
+      }
+      else {
+        player.receive_ball_pos_spectate();
+        player.receive_pos_specate();
+        player.receive_endGame();
+        player.receive_point();
+        player.receive_particle();
+      }
     }
-    else {
-      player.receive_ball_pos_spectate();
-      player.receive_pos_specate();
-      player.receive_endGame();
-      player.receive_warning(setGameFinish);
-    }
-  }, [reload, player]);
+  }, [reload, player, player.GameID]);
 
   function handleResize() {
     let game: any = document.getElementsByClassName('game_screen')[0];
@@ -135,31 +140,64 @@ export function InGame() {
 
   useEffect(() => {
     window.addEventListener('resize', handleResize)
-  });
+    player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
+  }, []);
 
   function check_ready() {
-    if (leaveTimeRef.current === 1) {
-      setMyTabTime(tabTimeRef.current + 1);
+    console.log(`${player.P2ready} || ${player.P1ready}`);
+    if (player.Spectator === false) {
+      if (leaveTimeRef.current === 1) {
+        setMyTabTime(tabTimeRef.current + 1);
+      }
+      else {
+        setTabTime(0);
+      }
+      if (tabTimeRef.current === 1000) {
+        if (player.ID === 'Player1') {
+          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
+        }
+        else {
+          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
+        }
+      }
+      if (player.GameState === true || leaveRef.current === 300) {
+        if (player.ID === 'Player1') {
+          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
+        }
+        else {
+          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
+        }
+      }
+
+      if (gameFinish === true || player.Warning === true) {
+        return history.push('/resume');
+      }
+      if (player.Spectator === false) {
+        player.ready_checker();
+      }
     }
-    else {
-      setTabTime(0);
+    else if (gameFinish === true || player.Warning === true) {
+      return history.push('/home');
+      
     }
-    if (tabTimeRef.current === 1000) {
-      player.Socket.emit('finishgame', { gameId: player.GameID, player: player.ID, score1: player.Score1, score2: player.Score2, date: player.Date });
-    }
-    if (player.GameState === true || leaveRef.current === 3) {
-      player.Socket.emit('finishgame', { gameId: player.GameID, player: player.ID, score1: player.Score1, score2: player.Score2, date: player.Date });
-    }
-    if (gameFinish === true || player.Warning === true) {
-      return history.push('/resume');
-    }
-    player.ready_checker();
+    
+  
   }
   useEffect(() => {
-    setInterval(() => {
+    const interval = setInterval(() => {
       check_ready();
     }, 1000);
-  });
+    return () => clearInterval(interval);
+  }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (player.GameMod === 2 && player.GameID !== 0)
+      {console.log(player.GameMod);
+        player.Socket.emit('StartParticle', {gameId : player.GameID});
+      }
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [player.GameID]);
 
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);

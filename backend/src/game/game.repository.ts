@@ -62,10 +62,6 @@ export class GameRepository extends Repository<Game> {
             ranked,
         } = gameHistoryDto;
 
-        console.log(player1);
-        console.log(player2);
-        console.log(ranked);
-
         const game: Game = this.create({
             player1,
             player2,

@@ -36,13 +36,14 @@ export function Normal(data: any) {
 
   useEffect(() => {
     let mount = true;
-    if (mount && player) {
+    if (mount && player && cookies && history) {
       player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
       if (player?.Socket) {
         
         player.Socket.on(`startgame/${data.me?.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
+          player.Socket.disconnect();
           return history.push(`/game`)
         })
       }
