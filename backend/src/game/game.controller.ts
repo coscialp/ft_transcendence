@@ -21,7 +21,7 @@ export class GameController {
         @Body('score1') score1: number,
         @Body('score2') score2: number,
         @Body('date') date: string,
-        @Body('ranked') ranked: string,
+        @Body('ranked') ranked: boolean,
         ) {
 
         return await this.gameService.createGame({
