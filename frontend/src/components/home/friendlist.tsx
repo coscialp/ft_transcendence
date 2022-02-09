@@ -9,7 +9,7 @@ import { Open_Message } from "./privateMessage";
 import { ArrowSmUp } from 'heroicons-react'
 
 
-export function Friendlist(setCurrentChat: any) {
+export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
   const [friends, setFriends] = useState([]);
   const [socket, setSocket] = useState<Socket>();

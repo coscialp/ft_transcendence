@@ -19,24 +19,25 @@ export class RegisterForm extends React.Component<{}, { username: string, passwo
     handleSubmit(event: any) {
       const queryString = window.location.search;
 		  const urlParams = new URLSearchParams(queryString);
-		  const code = urlParams.get("code");
+		  const token = urlParams.get("token");
 
       
       axios.request({
-        url: '/auth/api42/signin',
-        method: 'post',
-        baseURL: `http://${ip}:5000`,
-        params: {
-            "code": code,
-            "nickName": this.state.username,
-        }
+        url: '/user/me/nickname',
+				method: 'patch',
+				baseURL: `http://${ip}:5000`,
+				headers: {
+					"Authorization": `Bearer ${token}`,
+				},
+				data: {
+					"nickname": this.state.username,
+				}
       }
-      ).then((response: AxiosResponse<any, any>) =>  {window.open(`http://${ip}:3000/cookies?token=${response.data.accessToken}`, '_self')});
+      ).then((response: AxiosResponse<any, any>) =>  {window.open(`http://${ip}:3000/home`, '_self')});
       event.preventDefault();
     }
 
     render() {
-      //this.handleAlreadyLogged();
       return (
         <form onSubmit={this.handleSubmit}>
           <div className="logs">

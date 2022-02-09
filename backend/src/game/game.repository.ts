@@ -75,6 +75,8 @@ export class GameRepository extends Repository<Game> {
 
         try {
             await this.save(game);
+            await this.usersRepository.save(player1);
+            await this.usersRepository.save(player2);
         } catch (error) {
             console.log(error.code);
         }

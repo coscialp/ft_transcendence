@@ -173,11 +173,11 @@ export function Overall(data: any) {
 			<p id="goal-average" > {stats?.GA} GA </p>
 			<div className='Stats'>
 				<p className="normal-Stats" >
-					{stats?.normal?.winrate}<br />
+					{stats?.normal?.played ? stats?.normal?.winrate : "No game"}<br />
 					{stats?.normal?.played}
 				</p>
 				<p className="ranked-Stats" >
-					{stats?.ranked?.winrate}<br />
+					{stats?.ranked?.played ? stats?.ranked?.winrate : "No game" }<br />
 					{stats?.ranked?.played}
 				</p>
 			</div>
