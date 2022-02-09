@@ -49,7 +49,7 @@ export function Settings() {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+			isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
 		}
 		return (() => { mount = false; });
 	}, [cookies])
@@ -190,7 +190,7 @@ export function Settings() {
 							)}
 					</div>
 					<div className="2FA">
-						{me.twoFactorAuth ?
+						{me?.twoFactorAuth ?
 						<>Disable the 2FA<input className="ToggleSwitchON" type="checkbox" id="switch" onClick={handle2FA} /><label className="ToggleSLabelON" htmlFor="switch"></label></>
 						:
 						<>Enable the 2FA<input className="ToggleSwitchOFF" type="checkbox" id="switch" onClick={handle2FA} /><label className="ToggleSLabelOFF" htmlFor="switch"></label></>

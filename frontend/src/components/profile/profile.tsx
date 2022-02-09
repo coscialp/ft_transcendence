@@ -22,7 +22,7 @@ export function Profile() {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+			isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
 		}
 		return (() => { mount = false; });
 	}, [cookies])
@@ -37,7 +37,7 @@ export function Profile() {
 				"Authorization": `Bearer ${cookies.access_token}`,
 			}
 		}).then((response: any) => {
-			console.log(response)
+			
 			setUser(response.data);
 		})
 	}, [userProfile, cookies]);
@@ -53,7 +53,7 @@ export function Profile() {
 				"Authorization": `Bearer ${cookies.access_token}`,
 			},
 		}).then((response: any) => {
-			console.log(response)
+			
 			if (mount) { setBlackList(response.data.blackList) }
 		})
 		return (() => { mount = false; });
@@ -70,7 +70,7 @@ export function Profile() {
 					{blackList.find((user) => user.username === me.username) ? <div className="Blocked ProfileMain" ><img className="ProfileImage" style={{ backgroundImage: `url(${user.profileImage})` }} alt="" /> {user.username} has blocked you !</div> :
 					<div className="ProfileMain">
 						<Overall me={me} user={user} />
-						<History me={me} />
+						<History me={me} user={user} />
 						<Achivements />
 					</div>
 					}

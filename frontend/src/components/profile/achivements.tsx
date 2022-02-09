@@ -130,7 +130,7 @@ export function Achivements() {
     var HaterLvl: number = 1;
     
     return (
-            <div className="Achivements" >
+            <div id="Achivements" >
                 <div className="Achievements_contents">
                    <p id="Achievement_font">Achievement</p> 
                     <p><LockClosed className='logo'/> Authentifier Lvl: {SecurityLvl} </p>

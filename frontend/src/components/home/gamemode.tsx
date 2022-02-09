@@ -1,16 +1,8 @@
 import './home.css'
-import { ArrowSmUp, Backspace } from 'heroicons-react'
-import { useEffect, useState } from 'react'
-
-function useForceUpdate() {
-    // eslint-disable-next-line
-    const [value, setValue] = useState(0);
-    return () => setValue(value => ++value);
-}
+import { ArrowSmUp } from 'heroicons-react'
 
 export function Open_Gamemode() {
     var Gamemode: any = document.getElementById('gamemodeMini')
-    var OpenGamemode: any = document.getElementById('OpenGamemode')
     var GMBodyOpen: any = document.getElementById('GMBodyOpen')
     var arrowR: any = document.getElementById('gameArrowR')
     var arrowL: any = document.getElementById('gameArrowL')
@@ -49,7 +41,6 @@ export function Open_Gamemode() {
 }
 
 export function Gamemode() {
-    const forceUpdate = useForceUpdate();
 
     return (
         <div className="GMElement" >
