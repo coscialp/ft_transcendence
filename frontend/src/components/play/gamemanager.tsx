@@ -1,7 +1,5 @@
-import axios from "axios";
 import { UnityContext } from "react-unity-webgl";
 import { io, Socket } from "socket.io-client";
-import { ip } from "../../App";
 
 
 

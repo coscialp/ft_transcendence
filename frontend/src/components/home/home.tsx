@@ -22,7 +22,7 @@ export function Home() {
   useEffect(() => {
     let mount = true;
     if (mount) {
-      isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+      isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
       setSocket(io(`ws://${ip}:5001`, { transports: ['websocket'] }));
     }
     return (() => { mount = false; });

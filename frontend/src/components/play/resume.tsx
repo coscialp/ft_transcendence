@@ -20,7 +20,7 @@ export default function Resume() {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			isLogged(cookies).then((res) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+			isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
 		}
 		return (() => { mount = false; });
 	}, [cookies])
@@ -46,7 +46,7 @@ export default function Resume() {
     useEffect(() => {
 		let mount = true;
 		if (mount) {
-			if (game?.winner === me.username) {
+			if (game?.winner === me?.username) {
                 document.getElementById("resume-all-score")!.style.backgroundColor = "rgba(0, 141, 177, 0.39)";
                 setScoreDifference(scoreDifferenceWinner[game?.scoreDifference]);
                 document.getElementById("score-difference")!.style.color = "rgb(54 143 194)";
@@ -75,7 +75,7 @@ export default function Resume() {
         setCookies("access_token", "");
         history.push("/");
       }
-      console.log(game);
+      
 
     return (
         <div>

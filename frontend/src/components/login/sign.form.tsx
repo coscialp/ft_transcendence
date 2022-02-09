@@ -13,15 +13,6 @@ export function SignForm() {
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
 
-  /*function FirstSlideNext() {
-    if (username !== "" && password !== "") {
-      document.getElementById("slides")!.style.transform = "translateX(-33%)"
-    }
-    else {
-      document.getElementById("InputStyle")!.style.boxShadow = "1px 1px 5px red";
-    }
-  }*/
-
   function handleSubmit(event: any) {
     axios.request({
       url: '/auth/signup',
@@ -37,7 +28,7 @@ export function SignForm() {
         email: email,
       }
     }
-    ).then((response) => { console.log(response); window.open(`http://${ip}:3000/`, '_self') });
+    ).then((response) => { window.open(`http://${ip}:3000/`, '_self') });
     event.preventDefault();
   }
 

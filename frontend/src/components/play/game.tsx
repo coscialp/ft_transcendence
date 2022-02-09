@@ -60,7 +60,7 @@ export function InGame() {
   useEffect(() => {
     let mount = true;
     if (mount) {
-      isLogged(cookies).then((res: any) => { setMe(res.me.data); setUnauthorized(res.unauthorized) });
+      isLogged(cookies).then((res: any) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
       player.Spectator = String(localStorage.getItem('playerID')) === 'spectator' ? true : false;
       player.GameMod = String(localStorage.getItem('playerID')) === 'gameMode' ? 1 : 0;
       if (player.Spectator === true) {

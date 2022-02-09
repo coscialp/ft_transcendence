@@ -20,17 +20,15 @@ type User = {
   profileImage: string,
   email: string,
 }
-export function Normal() {
+export function Normal(data: any) {
 
   const [cookies] = useCookies();
   let history = useHistory();
   const [player, setPlayer] = useState<GameManager>();
-  const [me, setMe] = useState<User>();
 
   useEffect(() => {
     let mount = true;
     if (mount) {
-      isLogged(cookies).then((res) => { setMe(res.me.data); });
       setPlayer(new GameManager());
     }
     return (() => { mount = false; });
@@ -41,8 +39,8 @@ export function Normal() {
     if (mount && player && cookies && history) {
       player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
       if (player?.Socket) {
-        console.log(`startgame/${me?.username}`);
-        player.Socket.on(`startgame/${me?.username}`, (msg: any) => {
+        
+        player.Socket.on(`startgame/${data.me?.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
           player.Socket.disconnect();
@@ -51,7 +49,7 @@ export function Normal() {
       }
     }
     return (() => { mount = false; });
-  }, [player, cookies, me, history]);
+  }, [player, cookies, data.me, history]);
 
   function play(): void {
     if (player?.Socket)
@@ -62,7 +60,7 @@ export function Normal() {
     <div className="normalElement" >
       <p className="normalTitle" >Normal Game</p>
       <PlayOutline className="playBtn" onClick={play} />
-      <p> Game played : 20 (12W/8L)</p>
+      <p> Game played : {data.stats?.normal?.played}</p>
     </div>
   )
 }
