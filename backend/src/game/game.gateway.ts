@@ -46,6 +46,7 @@ export class GameGateway
         if (!this.usersInQueue.find((u) => u.id === user.id)) {
             this.usersInQueue.push(user);
         }
+        console.log(this.usersInQueue);
         for (let u of this.usersInQueue) {
             if (user.username !== u.username) {
                 this.server.emit(`startgame/${user.username}`, 'Player1');
