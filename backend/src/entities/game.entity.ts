@@ -10,7 +10,7 @@ export class Game {
     date: string;
 
     @Column()
-    ranked: string;
+    ranked: boolean;
 
     @ManyToOne(type => User, user => user.games)
     player1: User;

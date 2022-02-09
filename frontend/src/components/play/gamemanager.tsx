@@ -146,9 +146,7 @@ export class GameManager {
         })
     }
     receive_ready_up() {
-        console.log(`ReadyUp/${this._GameID}`)
         this._Socket.on(`ReadyUp/${this._GameID}`, (playerID: string) => {
-            console.log('test1');
             if (playerID === 'Player1')
                 this._P1ready = true;
             else if (playerID === 'Player2')
@@ -156,19 +154,20 @@ export class GameManager {
         })
     }
     receive_particle() {
-        console.log(`StartParticle/${this._GameID}`);
         this._Socket.on(`StartParticle/${this._GameID}`, () => {
-            console.log('error');
             this._UnityContext.send("ParticleEffectBait", "StartParticlebait");
         })
     }
     receive_point() {
         this._Socket.on(`AddPoint/${this._GameID}`, (Player: string) => {
             if (this._ID === "Player2") {
-                if (Player === "player1")
+                if (Player === "player1") {
+                    this._Score1++;
                     this._UnityContext.send("HUD", "AddScore", "RightWall");
-                else
+                } else {
+                    this._Score2++;
                     this._UnityContext.send("HUD", "AddScore", "LeftWall");
+                }
             }
         })
     }
@@ -179,7 +178,7 @@ export class GameManager {
             if (loser === 'Player1') {
                 this.Socket.emit(`finishGame`, { gameId: this._GameID, player: this._ID, score1: 0, score2: 10, date: this._GameDate });
             }
-            else {
+            else if (loser === 'Player2') {
                 this.Socket.emit(`finishGame`, { gameId: this._GameID, player: this._ID, score1: 10, score2: 0, date: this._GameDate });
             }
         })
@@ -187,7 +186,6 @@ export class GameManager {
 
     send_ready_up() {
         this._UnityContext.on("setReady", () => {
-            console.log('test');
             this._Socket.emit('ReadyUp', { player: this._ID, gameId: this._GameID });
         });
     }
@@ -225,9 +223,7 @@ export class GameManager {
                     this._Score2++;
                 }
             }
-            console.log(`${this._Score1} || ${this._Score2}`)
             if (score1 === 10 || score2 === 10) {
-                console.log('test');
                 this._UnityContext.send("LocalPaddle", "setGameStarted", 0);
                 this._UnityContext.send("RemotePaddle", "setGameStarted", 0);
                 this._Socket.emit('finishGame', { gameId: this._GameID, player: this._ID, score1: this._Score1, score2: this._Score2, date: this._GameDate })
@@ -271,9 +267,7 @@ export class GameManager {
         }
     }
     receive_pos_specate() {
-        console.log(`SetPosSpectate/${this._GameID}`);
         this._Socket.on(`SetPosSpectate/${this._GameID}`, (Position: number, Player: string) => {
-            console.log(`test : ${Player}`);
             if (Player === "Player2")
                 this._UnityContext.send("RemotePaddle", "SetPosition", Position);
             else
