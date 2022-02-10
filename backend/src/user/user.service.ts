@@ -36,6 +36,10 @@ export class UserService {
     return this.userRepository.getUser(filterDto);
   }
 
+  async getLeaderboard(): Promise<User[]> {
+    return (await this.getUser({search: undefined})).sort((a: User, b: User) => b.PP - a.PP);
+  }
+
   async getUserById(id: string, user?: User): Promise<User> {
     if (id === 'me') {
       id = user.id;

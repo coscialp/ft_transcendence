@@ -17,6 +17,11 @@ export class UserController {
     async getUser(@Query() filterDto: GetUserFilterDto): Promise<User[]> {
         return await this.userService.getUser(filterDto);
     }
+    
+    @Get('/leaderboard/all')
+    async getLeaderboard(): Promise<User[]> {
+        return await this.userService.getLeaderboard();
+    }
 
     @Get('/:id')
     async getUserById(@Param('id') id: string, @GetUser() user: User): Promise<User> {
