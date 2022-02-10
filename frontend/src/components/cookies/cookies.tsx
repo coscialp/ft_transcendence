@@ -12,7 +12,7 @@ export function Cookies(props: any): ReactElement {
   function HandleCookie(cookies: any): any {
 
     cookies = null;
-    setCookie("access_token", token, { path: "/", sameSite: "none", secure: true });
+    setCookie("access_token", token, { path: "/"});
 
     useEffect(() => {
 
