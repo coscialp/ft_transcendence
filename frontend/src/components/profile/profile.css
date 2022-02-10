@@ -125,6 +125,13 @@ p#goal-average {
     font-size: 1.5vh;
 }
 
+img.rank-img {
+    height: 10vw;
+    width: 10vw;
+    background-size: cover;
+    background-position: center;
+}
+
 .Stats {
     display: flex;
     flex-direction: row;

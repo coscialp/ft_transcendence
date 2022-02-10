@@ -17,30 +17,43 @@ import { InGame } from './components/play/game';
 import Resume from './components/play/resume';
 import AllHistory from './components/profile/allHistory';
 import Connect from './components/login/connect';
+import { NavBar } from './components/navbar/navbar';
 
 export const ip = window.location.hostname;
+
+
+function Menu() {
+	const page = window.location.pathname.split('/')[1];
+	
+	return (
+		<>
+			<NavBar page={page} />
+			<Route exact path={"/home"} component={Home} />
+			<Route exact path={"/play"} component={Play} />
+			<Route exact path={"/alerts"} component={Notification} />
+			<Route path={"/settings"} component={Settings} />
+			<Route path={"/:id/profile"} component={Profile} />
+			<Route path={"/:id/history"} component={AllHistory} />
+		</>
+	)
+}
 
 function App() {
 
 	return (
 		<Router>
 			<Switch>
-					<Route exact path={'/'} component={ Login } />
-					<Route path={"/oauth/redirect"} component={ Connect } />
-					<Route path={"/register"} component={ Register } />
-					<Route exact path={"/signup"} component={ SignUp } />
-					<Route path={"/cookies"} component={ Cookies } />
-					<Route path={"/2fa"} component={ TwoFA } />
-					<Route exact path={"/home"} component={ Home } />
-					<Route exact path={"/play"} component={ Play } />
-					<Route exact path={"/alerts"} component={ Notification } />
-					<Route path={"/settings"} component={ Settings } />
-					<Route path={"/game"} component={ InGame } />
-					<Route path={"/:id/profile"} component={ Profile } />
-					<Route path={"/resume"} component={ Resume } />
-					<Route path={"/:id/history"} component={ AllHistory } />
+				<Route exact path={'/'} component={Login} />
+				<Route path={"/oauth/redirect"} component={Connect} />
+				<Route path={"/register"} component={Register} />
+				<Route exact path={"/signup"} component={SignUp} />
+				<Route path={"/cookies"} component={Cookies} />
+				<Route path={"/2fa"} component={TwoFA} />
+				<Menu />
+				<Route path={"/game"} component={InGame} />
+				<Route path={"/resume"} component={Resume} />
 
-					<Route component={ NotFound } />
+				<Route component={NotFound} />
 			</Switch>
 		</Router>
 	);

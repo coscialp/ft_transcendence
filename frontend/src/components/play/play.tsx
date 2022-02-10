@@ -48,7 +48,6 @@ export function Play() {
 
   return (
     <div>
-      <NavBar page="Play" />
       <div className="PlayMain" >
         <Normal me={me} stats={stats} />
         <Ranked me={me} stats={stats} />

@@ -48,7 +48,6 @@ export default function AllHistory() {
 
     return (
         <div>
-            <NavBar />
             <div className='ALlHistoryElement' >
                 <div className="ALlHistoryMain" >
                     {game.map((games: any, index: any, array: any) => (
