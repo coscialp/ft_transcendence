@@ -89,7 +89,6 @@ export function Settings() {
 
 	return (
 		<div>
-			<NavBar page="Settings" />
 			<div className="SettingsElement">
 				<div className="SettingsMain">
 					<div className="change Nickname">

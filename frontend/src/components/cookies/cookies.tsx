@@ -4,7 +4,7 @@ import { useCookies } from "react-cookie";
 import { ip } from "../../App";
 
 export function Cookies(props: any): ReactElement {
-  const [cookies, setCookie] = useCookies(["access_token", "_intra_42_session_production"]);
+  const [cookies, setCookie] = useCookies(["access_token"]);
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const token = urlParams.get("token");
@@ -12,7 +12,7 @@ export function Cookies(props: any): ReactElement {
   function HandleCookie(cookies: any): any {
 
     cookies = null;
-    setCookie("access_token", token, { path: "/"});
+    setCookie("access_token", token, { path: "/", sameSite: "none", secure: true });
 
     useEffect(() => {
 

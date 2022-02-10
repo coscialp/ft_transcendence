@@ -7,14 +7,27 @@ import { useHistory } from 'react-router';
 import { useEffect, useState } from 'react';
 import { User } from '../../utils/user.type';
 import '../../tooltip.css'
+import { ranks } from '../../utils/ranks';
 
 
 export function Overall(data: any) {
 	const [cookies] = useCookies();
 	let history = useHistory();
 	const [myBlackList, setMyBlackList] = useState<User[]>([]);
-	const [stats, setStats]:any = useState({});
+	const [stats, setStats]: any = useState({});
+	const [rank, setRank]:any = useState();
 
+	useEffect(() => {
+		let mount = true;
+		if (mount) {
+			if (data.user?.PP < 50 ) {setRank(1)}
+			else if (data.user?.PP < 200 ) {setRank(2)}
+			else if (data.user?.PP < 400 ) {setRank(3)}
+			else if (data.user?.PP < 600 ) {setRank(4)}
+			else if (data.user?.PP >= 600 ) {setRank(5)}
+		}
+		return (() => { mount = false; });
+	}, [cookies, data.user])
 
 	useEffect(() => {
 		let mount = true;
@@ -169,6 +182,7 @@ export function Overall(data: any) {
 				{(data.me?.isAdmin && data.user.isAdmin === false && (data.user.username !== data.me?.username)) ? <ChevronDoubleUp onClick={handlePromoteAdmin} /> : null}
 				{(data.me?.isAdmin && (data.user.username === data.me?.username)) ? <ChevronDoubleDown onClick={handleDemoteAdmin} /> : null}
 			</div>
+			<img className="rank-img" src={`${process.env.PUBLIC_URL}/${ranks[rank]}`} alt="" ></img>
 			<p id="my-pong-points">{data.user.PP} PP</p>
 			<p id="goal-average" > {stats?.GA} GA </p>
 			<div className='Stats'>
@@ -177,7 +191,7 @@ export function Overall(data: any) {
 					{stats?.normal?.played}
 				</p>
 				<p className="ranked-Stats" >
-					{stats?.ranked?.played ? stats?.ranked?.winrate : "No game" }<br />
+					{stats?.ranked?.played ? stats?.ranked?.winrate : "No game"}<br />
 					{stats?.ranked?.played}
 				</p>
 			</div>

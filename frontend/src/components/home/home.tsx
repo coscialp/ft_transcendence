@@ -42,7 +42,6 @@ export function Home() {
 
   return (
     <div className="HomePage" >
-      <NavBar page="Home" />
       <div className="HomeMain" >
         <Gamemode />
         <MainMenu me={me} socket={socket}/>
