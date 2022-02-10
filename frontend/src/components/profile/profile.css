@@ -5,33 +5,40 @@
     height: 86vh;
     text-align: center;
     padding-bottom: 7vh;
-    flex-direction: row;
     align-items: center;
 }
 
 .ProfileMain {
-    width: 70%;
-    position: relative;
+    width: 70vw;
+    display: flex;
     height: 80vh;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 15px;
+    justify-content: space-around;
+    flex-direction: column;
     box-shadow: rgb(0 0 0) 0px 30px 60px -12px inset, rgb(0 0 0) 0px 18px 36px -18px inset;
+    align-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
+
 .ImgName {
-    position: absolute;
+    display: flex;
     width: 30%;
     height: 85%;
-    top: 5%;
     padding: 10px;
-    left: 8%;
     border-radius: 20px;
     background-color: rgb(147 63 63 / 39%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
 }
 
 img.ProfileImage {
-    height: 15vw;
-    width: 15vw;
+    display:flex;
+    height: 20vh;
+    width: 20vh;
     background-size: cover;
     background-position: center;
     border-radius: 100%;
@@ -57,7 +64,7 @@ img.ProfileImage {
 
 svg.profile-pencil {
     position: absolute;
-    top: calc(15vw / 2 - 12px);
+    top: calc(100% / 2 - 12px);
     right: 0;
     left: calc(50% - 12px);
     bottom: 0;
@@ -66,18 +73,16 @@ svg.profile-pencil {
 }
 
 #History {
-    width: 40%;
-    height: 10%;
+    width: 30vw;
+    height: 10vh;
     padding: 10px;
-    position: absolute;
     display: flex;
-    top: 5%;
-    left: 48%;
     border-radius: 20px;
     background-color: rgb(147 63 63 / 39%);
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    font-size: 1.5vh
 }
 
 img.HistoryImage {
@@ -94,13 +99,10 @@ p.Score {
     height: 8vh;
 }
 
-#Achivements {
+#Achievements {
     width: 40%;
     height: 65%;
     padding: 10px;
-    position: absolute;
-    top: 25%;
-    left: 48%;
     border-radius: 20px;
     display: flex;
     background-color: rgb(147 63 63 / 39%);
@@ -109,7 +111,18 @@ p.Score {
 }
 
 p.ProfileName {
-    font-size: 2vw;
+    display: flex;
+    font-size: 1.5vh;
+}
+
+p#my-pong-points {
+    display: flex;
+    font-size: 1.5vh;
+}
+
+p#goal-average {
+    display: flex;
+    font-size: 1.5vh;
 }
 
 .Stats {
@@ -119,7 +132,7 @@ p.ProfileName {
     align-items: center;
     justify-content: center;
     background-color: #00000063;
-    font-size: 1.5vw;
+    font-size: 1.5vh;
     border-radius: 10px;
 }
 
@@ -154,7 +167,6 @@ img.Add.friend {
 .Achievements_contents {
     width: 100%;
     height: 20%;
-    position: absolute;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -233,15 +245,37 @@ img.Add.friend {
         justify-content: space-evenly;
     }
 
-    .ImgName {
+    .HistoryMain {
         width: 85%;
-        position: unset;
         display: flex;
         height: 20%;
         padding: 10px;
         border-radius: 20px;
         background-color: rgb(147 63 63 / 39%);
         flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #History {
+        width: 85%;
+        display: flex;
+        height: 20%;
+        padding: 10px;
+        background-color: rgb(0 0 0 / 0%);
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ImgName {
+        width: 85%;
+        display: flex;
+        height: 20%;
+        padding: 10px;
+        border-radius: 20px;
+        background-color: rgb(147 63 63 / 39%);
+        flex-wrap: nowrap;
+        flex-direction: row;
         align-items: center;
         justify-content: center;
     }
@@ -253,28 +287,18 @@ img.Add.friend {
         background-position: center;
         border-radius: 100%;
     }
-    
-    .History {
+
+    #Achievements {
         width: 85%;
-        position: unset;
-        height: 10%;
+        height: 40%;
         padding: 10px;
         border-radius: 20px;
         background-color: rgb(147 63 63 / 39%);
     }
 
-    .Achivements {
-        width: 85%;
-        height: 40%;
-        position: unset;
-        padding: 10px;
-        border-radius: 20px;
-        background-color: rgb(147 63 63 / 39%);
-    }
     .Achievements_contents {
         width: 100%;
         height: 20%;
-        position: absolute;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -306,11 +330,27 @@ img.Add.friend {
     #Achievement_font
     {
         font-family:'neon';
-        font-size:0;
+        font-size:1.5vh;
         margin-bottom:-5px;
     }
     .logo {
         height:10px;
         width:10px;
     }
+
+    p.ProfileName {
+        display: flex;
+        font-size: 1.5vw;
+    }
+    
+    p#my-pong-points {
+        display: flex;
+        font-size: 1.5vw;
+    }
+    
+    p#goal-average {
+        display: flex;
+        font-size: 1.5vw;
+    }
+    
 }
