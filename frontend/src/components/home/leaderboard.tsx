@@ -49,7 +49,7 @@ export function Leaderboard() {
     const [leaders, setLeaders]: any = useState([]);
     const [friends, setFriends]: any = useState([]);
     const [cookies] = useCookies();
-    const [, setMe]: any = useState({});
+    const [me, setMe]: any = useState({});
     let rankAll:number = 0;
     let rankFriend:number = 0;
     let rankAllReduced:number = 0;
