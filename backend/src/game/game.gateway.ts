@@ -75,7 +75,7 @@ export class GameGateway
         }
     }
     @SubscribeMessage('ReadyUp')
-    ReadyUp(
+    async ReadyUp(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         this.server.emit(`ReadyUp/${data.gameId}`, data.player);

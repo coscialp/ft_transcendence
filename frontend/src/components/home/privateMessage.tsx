@@ -1,7 +1,7 @@
 import { ArrowSmUp, Backspace } from 'heroicons-react'
 import './privateMessage.css'
 import './mainMenu.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForceUpdate } from '../../utils/forceUpdate'
 import { MessageType } from '../../utils/message.type'
@@ -46,6 +46,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
     const [newDmNotif, setNewDmNotif] = useState<boolean>();
 
     const forceUpdate = useForceUpdate();
+    const scrollRef = useRef<any>();
 
     const requestApi = new RequestApi(cookies.access_token, ip);
     
@@ -123,6 +124,10 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 
     console.log(newDmNotif);
 
+    useEffect(() => {
+		scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+	}, [messages.length])
+
     return (
         <div id="Message" >
             <div id="OpenMsg" onClick={() => { Open_Message(); setNewDmNotif(false); setCurrentChat(""); setisConvOpen(false) }}>
@@ -153,8 +158,8 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
                             {
                                 messages.map((message: any) => (
                                     message.sender === me.username ?
-                                        <div key={message.id} className="bubble sender"> {message.content} </div> :
-                                        <div key={message.id} className="bubble recipient"> {message.content} </div>
+                                        <div ref={scrollRef} key={message.id} className="bubble sender"> {message.content} </div> :
+                                        <div ref={scrollRef} key={message.id} className="bubble recipient"> {message.content} </div>
                                 ))
                             }
                         </section>
