@@ -89,7 +89,6 @@ export function Notification() {
 
     return (
         <div>
-            <NavBar page="Alerts" />
             <div className="AlertsELement" >
                 <div className="AlertsMain" >
                     {fromRequest.length === 0 ? <div className="no alerts">You have no alerts !</div> : fromRequest.map((request: any) => (
