@@ -49,9 +49,11 @@ export function Leaderboard() {
     const [leaders, setLeaders]: any = useState([]);
     const [friends, setFriends]: any = useState([]);
     const [cookies] = useCookies();
-    const [me, setMe]: any = useState({});
+    const [, setMe]: any = useState({});
     let rankAll:number = 0;
     let rankFriend:number = 0;
+    let rankAllReduced:number = 0;
+    let rankFriendReduced:number = 0;
     
     useEffect(() => {
         let mount = true;
@@ -99,7 +101,7 @@ export function Leaderboard() {
                         <div className="leaderboardMainList">
                         {leaders.map((users: any) => (
                             <div className="leaderboardList theList">
-                                <p className="lbSeparateList">{rankAll=rankUser(rankAll)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
+                                <p className="lbSeparateList">{rankAllReduced=rankUser(rankAllReduced)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
                             </div>
                         ))}
                         </div>
@@ -109,7 +111,7 @@ export function Leaderboard() {
                         <div className="leaderboardMainList">
                         {friends.map((users: any) => (
                             <div className="leaderboardList theList">
-                                <p className="lbSeparateList">{rankFriend=rankUser(rankFriend)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
+                                <p className="lbSeparateList">{rankFriendReduced=rankUser(rankFriendReduced)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
                             </div>
                         ))}
                         </div>

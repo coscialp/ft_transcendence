@@ -25,6 +25,7 @@ export function Normal(data: any) {
   const [cookies] = useCookies();
   let history = useHistory();
   const [player, setPlayer] = useState<GameManager>();
+  const [popUp, setPopUp] = useState(false);
 
   useEffect(() => {
     let mount = true;
@@ -59,7 +60,22 @@ export function Normal(data: any) {
   return (
     <div className="normalElement" >
       <p className="normalTitle" >Normal Game</p>
-      <PlayOutline className="playBtn" onClick={play} />
+      <PlayOutline className="playBtn" onClick={e => {play(); setPopUp(true)}} />
+      {popUp === true ? 
+          <div className="duelPage">
+            <div className="duelPopUp"> 
+              <p>Waiting for a game...</p>
+              <div className="cancel-container">
+              <span className='cancel-cross' onClick={e => {setPopUp(false)}} >
+                <div className="leftright"></div>
+                <div className="rightleft"></div>
+                <label className="cancel">cancel</label>
+              </span>
+                <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+              </div>
+            </div>
+          </div>
+        : null}
       <p> Game played : {data.stats?.normal?.played}</p>
     </div>
   )

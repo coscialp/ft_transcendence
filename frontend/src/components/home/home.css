@@ -459,6 +459,7 @@ nav.menuFriendList {
     background-color: rgb(128 128 128 / 42%);
     align-items: center;
     justify-content: space-around;
+    overflow: hidden;
 }
 
 .lbSeparateList {
