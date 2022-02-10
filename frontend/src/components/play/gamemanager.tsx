@@ -1,5 +1,6 @@
 import { UnityContext } from "react-unity-webgl";
 import { io, Socket } from "socket.io-client";
+import { ip } from "../../App";
 
 
 
@@ -22,6 +23,7 @@ export class GameManager {
     private _Score2: number;
     private _BallSpeedSecurity: number;
     constructor() {
+        console.log('test');
         this._P1ready = false;
         this._P2ready = false;
         this._ID = "";
@@ -155,7 +157,7 @@ export class GameManager {
     }
     receive_particle() {
         this._Socket.on(`StartParticle/${this._GameID}`, () => {
-            this._UnityContext.send("ParticleEffectBait", "StartParticlebait");
+            this._UnityContext.send("HUD", "spawn_blackhole");
         })
     }
     receive_point() {

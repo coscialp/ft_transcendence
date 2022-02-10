@@ -82,8 +82,6 @@ export class UsersRepository extends Repository<User> {
       admin,
     } = authCredentialsDto;
 
-    
-
     const user: User = this.create({
       username: username,
       password: password,

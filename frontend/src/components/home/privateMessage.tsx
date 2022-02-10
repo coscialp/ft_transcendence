@@ -121,8 +121,6 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
         setisConvOpen(true);
     }
 
-    console.log(newDmNotif);
-
     return (
         <div id="Message" >
             <div id="OpenMsg" onClick={() => { Open_Message(); setNewDmNotif(false); setCurrentChat(""); setisConvOpen(false) }}>

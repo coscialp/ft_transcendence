@@ -24,35 +24,27 @@ export function Ranked(data: any) {
 
     const [cookies] = useCookies();
     let history = useHistory();
-    const [player, setPlayer] = useState<GameManager>();
+    const [player, setPlayer] = useState<GameManager>(new GameManager());
   
     useEffect(() => {
       let mount = true;
-      if (mount) {
-        setPlayer(new GameManager());
-      }
-      return (() => { mount = false; });
-    }, [cookies]);
-  
-    useEffect(() => {
-      let mount = true;
-      if (mount && player) {
-        player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
-        if (player?.Socket) {
+      if (mount && data.player) {
+        if (data.socket) {
           
-          player.Socket.on(`startgame/${data.me?.username}`, (msg: any) => {
+          data.socket.on(`startgame/${data.me?.username}`, (msg: any) => {
             player.ID = msg;
             localStorage.setItem('playerID', player.ID);
-            return history.push(`/game`)
+            return history.push(`/game`);
           })
         }
       }
       return (() => { mount = false; });
-    }, [player, cookies, data.me, history]);
+    }, [data.player, cookies, data.me, history]);
   
     function play(): void {
-      if (player?.Socket)
-        player.Socket.emit('matchmakingRanked', '');
+      console.log(data.socket)
+      if (data.socket)
+        data.socket.emit('matchmakingRanked', '');
     }
   
   

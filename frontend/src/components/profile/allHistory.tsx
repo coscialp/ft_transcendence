@@ -35,7 +35,6 @@ export default function AllHistory() {
                     "Authorization": `Bearer ${cookies.access_token}`,
                 }
             }).then((response: any) => {
-                console.log(response.data)
                 setGame(response.data);
             })
         }

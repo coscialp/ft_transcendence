@@ -63,6 +63,7 @@ export function InGame() {
       isLogged(cookies).then((res: any) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
       player.Spectator = String(localStorage.getItem('playerID')) === 'spectator' ? true : false;
       player.GameMod = String(localStorage.getItem('playerID')) === 'gameMode' ? 1 : 0;
+      player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
       if (player.Spectator === true) {
         player.GameID = Number(localStorage.getItem('GameID'));
       }

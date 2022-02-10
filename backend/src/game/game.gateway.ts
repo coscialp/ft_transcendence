@@ -31,13 +31,6 @@ export class GameGateway
         this.usersInQueue = [];
         this.matchInProgress = [];
     }
-    getId(matchInProgress: { user1: User, user2: User, gameID: number }[], user: User) {
-        for (let { user1, user2, gameID } of this.matchInProgress) {
-            if (user1.username === user.username || user2.username === user.username) {
-                return gameID;
-            }
-        }
-    }
     @SubscribeMessage('matchmaking')
     async MatchMaking(
         @ConnectedSocket() socket: Socket,

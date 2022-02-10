@@ -9,41 +9,20 @@ import { useHistory } from "react-router";
 import { io } from "socket.io-client";
 import { ip } from "../../App";
 
-type User = {
-  id: string,
-  username: string,
-  password: string | null,
-  firstName: string,
-  lastName: string,
-  nickName: string,
-  isLogged: boolean,
-  profileImage: string,
-  email: string,
-}
+
 export function Normal(data: any) {
 
   const [cookies] = useCookies();
   let history = useHistory();
-  const [player, setPlayer] = useState<GameManager>();
-
+  const [player, setPlayer] = useState<GameManager>(new GameManager());
   useEffect(() => {
     let mount = true;
-    if (mount) {
-      setPlayer(new GameManager());
-    }
-    return (() => { mount = false; });
-  }, [cookies]);
-
-  useEffect(() => {
-    let mount = true;
-    if (mount && player && cookies && history) {
-      player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
-      if (player?.Socket) {
-        
-        player.Socket.on(`startgame/${data.me?.username}`, (msg: any) => {
+    if (mount && data.player && cookies && history) {
+      
+      if (player && player?.Socket) {
+          data.socket.on(`startgame/${data.me?.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
-          player.Socket.disconnect();
           return history.push(`/game`)
         })
       }
@@ -52,8 +31,10 @@ export function Normal(data: any) {
   }, [player, cookies, data.me, history]);
 
   function play(): void {
-    if (player?.Socket)
-      player.Socket.emit('matchmaking', '');
+    if (data.socket) {
+      console.log(data.socket);
+      data.socket.emit('matchmaking', '');
+    }
   }
 
   return (
