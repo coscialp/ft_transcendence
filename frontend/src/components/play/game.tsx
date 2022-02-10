@@ -98,7 +98,6 @@ export function InGame() {
   }, [me, player]);
 
   function setReady(id: string, gameid: number) {
-    console.log(player.GameID);
     player.Socket.emit('ReadyUp', { player: player.ID, gameId: player.GameID });
     let ready: HTMLElement | null = document.getElementById('button_ready');
     if (ready) {
@@ -144,7 +143,6 @@ export function InGame() {
   }, []);
 
   function check_ready() {
-    console.log(`${player.P2ready} || ${player.P1ready}`);
     if (player.Spectator === false) {
       if (leaveTimeRef.current === 1) {
         setMyTabTime(tabTimeRef.current + 1);
@@ -192,7 +190,7 @@ export function InGame() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (player.GameMod === 2 && player.GameID !== 0)
-      {console.log(player.GameMod);
+      {
         player.Socket.emit('StartParticle', {gameId : player.GameID});
       }
     }, 10000);

@@ -19,7 +19,7 @@ export class GameGateway
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('GameGateway');
     private usersInQueue: User[];
-    private MatchInProgress: {
+    private matchInProgress: {
         user1: User,
         user2: User,
         gameID: number,
@@ -29,10 +29,10 @@ export class GameGateway
         private readonly gameService: GameService,
     ) {
         this.usersInQueue = [];
-        this.MatchInProgress = [];
+        this.matchInProgress = [];
     }
-    getId(MatchInProgress: { user1: User, user2: User, gameID: number }[], user: User) {
-        for (let { user1, user2, gameID } of this.MatchInProgress) {
+    getId(matchInProgress: { user1: User, user2: User, gameID: number }[], user: User) {
+        for (let { user1, user2, gameID } of this.matchInProgress) {
             if (user1.username === user.username || user2.username === user.username) {
                 return gameID;
             }
@@ -50,7 +50,7 @@ export class GameGateway
             if (user.username !== u.username) {
                 this.server.emit(`startgame/${user.username}`, 'Player1');
                 this.server.emit(`startgame/${u.username}`, 'Player2');
-                this.MatchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: false });
+                this.matchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: false });
                 this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
                 this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
             }
@@ -68,7 +68,7 @@ export class GameGateway
             if (user.username !== u.username) {
                 this.server.emit(`startgame/${user.username}`, 'Player1');
                 this.server.emit(`startgame/${u.username}`, 'Player2');
-                this.MatchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: true });
+                this.matchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: true });
                 this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
                 this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
             }
@@ -86,7 +86,7 @@ export class GameGateway
         @ConnectedSocket() socket: Socket,
         @MessageBody() message: string, id: number): Promise<void> {
         const user: User = await this.gameService.getUserFromSocket(socket);
-        for (let { user1, user2, gameID } of this.MatchInProgress) {
+        for (let { user1, user2, gameID } of this.matchInProgress) {
             if (user1.username === user.username || user2.username === user.username) {
                 this.server.emit(`getGameID/${user.username}`, gameID);
             }
@@ -95,7 +95,7 @@ export class GameGateway
     @SubscribeMessage('getSpectateID')
     getSpectateID(
         @MessageBody() data: any) {
-        for (let { user1, user2, gameID } of this.MatchInProgress) {
+        for (let { user1, user2, gameID } of this.matchInProgress) {
             if (user1.username === data.username || user2.username === data.username) {
                 this.server.emit(`getSpectateID/${data.id}`, gameID);
             }
@@ -106,33 +106,40 @@ export class GameGateway
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         const user: User = await this.gameService.getUserFromSocket(socket);
-        let gameToDelete = this.MatchInProgress.findIndex(u => u.user1.username === user.username);
+        let gameToDelete = this.matchInProgress.findIndex(u => u.user1.username === user.username);
         if (gameToDelete === -1) {
-            gameToDelete = this.MatchInProgress.findIndex(u => u.user2.username === user.username);
+            gameToDelete = this.matchInProgress.findIndex(u => u.user2.username === user.username);
         }
         if (gameToDelete !== -1) {
-            this.server.emit(`finishGame/${data.gameId}`, data.score1, data.score2, this.MatchInProgress[gameToDelete].user1, this.MatchInProgress[gameToDelete].user2, false);
-                this.gameService.createGame({
-                player1: this.MatchInProgress[gameToDelete].user1,
-                player2: this.MatchInProgress[gameToDelete].user2,
+            const {
+                user1,
+                user2,
+                gameID,
+                ranked,
+            } = this.matchInProgress[gameToDelete];
+
+            this.matchInProgress.splice(gameToDelete, 1);
+            await this.gameService.createGame({
+                player1: user1,
+                player2: user2,
                 score1: data.score1,
                 score2: data.score2,
                 date: Date(),
-                ranked: "false",
+                ranked: ranked,
             })
-            this.MatchInProgress.splice(gameToDelete, 1);
+            this.server.emit(`finishGame/${data.gameId}`, '');
         }
     }
 
     @SubscribeMessage('AddPoint')
-    AddPoint(
+    async AddPoint(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         this.server.emit(`AddPoint/${data.gameId}`, data.point);
     }
 
     @SubscribeMessage('SetPosition')
-    SetPosition(
+    async SetPosition(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
 
@@ -140,7 +147,7 @@ export class GameGateway
     }
 
     @SubscribeMessage('SetPosSpectate')
-    SetPosSpectate(
+    async SetPosSpectate(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
 
@@ -148,21 +155,20 @@ export class GameGateway
     }
 
     @SubscribeMessage('StartParticle')
-    StartParticle(
+    async StartParticle(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
-            console.log(`StartParticle/${data.gameId}`)
         this.server.emit(`StartParticle/${data.gameId}`);
     }
     @SubscribeMessage('SetBallPosSpectate')
-    SetBallPosSpectate(
+    async SetBallPosSpectate(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         this.server.emit(`SetBallPosSpectate/${data.id}`, data.posx, data.posy);
     }
 
     @SubscribeMessage('SetBallPos')
-    SetBallPos(
+    async SetBallPos(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         this.server.emit(`SetBallPos/${data.id}`, data.posx, data.posy);
@@ -176,17 +182,16 @@ export class GameGateway
         const user: User = await this.gameService.getUserFromSocket(socket);
         try {
             this.logger.log(`Client ${user.username} disconnected`);
-            let index = this.MatchInProgress.findIndex(m => m.user1.username === user.username);
+            let index = this.matchInProgress.findIndex(m => m.user1.username === user.username);
             let loser = "Player1";
             if (index === -1) {
-                index = this.MatchInProgress.findIndex(m => m.user2.username === user.username)
+                index = this.matchInProgress.findIndex(m => m.user2.username === user.username)
                 loser = "Player2";
             }
-            this.MatchInProgress.slice(index, 1);
-            console.log('--------------------------');
-            console.log(index);
-            if (index !== -1)
-            this.server.emit(`finishGame/${this.MatchInProgress[index].gameID}`, loser);
+            this.matchInProgress.slice(index, 1);
+            if (index !== -1) {
+                this.server.emit(`finishGame/${this.matchInProgress[index].gameID}`, loser);
+            }
         } catch (error) {
             this.logger.error(error);
         }

@@ -41,7 +41,7 @@ export function History(data: any) {
                     <img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />
                 </div>
                 :
-                <div id="History" onClick={() => { return history.push(`/${data.user.username}/history`) }}>
+                <div id="History">
                     This is your match history ! Launch your first game to see it !
                 </div>
             }

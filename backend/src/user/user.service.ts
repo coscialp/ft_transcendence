@@ -125,7 +125,6 @@ export class UserService {
       return user.username === currentUser.username;
     }).friends;
 
-    console.log(friends);
     return { friends: friends };
   }
 
@@ -392,15 +391,15 @@ export class UserService {
     const currentUser = await this.getUserById(id, user);
 
     const ranked: StatDto = {
-      winrate: String((currentUser.RankedWinNumber / currentUser.RankedGameNumber) * 100) + '%',
+      winrate: (currentUser.RankedWinNumber / currentUser.RankedGameNumber * 100).toFixed(1) + '%',
       played: currentUser.RankedGameNumber,
     }
 
     const normal: StatDto = {
-      winrate: String((currentUser.NormalWinNumber / currentUser.NormalGameNumber) * 100) + '%',
+      winrate: (currentUser.NormalWinNumber / currentUser.NormalGameNumber * 100).toFixed(1) + '%',
       played: currentUser.NormalGameNumber,
     }
 
-    return { ranked, normal, GA: currentUser.GoalSet - currentUser.GoalTaken };
+    return { ranked, normal, GA: Number(Math.fround(currentUser.GoalSet / currentUser.GoalTaken).toFixed(2))};
   }
 }

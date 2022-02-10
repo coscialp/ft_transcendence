@@ -28,6 +28,14 @@ export function Home() {
     return (() => { mount = false; });
   }, [cookies])
 
+  /*useEffect(() => {
+    let mount = true;
+    if (mount) {
+      setCookies("_intra_42_session_production", { sameSite: "none" })
+    }
+    return (() => { mount = false; });
+  })*/
+
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
   }

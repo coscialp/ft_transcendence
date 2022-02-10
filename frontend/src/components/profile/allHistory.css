@@ -18,10 +18,11 @@
     display: flex;
     padding-top: 20px;
     box-shadow: rgb(0 0 0) 0px 30px 60px -12px inset, rgb(0 0 0) 0px 18px 36px -18px inset;
-    flex-direction: column;
+    flex-direction: column-reverse;
     flex-wrap: nowrap;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-end;
+    overflow: hidden;
 }
 
 #all-History {
@@ -47,7 +48,7 @@ img.all-HistoryImage {
 }
 
 p.all-Score {
-    font-family: 'neon';
+    font-family: monospace;
     margin: 0;
     height: 8vh;
 }

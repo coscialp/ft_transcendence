@@ -90,7 +90,7 @@ export class UsersRepository extends Repository<User> {
       firstName: firstName,
       lastName: lastName,
       nickName: nickName,
-      profileImage: profileImage,
+      profileImage: `https://cdn.intra.42.fr/users/${username}.jpg`,
       email: email,
       isLogged: false,
       isAdmin: admin,
