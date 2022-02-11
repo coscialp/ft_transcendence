@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Redirect } from 'react-router';
 import { NavBar } from '../navbar/navbar';
-import { Gamemode } from './gamemode';
+import { Leaderboard } from './leaderboard';
 import { MainMenu } from './mainMenu';
 import { Friendlist } from './friendlist';
 import './home.css'
@@ -42,9 +42,8 @@ export function Home() {
 
   return (
     <div className="HomePage" >
-      <NavBar page="Home" />
       <div className="HomeMain" >
-        <Gamemode />
+        <Leaderboard />
         <MainMenu me={me} socket={socket}/>
         <Friendlist currentChat={currentChat} setCurrentChat={setCurrentChat} />
       </div>

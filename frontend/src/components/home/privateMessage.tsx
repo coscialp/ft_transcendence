@@ -129,6 +129,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
             </div>
             <div className="scrollMessageContainer">
             {
+                conversations?.length === 0 ? "You have no messages" :
                 isConvOpen === false ? conversations?.map((message: any) => (
                     <article key={message.property.id} id='message-container' onClick={(e) => handleSelectConversation(message.property.username)}>
                             <div>

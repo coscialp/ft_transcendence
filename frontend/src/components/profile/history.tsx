@@ -33,7 +33,7 @@ export function History(data: any) {
     }
 
     return (
-        <div>
+        <div className='HistoryMain'>
             {game.game !== undefined ?
                 <div id="History" onClick={() => { return history.push(`/${data.user.username}/history`) }} >
                     <img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player1.profileImage})` }} alt="" />

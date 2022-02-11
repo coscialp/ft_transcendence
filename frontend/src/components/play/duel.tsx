@@ -112,9 +112,6 @@ export function Duel() {
               </span>
                 <div className="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
               </div>
-              <div className="duelBox">
-	              <button className="button-duelBox" onClick={e => {}}>Go game</button>
-              </div>
             </div>
           </div>
         : null}

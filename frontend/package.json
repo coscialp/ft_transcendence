@@ -4,6 +4,9 @@
   "private": true,
   "dependencies": {
     "@headlessui/react": "^1.4.1",
+    "@rpldy/upload-button": "^0.17.2",
+    "@rpldy/upload-preview": "^0.17.2",
+    "@rpldy/uploady": "^0.17.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -22,6 +25,7 @@
     "react": "^17.0.2",
     "react-cookie": "^4.1.1",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.25.3",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "react-unity-webgl": "^8.7.3",

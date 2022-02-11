@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { withCookies } from 'react-cookie';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { Cookies } from './components/cookies/cookies';
@@ -17,30 +17,45 @@ import { InGame } from './components/play/game';
 import Resume from './components/play/resume';
 import AllHistory from './components/profile/allHistory';
 import Connect from './components/login/connect';
+import { NavBar } from './components/navbar/navbar';
+import { io } from 'socket.io-client';
 
 export const ip = window.location.hostname;
 
-function App() {
 
+function Menu() {
+	const page = window.location.pathname.split('/')[1];
+
+	return (
+		<>
+			<NavBar page={page} />
+			<Route exact path={"/home"} component={Home} />
+			<Route exact path={"/play"} component={Play} />
+			<Route exact path={"/alerts"} component={Notification} />
+			<Route path={"/settings"} component={Settings} />
+			<Route path={"/:id/profile"} component={Profile} />
+			<Route path={"/:id/history"} component={AllHistory} />
+		</>
+	)
+}
+
+function App() {
+	useEffect (() => {
+		const socket: any = io(`ws://${ip}:5002`, { transports: ['websocket'] });
+	}, []);
 	return (
 		<Router>
 			<Switch>
-					<Route exact path={'/'} component={ Login } />
-					<Route path={"/oauth/redirect"} component={ Connect } />
-					<Route path={"/register"} component={ Register } />
-					<Route exact path={"/signup"} component={ SignUp } />
-					<Route path={"/cookies"} component={ Cookies } />
-					<Route path={"/2fa"} component={ TwoFA } />
-					<Route exact path={"/home"} component={ Home } />
-					<Route exact path={"/play"} component={ Play } />
-					<Route exact path={"/alerts"} component={ Notification } />
-					<Route path={"/settings"} component={ Settings } />
-					<Route path={"/game"} component={ InGame } />
-					<Route path={"/:id/profile"} component={ Profile } />
-					<Route path={"/resume"} component={ Resume } />
-					<Route path={"/:id/history"} component={ AllHistory } />
-
-					<Route component={ NotFound } />
+				<Route exact path={'/'} component={Login} />
+				<Route path={"/oauth/redirect"} component={Connect} />
+				<Route path={"/register"} component={Register} />
+				<Route exact path={"/signup"} component={SignUp} />
+				<Route path={"/cookies"} component={Cookies} />
+				<Route path={"/2fa"} component={TwoFA} />
+				<Route path={"/game"} component={InGame} />
+				<Route path={"/resume"} component={Resume} />
+				<Menu />
+				<Route component={NotFound} />
 			</Switch>
 		</Router>
 	);

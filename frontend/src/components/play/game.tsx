@@ -18,7 +18,7 @@ export function InGame() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
   const [reload, setReload] = useState<boolean>(false);
-  const [gameFinish, setGameFinish] = useState<boolean>(false);
+  const [gameFinish] = useState<boolean>(false);
   const [leaveTime, setLeaveTime] = useState<number>(0);
   const leaveTimeRef = useRef(leaveTime);
   const [tabTime, setTabTime] = useState<number>(0);
@@ -55,6 +55,7 @@ export function InGame() {
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
     };
+  // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -67,17 +68,16 @@ export function InGame() {
       if (player.Spectator === true) {
         player.GameID = Number(localStorage.getItem('GameID'));
       }
-
     }
-    return (() => { mount = false; });
+    return (() => { mount = false; player.Socket.disconnect(); });
   }, [cookies, player]);
 
   useEffect(function () {
     if (player.GameID !== 0) {
       if (player.Spectator === false) {
         player.send_ready_up();
-        player.send_ball_position();
         player.send_player_position();
+        player.send_ball_position();
       }
     }
   }, [player, player.GameID]);
@@ -85,6 +85,7 @@ export function InGame() {
     if (player.Spectator === false && player.GameID) {
       player.send_point();
     }
+  // eslint-disable-next-line
   }, [player.GameID])
   useEffect(function () {
     let mount = true;
@@ -98,7 +99,7 @@ export function InGame() {
     return (() => { mount = false; });
   }, [me, player]);
 
-  function setReady(id: string, gameid: number) {
+  function setReady() {
     player.Socket.emit('ReadyUp', { player: player.ID, gameId: player.GameID });
     let ready: HTMLElement | null = document.getElementById('button_ready');
     if (ready) {
@@ -109,19 +110,17 @@ export function InGame() {
   useEffect(function () {
     if (player.GameID !== 0) {
       if (player.Spectator === false) {
-        player.receive_ball_position();
-        player.receive_player_position();
+        player.receive_game_info();
         player.receive_point();
         player.receive_ready_up();
         player.receive_endGame();
         player.receive_particle();
       }
       else {
-        player.receive_ball_pos_spectate();
-        player.receive_pos_specate();
         player.receive_endGame();
         player.receive_point();
         player.receive_particle();
+        player.receive_game_info();
       }
     }
   }, [reload, player, player.GameID]);
@@ -140,7 +139,7 @@ export function InGame() {
 
   useEffect(() => {
     window.addEventListener('resize', handleResize)
-    player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
+  // eslint-disable-next-line
   }, []);
 
   function check_ready() {
@@ -187,15 +186,17 @@ export function InGame() {
       check_ready();
     }, 1000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line
   }, []);
   useEffect(() => {
     const interval = setInterval(() => {
       if (player.GameMod === 2 && player.GameID !== 0)
       {
         player.Socket.emit('StartParticle', {gameId : player.GameID});
-      }
+      } 
     }, 10000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line
   }, [player.GameID]);
 
   if (!cookies.access_token || unauthorized) {
@@ -204,7 +205,7 @@ export function InGame() {
   return (
     <div className="game_body">
       <Unity className="game_screen" unityContext={player.UnityContext} />
-      <button id="button_ready" onClick={() => setReady(player.ID, player.GameID)}>Ready up</button>
+      <button id="button_ready" onClick={() => setReady()}>Ready up</button>
     </div>
   );
 }

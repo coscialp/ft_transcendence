@@ -1,8 +1,5 @@
 import { UnityContext } from "react-unity-webgl";
 import { io, Socket } from "socket.io-client";
-import { ip } from "../../App";
-
-
 
 export class GameManager {
     private _P1ready: boolean;
@@ -21,11 +18,16 @@ export class GameManager {
     private _SpeedSecurity: number;
     private _Score1: number;
     private _Score2: number;
-    private _BallSpeedSecurity: number;
+    private _UpdatePos: boolean;
+    private _SocketId: string;
+    private _BallPos: {
+        posx: number,
+        posy: number
+    };
     constructor() {
-        console.log('test');
         this._P1ready = false;
         this._P2ready = false;
+        this._SocketId = '';
         this._ID = "";
         this._Socket = io();
         this._GameID = 0;
@@ -35,10 +37,14 @@ export class GameManager {
         this._Spectator = false;
         this._Ranked = false;
         this._SpeedSecurity = 0;
-        this._BallSpeedSecurity = 0;
+        this._UpdatePos = false;
         this._Score1 = 0;
         this._Score2 = 0;
         this._GameMod = 0;
+        this._BallPos = {
+            posx: 0,
+            posy: 0
+        }
         this._GameDate = new Date().toLocaleDateString();
         this._UnityContext = new UnityContext({
             loaderUrl: "./Build/webgl.loader.js",
@@ -124,28 +130,11 @@ export class GameManager {
     }
 
     receive_gameID(username: string, setReload: any) {
-        this._Socket.on(`getGameID/${username}`, (gameID: number) => {
+        this._Socket.on(`getGameID/${username}`, (gameID: number, socketId: string) => {
             this._GameID = gameID;
+            this._SocketId = socketId;
             setReload(true);
         });
-    }
-    receive_player_position() {
-        this._Socket.on(`SetPosition/${this._GameID}`, (Position: number, Player: string) => {
-            if (this._ID !== Player) {
-                if (this._ID === "Player1")
-                    this._UnityContext.send("RemotePaddle", "SetPosition", Position);
-                else
-                    this._UnityContext.send("LocalPaddle", "SetPosition", Position);
-            }
-        })
-    }
-    receive_ball_position() {
-        this._Socket.on(`SetBallPos/${this._GameID}`, (posx: number, posy: number) => {
-            this._Ballpos = `${posx} ${posy}`;
-            if (this._ID === "Player2") {
-                this._UnityContext.send("Ball", 'setPos', this._Ballpos);
-            }
-        })
     }
     receive_ready_up() {
         this._Socket.on(`ReadyUp/${this._GameID}`, (playerID: string) => {
@@ -194,22 +183,41 @@ export class GameManager {
     send_ball_position() {
         this._UnityContext.on("SetBallPos", (posx: number, posy: number) => {
             if (this._ID === "Player1") {
-                this._BallSpeedSecurity += 1;
-                if (this._BallSpeedSecurity === 4) {
-                    this._BallSpeedSecurity = 0;
-                    this._Socket.emit('SetBallPos', { posx: posx, posy: posy, id: this._GameID });
-                    this._Socket.emit('SetBallPosSpectate', { posx: posx, posy: posy, id: this._GameID });
-                }
+                this._UpdatePos = true;
+                this._BallPos = {
+                    posx: posx,
+                    posy: posy
+                };
             }
         });
     }
+    receive_game_info() {
+        this._Socket.on(`UpdatePosition/${this._GameID}`, (Position: number, Player: string, posx: number, posy: number) => {
+            if (this._ID !== Player) {
+                if (this._ID === "Player1") {
+                    this._UnityContext.send("RemotePaddle", "SetPosition", Position);
+                }
+                else if ("Player2") {
+                    if (Player === 'Player2') {
+                        this._UnityContext.send("RemotePaddle", "SetPosition", Position);
+                    }
+                    else {
+                        this._UnityContext.send("LocalPaddle", "SetPosition", Position);
+                    }
+                    this._Ballpos = `${posx} ${posy}`;
+                    this._UnityContext.send("Ball", 'setPos', this._Ballpos);
+                }
+                else {
+
+                }
+            }
+        })
+    }
     send_player_position() {
         this._UnityContext.on("SendPosition", (Position: number) => {
-            this._SpeedSecurity += 1;
-            if (this._SpeedSecurity === 4) {
-                this._SpeedSecurity = 0;
-                this._Socket.emit('SetPosition', { pos: Position, id: this._ID, gameId: this._GameID })
-                this._Socket.emit('SetPosSpectate', { pos: Position, id: this._ID, gameId: this._GameID });
+            if (this._UpdatePos || this._ID === 'Player2') {
+                this._UpdatePos = false;
+                this._Socket.emit('UpdatePosition', { pos: Position, id: this._ID, gameId: this._GameID, posx: this._BallPos.posx, posy: this._BallPos.posy, soId: this._SocketId });
             }
         });
     }
@@ -267,19 +275,5 @@ export class GameManager {
             this._P1ready = false;
             this._P2ready = false;
         }
-    }
-    receive_pos_specate() {
-        this._Socket.on(`SetPosSpectate/${this._GameID}`, (Position: number, Player: string) => {
-            if (Player === "Player2")
-                this._UnityContext.send("RemotePaddle", "SetPosition", Position);
-            else
-                this._UnityContext.send("LocalPaddle", "SetPosition", Position);
-        })
-    }
-    receive_ball_pos_spectate() {
-        this._Socket.on(`SetBallPosSpectate/${this._GameID}`, (posx: number, posy: number) => {
-            this._Ballpos = `${posx} ${posy}`;
-            this._UnityContext.send("Ball", 'setPos', this._Ballpos);
-        })
     }
 }

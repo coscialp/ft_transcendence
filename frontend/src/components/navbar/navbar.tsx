@@ -8,7 +8,6 @@ import { Bell, Cog, UserCircle, Logout} from 'heroicons-react';
 import './navbar.css'
 
 export function NavBar(props: any) {
-
   let history = useHistory();
   const [cookies, setCookie] = useCookies();
   const [search, setSearch] = useState("");
@@ -152,8 +151,8 @@ export function NavBar(props: any) {
   return (
     <div className="navBar">
       <div className="gradientRight" ></div>
-      <button className="navBtn" onClick={() => { return history.push("/home") }} ><h1 className={props.page === "Home" ? "neonTextOn" : "neonTextOff"}>Home</h1></button>
-      <button className="navBtn" onClick={() => { return history.push("/play") }} ><h1 className={props.page === "Play" ? "neonTextOn" : "neonTextOff"}>Play</h1></button>
+      <button className="navBtn" onClick={() => { return history.push("/home") }} ><h1 className={props.page === "home" ? "neonTextOn" : "neonTextOff"}>Home</h1></button>
+      <button className="navBtn" onClick={() => { return history.push("/play") }} ><h1 className={props.page === "play" ? "neonTextOn" : "neonTextOff"}>Play</h1></button>
       <div className="prof-search">
         {notification ? <NewNotification /> : null}
         <form onSubmit={handleSearch} >

@@ -65,7 +65,6 @@ export function Profile() {
  
 	return (
 		<div>
-			<NavBar page="Profile" />
 			<div className="ProfileElement">
 					{blackList.find((user) => user.username === me.username) ? <div className="Blocked ProfileMain" ><img className="ProfileImage" style={{ backgroundImage: `url(${user.profileImage})` }} alt="" /> {user.username} has blocked you !</div> :
 					<div className="ProfileMain">

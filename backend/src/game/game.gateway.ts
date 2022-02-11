@@ -18,7 +18,9 @@ export class GameGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('GameGateway');
+    private connectedUser: {user: User, socketId: string}[];
     private usersInQueue: User[];
+    private usersInRankedQueue: {user: User, pool: number}[];
     private matchInProgress: {
         user1: User,
         user2: User,
@@ -29,7 +31,9 @@ export class GameGateway
         private readonly gameService: GameService,
     ) {
         this.usersInQueue = [];
+        this.usersInRankedQueue = [];
         this.matchInProgress = [];
+        this.connectedUser = [];
     }
     @SubscribeMessage('matchmaking')
     async MatchMaking(
@@ -39,12 +43,11 @@ export class GameGateway
         if (!this.usersInQueue.find((u) => u.id === user.id)) {
             this.usersInQueue.push(user);
         }
-        console.log(this.usersInQueue);
         for (let u of this.usersInQueue) {
             if (user.username !== u.username) {
+                this.matchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: false });
                 this.server.emit(`startgame/${user.username}`, 'Player1');
                 this.server.emit(`startgame/${u.username}`, 'Player2');
-                this.matchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: false });
                 this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
                 this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
             }
@@ -55,16 +58,19 @@ export class GameGateway
         @ConnectedSocket() socket: Socket,
     ): Promise<void> {
         const user: User = await this.gameService.getUserFromSocket(socket);
-        if (!this.usersInQueue.find((u) => u.id === user.id)) {
-            this.usersInQueue.push(user);
+        if (this.usersInRankedQueue.findIndex((u) => u.user.id === user.id) === -1) {
+            this.usersInRankedQueue.push({user: user, pool: 100});
         }
-        for (let u of this.usersInQueue) {
-            if (user.username !== u.username) {
+        else {
+            this.usersInRankedQueue[this.usersInRankedQueue.findIndex((u) => u.user.id === user.id)].pool += 25;
+        }
+        for (let {user: u, pool: pool} of this.usersInRankedQueue) {
+            if (user.username !== u.username && Math.abs(u.PP - user.PP) - pool <= 0) {
+                this.matchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: true });
                 this.server.emit(`startgame/${user.username}`, 'Player1');
                 this.server.emit(`startgame/${u.username}`, 'Player2');
-                this.matchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: true });
-                this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
-                this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
+                this.usersInRankedQueue.splice(this.usersInRankedQueue.findIndex((j) => j.user.id === u.id), 1);
+                this.usersInRankedQueue.splice(this.usersInRankedQueue.findIndex((j) => j.user.id === user.id), 1);
             }
         }
     }
@@ -73,6 +79,7 @@ export class GameGateway
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         this.server.emit(`ReadyUp/${data.gameId}`, data.player);
+        this.server.to('')
     }
 
     @SubscribeMessage('getGameID')
@@ -80,8 +87,11 @@ export class GameGateway
         @ConnectedSocket() socket: Socket,
         @MessageBody() message: string, id: number): Promise<void> {
         const user: User = await this.gameService.getUserFromSocket(socket);
-        for (let { user1, user2, gameID } of this.matchInProgress) {
-            if (user1.username === user.username || user2.username === user.username) {
+        for (let { user1, user2, gameID } of this.matchInProgress) {    
+            if (user1.username === user.username) {
+                this.server.emit(`getGameID/${user.username}`, gameID);
+            }
+            else if (user2.username === user.username){
                 this.server.emit(`getGameID/${user.username}`, gameID);
             }
         }
@@ -140,12 +150,11 @@ export class GameGateway
         this.server.emit(`SetPosition/${data.gameId}`, data.pos, data.id);
     }
 
-    @SubscribeMessage('SetPosSpectate')
-    async SetPosSpectate(
+    @SubscribeMessage('UpdatePosition')
+    async UpdatePosition(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
-
-        this.server.emit(`SetPosSpectate/${data.gameId}`, data.pos, data.id);
+        this.server.emit(`UpdatePosition/${data.gameId}`, data.pos, data.id, data.posx, data.posy);
     }
 
     @SubscribeMessage('StartParticle')
@@ -154,18 +163,24 @@ export class GameGateway
         @MessageBody() data: any) {
         this.server.emit(`StartParticle/${data.gameId}`);
     }
-    @SubscribeMessage('SetBallPosSpectate')
-    async SetBallPosSpectate(
-        @ConnectedSocket() socket: Socket,
-        @MessageBody() data: any) {
-        this.server.emit(`SetBallPosSpectate/${data.id}`, data.posx, data.posy);
-    }
 
-    @SubscribeMessage('SetBallPos')
-    async SetBallPos(
+    @SubscribeMessage('ExitQueue')
+    async ExitQueue(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
-        this.server.emit(`SetBallPos/${data.id}`, data.posx, data.posy);
+            const user: User = await this.gameService.getUserFromSocket(socket);
+            for (let {user: u, pool: pool} of this.usersInRankedQueue) {
+                
+                if (user.username === u.username) {
+                    
+                    this.usersInRankedQueue.splice(this.usersInRankedQueue.findIndex((j) => j.user.id === u.id), 1);
+                }
+            }
+            for (let u of this.usersInQueue) {
+                if (user.username === u.username) {
+                    this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
+                }
+            }
     }
 
     async afterInit(server: Server) {
@@ -186,6 +201,7 @@ export class GameGateway
             if (index !== -1) {
                 this.server.emit(`finishGame/${this.matchInProgress[index].gameID}`, loser);
             }
+            this.connectedUser.slice(this.connectedUser.findIndex((u) => u.user.username === user.username), 1);
         } catch (error) {
             this.logger.error(error);
         }
@@ -194,9 +210,12 @@ export class GameGateway
     async handleConnection(@ConnectedSocket() socket: Socket) {
         const user: User = await this.gameService.getUserFromSocket(socket);
         try {
+            if (!this.connectedUser.some((u) => u.user.username === user.username)) {
+                this.connectedUser.push({user: user, socketId: socket.id});
+            }
             this.logger.log(`Client ${user.username} connected`);
         } catch (error) {
             this.logger.error(error);
-        }
+        }``
     }
 }
