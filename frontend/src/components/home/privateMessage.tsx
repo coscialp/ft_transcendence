@@ -10,9 +10,9 @@ import { ip } from '../../App'
 import { Conversation } from '../../utils/conversation.type'
 
 export function Open_Message() {
-    var Message: any = document.getElementById('Message')
-    var arrowR: any = document.getElementById('arrowR')
-    var arrowL: any = document.getElementById('arrowL')
+    let Message: any = document.getElementById('Message')
+    let arrowR: any = document.getElementById('arrowR')
+    let arrowL: any = document.getElementById('arrowL')
     if (Message.style.height === '400px') {
         Message.style.transition = 'all .5s ease-in-out'
         Message.style.height = '50px'
