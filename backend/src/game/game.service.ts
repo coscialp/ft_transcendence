@@ -42,15 +42,7 @@ export class GameService {
     for (let game of allGames) {
       if (game.player1.username === user.username || game.player2.username === user.username) {
         let r = {game, winner: (game.score1 > game.score2 ? game.player1.username : game.player2.username), scoreDifference: Math.abs(game.score1 - game.score2), PPaverage: game.ranked === true ? 10 + Math.abs(game.score1 - game.score2) : 0};
-        if (game.player1.username === r.winner) {
-          game.player1.PP += r.PPaverage;
-          game.player2.PP -= r.PPaverage;
-        } else {
-          game.player2.PP += r.PPaverage;
-          game.player1.PP -= r.PPaverage;
-        }
         result.push(r);
-
       }
     }
     return result;

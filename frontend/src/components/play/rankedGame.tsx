@@ -21,6 +21,7 @@ export function Ranked(data: any) {
         data.socket.on(`startgame/${data.me.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
+          localStorage.setItem('gameMOD', "false");
           return history.push(`/game`);
         })
       }
@@ -54,13 +55,13 @@ export function Ranked(data: any) {
   return (
     <div className="rankedElement" >
       <p className="rankedTitle" >Ranked Game</p>
-      <PlayOutline className="playBtn" onClick={e => { play(); setPopUp(true) }} />
+      <PlayOutline className="playBtn" onClick={() => { play(); setPopUp(true) }} />
       {popUp === true ?
         <div className="duelPage">
           <div className="duelPopUp">
             <p>Waiting for a game...</p>
             <div className="cancel-container">
-              <span className='cancel-cross' onClick={e => { exit_queue(); setPopUp(false) }} >
+              <span className='cancel-cross' onClick={() => { exit_queue(); setPopUp(false) }} >
                 <div className="leftright"></div>
                 <div className="rightleft"></div>
                 <label className="cancel">cancel</label>

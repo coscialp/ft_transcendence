@@ -58,7 +58,7 @@ export function Leaderboard() {
     useEffect(() => {
         let mount = true;
         axios.request({
-            url:`/user`,
+            url:`/user/leaderboard/all`,
             method: 'get',
             baseURL: `http://${ip}:5000`,
             headers: {

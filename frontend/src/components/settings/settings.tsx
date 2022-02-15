@@ -14,7 +14,7 @@ export function Settings() {
 	const [newNick, setNewNick] = useState("");
 	const [newEmail, setNewEmail] = useState("");
 	const [newAvatar, setNewAvatar] = useState("");
-	const [previewAvatar, setPreviewAvatar] = useState<File>();
+	const [previewAvatar, setPreviewAvatar] = useState<any>();
 	const { handleSubmit } = useForm({
 		mode: "onChange"
 	});
@@ -96,28 +96,33 @@ export function Settings() {
 	function handleNewAvatar(e: any) {
 		console.log(newAvatar)
 		console.log(previewAvatar)
+
+		console.log(previewAvatar);
+		const formData = new FormData();
+
+		formData.append('file', previewAvatar);
 		if (newAvatar !== "") {
 			axios.request({
-				url: '/user/me/avatar',
-				method: 'patch',
-				baseURL: `http://${ip}:5000`,
-				headers: {
-					"Authorization": `Bearer ${cookies.access_token}`,
-				},
-				data: {
-					"avatar":  newAvatar,
-				}
-			})
-			axios.request({
-				url: '/img/',
+				url: '/upload/',
 				method: 'post',
 				baseURL: `http://${ip}:5000`,
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,
+					"Content-Type": "multipart/form-data; boundary=123",
 				},
-				data: {
-					"file": previewAvatar,
-				}
+				data: formData,
+			}).then((response: any) => {
+				axios.request({
+					url: '/user/me/avatar',
+					method: 'patch',
+					baseURL: `http://${ip}:5000`,
+					headers: {
+						"Authorization": `Bearer ${cookies.access_token}`,
+					},
+					data: {
+						"avatar":  '/Users/coscialp/Project/transcendance/backend/' + response.data.path,
+					}
+				});
 			})
 			window.alert("Avatar successfully changed to " + newAvatar + " !")
 			setNewAvatar("");

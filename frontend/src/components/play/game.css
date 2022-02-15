@@ -14,6 +14,7 @@
     background: linear-gradient(rgb(207 29 61 / 30%), rgb(12 73 181 / 54%));
     filter:blur(2px);
     transform: scale(0.9);
+    visibility:hidden;
 }
 
 #button_ready:hover {

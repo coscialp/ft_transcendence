@@ -15,7 +15,6 @@ export class GameManager {
     private _Spectator: boolean;
     private _GameDate: string;
     private _Ranked: boolean;
-    private _SpeedSecurity: number;
     private _Score1: number;
     private _Score2: number;
     private _UpdatePos: boolean;
@@ -36,7 +35,6 @@ export class GameManager {
         this._Warning = false;
         this._Spectator = false;
         this._Ranked = false;
-        this._SpeedSecurity = 0;
         this._UpdatePos = false;
         this._Score1 = 0;
         this._Score2 = 0;
@@ -133,6 +131,7 @@ export class GameManager {
         this._Socket.on(`getGameID/${username}`, (gameID: number, socketId: string) => {
             this._GameID = gameID;
             this._SocketId = socketId;
+            this._Socket.emit('JoinRoom', {gameID: gameID});
             setReload(true);
         });
     }
@@ -149,19 +148,7 @@ export class GameManager {
             this._UnityContext.send("HUD", "spawn_blackhole");
         })
     }
-    receive_point() {
-        this._Socket.on(`AddPoint/${this._GameID}`, (Player: string) => {
-            if (this._ID === "Player2") {
-                if (Player === "player1") {
-                    this._Score1++;
-                    this._UnityContext.send("HUD", "AddScore", "RightWall");
-                } else {
-                    this._Score2++;
-                    this._UnityContext.send("HUD", "AddScore", "LeftWall");
-                }
-            }
-        })
-    }
+
     receive_endGame() {
         this._Socket.on(`finishGame/${this._GameID}`, (loser: string) => {
             this._GameState = true;
@@ -191,8 +178,9 @@ export class GameManager {
             }
         });
     }
+
     receive_game_info() {
-        this._Socket.on(`UpdatePosition/${this._GameID}`, (Position: number, Player: string, posx: number, posy: number) => {
+        this._Socket.on(`UpdatePosition`, (Position: number, Player: string, posx: number, posy: number, score1: number, score2: number) => {
             if (this._ID !== Player) {
                 if (this._ID === "Player1") {
                     this._UnityContext.send("RemotePaddle", "SetPosition", Position);
@@ -206,6 +194,8 @@ export class GameManager {
                     }
                     this._Ballpos = `${posx} ${posy}`;
                     this._UnityContext.send("Ball", 'setPos', this._Ballpos);
+                    this._Score1 = score1;
+                    this._Score2 = score2;
                 }
                 else {
 
@@ -213,11 +203,12 @@ export class GameManager {
             }
         })
     }
+
     send_player_position() {
         this._UnityContext.on("SendPosition", (Position: number) => {
             if (this._UpdatePos || this._ID === 'Player2') {
                 this._UpdatePos = false;
-                this._Socket.emit('UpdatePosition', { pos: Position, id: this._ID, gameId: this._GameID, posx: this._BallPos.posx, posy: this._BallPos.posy, soId: this._SocketId });
+                this._Socket.emit('UpdatePosition', { pos: Position, id: this._ID, gameID: this._GameID, posx: this._BallPos.posx, posy: this._BallPos.posy, soId: this._SocketId, score1: this.Score1, score2: this.Score2 });
             }
         });
     }
@@ -247,19 +238,17 @@ export class GameManager {
 
     ready_checker() {
         if (this._P1ready === true && this._P2ready === true) {
-            if (this._GameMod === 0) {
-                this._GameMod = 2;
-            }
             if (this._ID === "Player2") {
                 this._UnityContext.send("RemotePaddle", "setID", this._ID);
+                this._UnityContext.send("Ball", "setID", this._ID);
                 this._UnityContext.send("HUD", "setID", this._ID);
             }
             else if (this._ID === "Player1") {
                 this._UnityContext.send("LocalPaddle", "setID", this._ID);
+                this._UnityContext.send("Ball", "setID", this._ID);
                 this._UnityContext.send("HUD", "setID", this._ID);
             }
             this._UnityContext.send("HUD", "gameInit");
-            this._UnityContext.send("Ball", "setID", this._ID);
             this._UnityContext.send("LocalPaddle", "setGameStarted", 1);
             this._UnityContext.send("RemotePaddle", "setGameStarted", 1);
             this._P1ready = false;

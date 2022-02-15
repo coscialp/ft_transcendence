@@ -14,11 +14,13 @@ export class ImageController {
   constructor() {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('image'))
-  async uploadedFile(@UploadedFile() file: any) {
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadedFile(@UploadedFile('file') file: any) {
+    console.log(file);
     const response = {
       originalname: file.originalname,
       filename: file.filename,
+      path: file.path,
     };
     return response;
   }
