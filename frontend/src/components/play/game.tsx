@@ -56,14 +56,14 @@ export function InGame() {
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
     };
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
-   
+
     return () => {
     };
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export function InGame() {
     if (player.Spectator === false && player.GameID) {
       player.send_point();
     }
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [player.GameID])
 
   useEffect(function () {
@@ -146,7 +146,7 @@ export function InGame() {
 
   useEffect(() => {
     window.addEventListener('resize', handleResize)
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   function check_ready() {
@@ -172,24 +172,23 @@ export function InGame() {
     }
     else if (gameFinish === true || player.Warning === true) {
       return history.push('/home');
-      
+
     }
-    
-  
+
+
   }
   useEffect(() => {
     const interval = setInterval(() => {
       check_ready();
     }, 1000);
     return () => clearInterval(interval);
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (player.GameMod === 0 && player.GameID !== 0 && player.ID === "Player1")
-      {
-        player.Socket.emit('StartParticle', {gameId : player.GameID});
+      if (player.GameMod === 0 && player.GameID !== 0 && player.ID === "Player1") {
+        player.Socket.emit('StartParticle', { gameId: player.GameID });
       }
       let ready: HTMLElement | null = document.getElementById('button_ready');
       if (ready) {
@@ -197,7 +196,7 @@ export function InGame() {
       }
     }, 5000);
     return () => clearInterval(interval);
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, [player.GameID]);
 
   if (!cookies.access_token || unauthorized) {
