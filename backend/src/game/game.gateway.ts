@@ -18,7 +18,6 @@ export class GameGateway
     implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('GameGateway');
-    private connectedUser: {user: User, socketId: string}[];
     private usersInQueue: User[];
     private usersInRankedQueue: {user: User, pool: number}[];
     private matchInProgress: {
@@ -33,7 +32,6 @@ export class GameGateway
         this.usersInQueue = [];
         this.usersInRankedQueue = [];
         this.matchInProgress = [];
-        this.connectedUser = [];
     }
     @SubscribeMessage('matchmaking')
     async MatchMaking(
@@ -74,12 +72,12 @@ export class GameGateway
             }
         }
     }
+
     @SubscribeMessage('ReadyUp')
-    ReadyUp(
+    async ReadyUp(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         this.server.emit(`ReadyUp/${data.gameId}`, data.player);
-        this.server.to('')
     }
 
     @SubscribeMessage('getGameID')
@@ -135,26 +133,18 @@ export class GameGateway
         }
     }
 
-    @SubscribeMessage('AddPoint')
-    async AddPoint(
+    @SubscribeMessage('JoinRoom')
+    async JoinRoom(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
-        this.server.emit(`AddPoint/${data.gameId}`, data.point);
-    }
-
-    @SubscribeMessage('SetPosition')
-    async SetPosition(
-        @ConnectedSocket() socket: Socket,
-        @MessageBody() data: any) {
-
-        this.server.emit(`SetPosition/${data.gameId}`, data.pos, data.id);
+        socket.join(data.gameID);
     }
 
     @SubscribeMessage('UpdatePosition')
     async UpdatePosition(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
-        this.server.to(data.gameID).emit(`UpdatePosition`, data.pos, data.id, data.posx, data.posy);
+        this.server.to(data.gameID).emit(`UpdatePosition`, data.pos, data.id, data.posx, data.posy, data.score1, data.score2);
     }
 
     @SubscribeMessage('StartParticle')
@@ -207,7 +197,6 @@ export class GameGateway
             if (index !== -1) {
                 this.server.emit(`finishGame/${this.matchInProgress[index].gameID}`, loser);
             }
-            this.connectedUser.slice(this.connectedUser.findIndex((u) => u.user.username === user.username), 1);
         } catch (error) {
             this.logger.error(error);
         }
@@ -216,10 +205,7 @@ export class GameGateway
     async handleConnection(@ConnectedSocket() socket: Socket) {
         const user: User = await this.gameService.getUserFromSocket(socket);
         try {
-            this.logger.log(`Clientux ${user.username} connected`);
-            if (!this.connectedUser.some((u) => u.user.username === user.username)) {
-                this.connectedUser.push({user: user, socketId: socket.id});
-            }
+            this.logger.log(`Client ${user.username} connected`);
         } catch (error) {
             this.logger.error(error);
         }

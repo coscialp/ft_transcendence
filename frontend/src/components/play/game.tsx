@@ -24,7 +24,10 @@ export function InGame() {
   const [tabTime, setTabTime] = useState<number>(0);
   const tabTimeRef = useRef(tabTime);
   const leaveRef = useRef(leave);
-
+  const [score, setScore] = useState<{
+    score1: number,
+    score2: number
+  }>({score1: 0, score2: 0});
   const setMyTabTime = (data: any) => {
     tabTimeRef.current = data;
     setTabTime(data);
@@ -37,7 +40,7 @@ export function InGame() {
     leaveTimeRef.current = data;
     setLeaveTime(data);
   }
-  player.ID = String(localStorage.getItem('playerID'));
+
 
 
   const onBlur = () => {
@@ -51,12 +54,14 @@ export function InGame() {
   useEffect(() => {
     window.addEventListener("blur", onBlur);
     window.addEventListener("focus", onFocus);
+    player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
     return () => {
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
     };
     // eslint-disable-next-line
   }, []);
+
   useEffect(() => {
     player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
   }, []);
@@ -65,8 +70,9 @@ export function InGame() {
     let mount = true;
     if (mount) {
       isLogged(cookies).then((res: any) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
+      player.ID = String(localStorage.getItem('playerID'));
       player.Spectator = String(localStorage.getItem('playerID')) === 'spectator' ? true : false;
-      player.GameMod = String(localStorage.getItem('playerID')) === 'gameMode' ? 1 : 0;
+      player.GameMod = String(localStorage.getItem('gameMOD')) === 'true' ? 1 : 0;
       if (player.Spectator === true) {
         player.GameID = Number(localStorage.getItem('GameID'));
       }
@@ -89,6 +95,7 @@ export function InGame() {
     }
     // eslint-disable-next-line
   }, [player.GameID])
+
   useEffect(function () {
     let mount = true;
     if (mount) {
@@ -113,14 +120,12 @@ export function InGame() {
     if (player.GameID !== 0) {
       if (player.Spectator === false) {
         player.receive_game_info();
-        player.receive_point();
         player.receive_ready_up();
         player.receive_endGame();
         player.receive_particle();
       }
       else {
         player.receive_endGame();
-        player.receive_point();
         player.receive_particle();
         player.receive_game_info();
       }
@@ -152,7 +157,7 @@ export function InGame() {
       else {
         setTabTime(0);
       }
-      if (tabTimeRef.current === 1000) {
+      if (tabTimeRef.current === 1000 || player.GameState === true || leaveRef.current === 300) {
         if (player.ID === 'Player1') {
           player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
         }
@@ -160,21 +165,10 @@ export function InGame() {
           player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
         }
       }
-      if (player.GameState === true || leaveRef.current === 300) {
-        if (player.ID === 'Player1') {
-          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
-        }
-        else {
-          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
-        }
-      }
-
       if (gameFinish === true || player.Warning === true) {
         return history.push('/resume');
       }
-      if (player.Spectator === false) {
-        player.ready_checker();
-      }
+      player.ready_checker();
     }
     else if (gameFinish === true || player.Warning === true) {
       return history.push('/home');
@@ -190,12 +184,17 @@ export function InGame() {
     return () => clearInterval(interval);
     // eslint-disable-next-line
   }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      if (player.GameMod === 2 && player.GameID !== 0) {
+      if (player.GameMod === 0 && player.GameID !== 0 && player.ID === "Player1") {
         player.Socket.emit('StartParticle', { gameId: player.GameID });
       }
-    }, 10000);
+      let ready: HTMLElement | null = document.getElementById('button_ready');
+      if (ready) {
+        ready.style.visibility = 'visible';
+      }
+    }, 5000);
     return () => clearInterval(interval);
     // eslint-disable-next-line
   }, [player.GameID]);
@@ -205,6 +204,7 @@ export function InGame() {
   }
   return (
     <div className="game_body">
+      <p id="game_score"> {score?.score1} : {score?.score2} </p>
       <Unity className="game_screen" unityContext={player.UnityContext} />
       <button id="button_ready" onClick={() => setReady()}>Ready up</button>
     </div>

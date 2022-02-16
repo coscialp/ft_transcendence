@@ -31,6 +31,7 @@ export function Normal(data: any) {
         data.socket.on(`startgame/${data.me?.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
+          localStorage.setItem('gameMOD', "false");
           return history.push(`/game`)
         })
       }

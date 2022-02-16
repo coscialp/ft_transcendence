@@ -72,4 +72,15 @@ export class ChannelsRepository extends Repository<Channel> {
             console.log(e.code);
         }
     }
+
+    async promoteToAdmin(user: User, channel: Channel) {
+        channel.admin.push(user);
+
+        try {
+            this.save(channel)
+            this.usersRepository.save(user);
+        } catch (e) {
+            console.log(e.code);
+        }
+    }
 }

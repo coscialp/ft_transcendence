@@ -69,6 +69,9 @@ export class ChannelService {
   async createMessage(user: User, message: MessagesDto): Promise<void> {
     return await this.messagesRepository.createMessage(user, message, this.userService, this);
   }
+  async promoteToAdmin(user: User, channel: Channel): Promise<void> {
+    return await this.channelsRepository.promoteToAdmin(user, channel);
+  }
 
   async joinChannel(user: User, name: string, password: string): Promise<void> {
     let channel = await this.getOneChannel(name);

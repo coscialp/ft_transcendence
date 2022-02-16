@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
@@ -8,6 +8,7 @@ import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog }
 import { useForceUpdate } from "../../utils/forceUpdate";
 import { ip } from "../../App";
 import { MessageType } from "../../utils/message.type";
+import { Socket } from "socket.io-client";
 
 export function MainMenu(data: any) {
 	let history = useHistory();
@@ -20,6 +21,8 @@ export function MainMenu(data: any) {
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
+	const scrollRef = useRef<any>();
+
 	const requestApi = new RequestApi(cookies.access_token, ip);
 
 	const forceUpdate = useForceUpdate();
@@ -45,6 +48,9 @@ export function MainMenu(data: any) {
 				data.socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
 					messages.push({ id: messages.length, date: msg.sentAt, sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
+				});
+				data.socket.on('admin', (admin: any) => {
+					console.log(admin);
 				});
 			}
 		}
@@ -123,7 +129,6 @@ export function MainMenu(data: any) {
 		e.preventDefault();
 	}
 
-
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
@@ -140,6 +145,12 @@ export function MainMenu(data: any) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cookies, messages, current_channel]);
 
+
+	useEffect(() => {
+		scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+	}, [messages.length])
+
+
 	function changeChannel(e: any) {
 		if (data.socket) {
 			data.socket.emit('change_channel', { channelName: e.target.innerText });
@@ -153,7 +164,19 @@ export function MainMenu(data: any) {
 		return history.push(`/${toGo}/profile`)
 	}
 
+	function handlePromotion(id: string) {
+		if (data.socket) {
+			data.socket.emit('promote_admin', {id: id,channelName: current_channel});
+		}
+	}
 
+	function getAdmin() {
+		if (data.socket) {
+			data.socket.emit('get_admin', {channelName: current_channel});
+		}
+	}
+
+	console.log(messages[0]);
 
 	return (
 		<div className="MainElement" >
@@ -165,7 +188,7 @@ export function MainMenu(data: any) {
 			<div className="Message Container" >
 				{messages.map((message: any) =>
 				(
-					<article key={message.id} className='message-container'>
+					<article ref={scrollRef} key={message.id} className='message-container'>
 						<div className="img-content" >
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
 							<div className="message-body" >
@@ -183,8 +206,8 @@ export function MainMenu(data: any) {
 							<div className="dropdown-content">
 								<UserCircle className="chatUserParam" onClick={(e) => { return history.push(`/${message.sender}/profile`) }} />
 								<Challenge className="chatUserParam" />
-								<ChevronDoubleUp className="chatUserParam" />
-								<VolumeOff className="chatUserParam" />
+								<ChevronDoubleUp className="chatUserParam" onClick={() => handlePromotion(message.sender)}/>
+								<VolumeOff className="chatUserParam" onClick={getAdmin}/>
 								<Trash className="chatUserParam" />
 							</div>
 						</div>
