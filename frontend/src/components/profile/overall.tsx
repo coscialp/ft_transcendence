@@ -49,6 +49,7 @@ export function Overall(data: any) {
 	useEffect(() => {
 		let mount = true;
 
+		if (mount && data.user.username !== undefined) {
 		axios.request({
 			url: `/user/${data.user.username}/statistics`,
 			method: 'get',
@@ -58,8 +59,9 @@ export function Overall(data: any) {
 			},
 		}).then((response: any) => {
 
-			if (mount) { setStats(response.data) }
+			 setStats(response.data);
 		})
+	}
 		return (() => { mount = false; });
 	}, [cookies, data.user])
 
