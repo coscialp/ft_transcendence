@@ -66,8 +66,8 @@ export class ChannelsRepository extends Repository<Channel> {
         user.channelsConnected.push(channel);
 
         try {
-            this.save(channel)
-            this.usersRepository.save(user);
+            await this.save(channel)
+            await this.usersRepository.save(user);
         } catch (e) {
             console.log(e.code);
         }
@@ -77,8 +77,19 @@ export class ChannelsRepository extends Repository<Channel> {
         channel.admin.push(user);
 
         try {
-            this.save(channel)
-            this.usersRepository.save(user);
+           await this.save(channel)
+           await this.usersRepository.save(user);
+        } catch (e) {
+            console.log(e.code);
+        }
+    }
+
+    async demoteToPeon(user: User, channel: Channel) {
+        channel.admin.splice(channel.admin.findIndex((u) => u.username === user.username), 1);
+
+        try {
+            await this.save(channel)
+            await this.usersRepository.save(user);
         } catch (e) {
             console.log(e.code);
         }

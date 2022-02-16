@@ -4,11 +4,13 @@ import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
 
 import { useHistory } from "react-router";
-import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
+import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog, ChevronDoubleDown } from "heroicons-react";
 import { useForceUpdate } from "../../utils/forceUpdate";
 import { ip } from "../../App";
 import { MessageType } from "../../utils/message.type";
-import { Socket } from "socket.io-client";
+
+import axios from "axios";
+import { User } from "../../utils/user.type";
 
 export function MainMenu(data: any) {
 	let history = useHistory();
@@ -17,10 +19,13 @@ export function MainMenu(data: any) {
 	const [messageInput, setMessageInput] = useState<string>('');
 	const [current_channel, setCurrent_Channel] = useState<string>('');
 	const [channels] = useState<string[]>([]);
+	const [channelAdmin, setChannelAdmin] = useState<User[]>([]);
+	const [channelCreator, setChannelCreator] = useState<User>();
 	const [channelName, setChannelName] = useState<string>('');
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
+	const [updateAdmin, setUpdateAdmin] = useState<boolean>(false);
 	const scrollRef = useRef<any>();
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
@@ -34,6 +39,17 @@ export function MainMenu(data: any) {
 				response.channelsConnected?.map((chan: any) =>
 					channels.push(chan.name)
 				)
+			})
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cookies]);
+
+	useEffect(() => {
+		let mount = true;
+		if (mount && data.socket) {
+			data.socket.on('update', () => {
+				setUpdateAdmin(!updateAdmin);
 			})
 		}
 		return (() => { mount = false; });
@@ -57,8 +73,6 @@ export function MainMenu(data: any) {
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data.socket, cookies, messages]);
-
-
 
 	function togglePopup() {
 		setShowPopup(!showPopup);
@@ -132,6 +146,22 @@ export function MainMenu(data: any) {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
+			axios.request({
+				url: `/channel/${current_channel}`,
+				method: 'get',
+				baseURL: `http://${ip}:5000`,
+				headers: {
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+			}).then((response: any) => { setChannelCreator(response.data.creator) ; setChannelAdmin(response.data.admin)})
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cookies, current_channel, updateAdmin]);
+
+	useEffect(() => {
+		let mount = true;
+		if (mount) {
 			if (current_channel) {
 				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
 					response.messages.map((msg: any) => (
@@ -170,9 +200,22 @@ export function MainMenu(data: any) {
 		}
 	}
 
-	function getAdmin() {
+	function handleNewPeon(id: string) {
 		if (data.socket) {
-			data.socket.emit('get_admin', {channelName: current_channel});
+			data.socket.emit('demote_admin', {id: id,channelName: current_channel});
+		}
+	}
+
+	function handleMute(username: string) {
+		if (data.socket) {
+			data.socket.emit('mute_user', {mutedUser: username, channelName: current_channel});
+		}
+	}
+
+	function handleBan(username: string) {
+		if (data.socket) {
+			console.log(username)
+			data.socket.emit('ban_user', {id: username, channelName: current_channel});
 		}
 	}
 
@@ -206,9 +249,14 @@ export function MainMenu(data: any) {
 							<div className="dropdown-content">
 								<UserCircle className="chatUserParam" onClick={(e) => { return history.push(`/${message.sender}/profile`) }} />
 								<Challenge className="chatUserParam" />
-								<ChevronDoubleUp className="chatUserParam" onClick={() => handlePromotion(message.sender)}/>
-								<VolumeOff className="chatUserParam" onClick={getAdmin}/>
-								<Trash className="chatUserParam" />
+								{ channelAdmin?.findIndex((u) => u.username === data.me.username) !== -1 && message.sender !== channelCreator?.username && message.sender !== data.me.username ?
+									<>
+										{ channelCreator?.username === data.me.username ? (channelAdmin?.findIndex((u) => u.username === message.sender) !== -1  ? <ChevronDoubleDown className="chatUserParam" onClick={() => handleNewPeon(message.sender)}/> : <ChevronDoubleUp className="chatUserParam" onClick={() => handlePromotion(message.sender)}/>) : null}
+										<VolumeOff className="chatUserParam" onClick={() => handleMute(message.sender)}/>
+										<Trash className="chatUserParam" onClick={() => handleBan(message.sender)}/>
+									</>
+									: null
+								}
 							</div>
 						</div>
 					</article>

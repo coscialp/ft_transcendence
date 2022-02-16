@@ -69,8 +69,7 @@ export function Overall(data: any) {
   useEffect(() => {
     let mount = true;
 
-    axios
-      .request({
+    axios.request({
         url: `/user/me/blacklist`,
         method: "get",
         baseURL: `http://${ip}:5000`,

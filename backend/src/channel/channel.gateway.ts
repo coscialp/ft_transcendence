@@ -21,7 +21,7 @@ export class ChannelGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChannelGateway');
-  private mutedUser: string[];
+  private mutedUser: {user: string, time: number}[];
   private activeChannel: Map<string, Channel>;
   constructor(
     private channelService: ChannelService,
@@ -39,7 +39,17 @@ export class ChannelGateway
     const user: User = await this.channelService.getUserFromSocket(socket);
     try {
       let receiver: User;
-      if (this.mutedUser.findIndex((u) => u === user.username) === -1) {
+      let mutedUserIndex: number = this.mutedUser.findIndex((u) => u.user === user.username);
+      console.log(this.mutedUser);
+      console.log(new Date().getMinutes());
+      if (mutedUserIndex !== -1) {
+        if (this.mutedUser[mutedUserIndex].time + 1 <= new Date().getMinutes() || (this.mutedUser[mutedUserIndex].time > new Date().getMinutes() && this.mutedUser[mutedUserIndex].time !== 70)) {
+          this.mutedUser.splice(mutedUserIndex, 1);
+          console.log(this.mutedUser);
+          mutedUserIndex = this.mutedUser.findIndex((u) => u.user === user.username);
+        }
+      }
+      if (mutedUserIndex === -1) {
         if (message.receiver) {
           receiver = await this.userService.getUserById(message.receiver);
         }
@@ -101,8 +111,8 @@ export class ChannelGateway
     @ConnectedSocket() socket: Socket,
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
-    this.mutedUser.push(data.mutedUser);
-    this.server.emit(`mute_user/${data.receiver}`, data.timeBanned);
+    this.mutedUser.push({user: data.mutedUser, time: new Date().getMinutes()});
+    this.server.emit(`mute_user/${data.receiver}`, data.timeMuted);
   }
 
   @SubscribeMessage('unmute_user')
@@ -111,7 +121,20 @@ export class ChannelGateway
     @ConnectedSocket() socket: Socket,
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
-    this.mutedUser.slice(this.mutedUser.findIndex((u) => u === user.username), 1);
+    this.mutedUser.slice(this.mutedUser.findIndex((u) => u.user === user.username), 1);
+  }
+
+  @SubscribeMessage('ban_user')
+  async banUser(
+    @MessageBody() data: any,
+    @ConnectedSocket() socket: Socket,
+  ): Promise<void> {
+    const user: User = await this.channelService.getUserFromSocket(socket);
+    let channel: Channel = await this.channelService.getOneChannel(data.channelName);
+    console.log(data.id);
+    const admin: User = await this.userService.getUserById(data.id);
+    this.channelService.demoteToPeon(admin, channel);
+    this.mutedUser.push({user: data.id, time: 70});
   }
 
   @SubscribeMessage('promote_admin')
@@ -124,6 +147,18 @@ export class ChannelGateway
     console.log(data.id);
     const admin: User = await this.userService.getUserById(data.id);
     this.channelService.promoteToAdmin(admin, channel);
+  }
+
+  @SubscribeMessage('demote_admin')
+  async demoteAdmin(
+    @MessageBody() data: any,
+    @ConnectedSocket() socket: Socket,
+  ): Promise<void> {
+    const user: User = await this.channelService.getUserFromSocket(socket);
+    let channel: Channel = await this.channelService.getOneChannel(data.channelName);
+    console.log(data.id);
+    const admin: User = await this.userService.getUserById(data.id);
+    this.channelService.demoteToPeon(admin, channel);
   }
 
   @SubscribeMessage('get_admin')

@@ -73,6 +73,10 @@ export class ChannelService {
     return await this.channelsRepository.promoteToAdmin(user, channel);
   }
 
+  async demoteToPeon(user: User, channel: Channel): Promise<void> {
+    return await this.channelsRepository.demoteToPeon(user, channel);
+  }
+
   async joinChannel(user: User, name: string, password: string): Promise<void> {
     let channel = await this.getOneChannel(name);
 
