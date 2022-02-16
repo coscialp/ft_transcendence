@@ -5,7 +5,7 @@ import { ImageController } from './image.controller';
 
 @Module({
   imports: [MulterModule.register({
-    dest: '../../../frontend/public/img',
+    dest: './upload',
   }),
   PassportModule.register({ defaultStrategy: 'jwt' }),
 ],

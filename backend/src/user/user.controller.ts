@@ -22,6 +22,10 @@ export class UserController {
     async getLeaderboard(): Promise<User[]> {
         return await this.userService.getLeaderboard();
     }
+    @Get('/leaderboard/friends')
+    async getLeaderboardByFriends(@GetUser() user: User): Promise<User[]> {
+        return await this.userService.getLeaderboardByFriends(user);
+    }
 
     @Get('/:id')
     async getUserById(@Param('id') id: string, @GetUser() user: User): Promise<User> {

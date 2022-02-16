@@ -1,7 +1,7 @@
 import { ArrowSmUp, Backspace } from 'heroicons-react'
 import './privateMessage.css'
 import './mainMenu.css'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie'
 import { useForceUpdate } from '../../utils/forceUpdate'
 import { MessageType } from '../../utils/message.type'
@@ -10,9 +10,9 @@ import { ip } from '../../App'
 import { Conversation } from '../../utils/conversation.type'
 
 export function Open_Message() {
-    var Message: any = document.getElementById('Message')
-    var arrowR: any = document.getElementById('arrowR')
-    var arrowL: any = document.getElementById('arrowL')
+    let Message: any = document.getElementById('Message')
+    let arrowR: any = document.getElementById('arrowR')
+    let arrowL: any = document.getElementById('arrowL')
     if (Message.style.height === '400px') {
         Message.style.transition = 'all .5s ease-in-out'
         Message.style.height = '50px'
@@ -46,6 +46,7 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
     const [newDmNotif, setNewDmNotif] = useState<boolean>();
 
     const forceUpdate = useForceUpdate();
+    const scrollRef = useRef<any>();
 
     const requestApi = new RequestApi(cookies.access_token, ip);
 
@@ -129,6 +130,10 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
 
     console.log(newDmNotif);
 
+    useEffect(() => {
+		scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+	}, [messages.length])
+
     return (
         <div id="Message" >
             <div id="OpenMsg" onClick={() => { Open_Message(); setNewDmNotif(false); setCurrentChat(""); setisConvOpen(false) }}>
@@ -153,22 +158,22 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
                             </div>
                         </article>
                     )) :
-                        <div>
-                            <section className='discussion' >
-                                <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
-                                {
-                                    messages.map((message: any) => (
-                                        message.sender === me.username ?
-                                            <div key={message.id} className="bubble sender"> {message.content} </div> :
-                                            <div key={message.id} className="bubble recipient"> {message.content} </div>
-                                    ))
-                                }
-                            </section>
-                            <form onSubmit={handleSendMessage} >
-                                <input type="text" className="privateMessageInput" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
-                            </form>
-                        </div>
-                }
+                    <div>
+                        <section className='discussion' >
+                            <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
+                            {
+                                messages.map((message: any) => (
+                                    message.sender === me.username ?
+                                        <div ref={scrollRef} key={message.id} className="bubble sender"> {message.content} </div> :
+                                        <div ref={scrollRef} key={message.id} className="bubble recipient"> {message.content} </div>
+                                ))
+                            }
+                        </section>
+                        <form onSubmit={handleSendMessage} >
+                            <input type="text" className="privateMessageInput" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
+                        </form>
+                    </div>
+            }
             </div>
         </div>
     )

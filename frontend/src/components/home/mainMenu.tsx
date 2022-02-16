@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
@@ -25,6 +25,7 @@ export function MainMenu(data: any) {
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
+	const scrollRef = useRef<any>();
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
 
@@ -166,6 +167,12 @@ export function MainMenu(data: any) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cookies, messages, current_channel]);
 
+
+	useEffect(() => {
+		scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+	}, [messages.length])
+
+
 	function changeChannel(e: any) {
 		if (data.socket) {
 			data.socket.emit('change_channel', { channelName: e.target.innerText });
@@ -189,7 +196,7 @@ export function MainMenu(data: any) {
 			<div className="Message Container" >
 				{messages.map((message: any) =>
 				(
-					<article key={message.id} className='message-container'>
+					<article ref={scrollRef} key={message.id} className='message-container'>
 						<div className="img-content" >
 							<img className="message-image" style={{ backgroundImage: `url(${message.avatar})` }} alt="" />
 							<div className="message-body" >
