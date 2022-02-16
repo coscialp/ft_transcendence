@@ -60,6 +60,9 @@ export function Normal(data: any) {
   return (
     <div className="normalElement" >
       <p className="normalTitle" >Normal Game</p>
+      <details className="choose-mode" >
+        <summary></summary>
+      </details>
       <PlayOutline className="playBtn" onClick={e => {play(); setPopUp(true)}} />
       {popUp === true ? 
           <div className="duelPage">
