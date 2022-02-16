@@ -40,6 +40,18 @@ export class UserService {
     return (await this.getUser({search: undefined})).sort((a: User, b: User) => b.PP - a.PP);
   }
 
+  async getLeaderboardByFriends(user: User): Promise<User[]> {
+    const leaderboard: User[] = [user];
+
+    user.friends = (await this.getFriends(user.id, user)).friends;
+
+    for (let friend of user.friends) {
+      leaderboard.push(friend);
+    }
+
+    return leaderboard.sort((a: User, b: User) => b.PP - a.PP);
+  }
+
   async getUserById(id: string, user?: User): Promise<User> {
     if (id === 'me') {
       id = user.id;

@@ -20,15 +20,8 @@ export function Settings() {
 	const [me, setMe]: any = useState({});
 	const [newNick, setNewNick] = useState("");
 	const [newEmail, setNewEmail] = useState("");
-	const [newAvatar, setNewAvatar] = useState<File | undefined>();
-	const [previewAvatar, setPreviewAvatar] = useState<File>();
-	let state = {
-		name: '',
-		price: '',
-		selectedFile: null,
-		filename: ''
-	};
-
+	const [newAvatar, setNewAvatar] = useState("");
+	const [previewAvatar, setPreviewAvatar] = useState<any>();
 	const { handleSubmit } = useForm({
 		mode: "onChange"
 	});
@@ -120,27 +113,33 @@ export function Settings() {
 	
 		console.log(newAvatar)
 		console.log(previewAvatar)
+
+		console.log(previewAvatar);
+		const formData = new FormData();
+
+		formData.append('file', previewAvatar);
+		if (newAvatar !== "") {
 			axios.request({
-				url: '/user/me/avatar',
-				method: 'patch',
+				url: '/upload/',
+				method: 'post',
 				baseURL: `http://${ip}:5000`,
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,
+					"Content-Type": "multipart/form-data; boundary=123",
 				},
-				data: {
-					"avatar":  newAvatar,
-				}
-			})
-			axios.request({
-				url: '/upload',
-				method: 'get',
-				baseURL: `http://${ip}:5000`,
-				headers: {
-					"Authorization": `Bearer ${cookies.access_token}`
-				},
-				data: {
-					"file": newAvatar,
-				}
+				data: formData,
+			}).then((response: any) => {
+				axios.request({
+					url: '/user/me/avatar',
+					method: 'patch',
+					baseURL: `http://${ip}:5000`,
+					headers: {
+						"Authorization": `Bearer ${cookies.access_token}`,
+					},
+					data: {
+						"avatar":  '/Users/coscialp/Project/transcendance/backend/' + response.data.path,
+					}
+				});
 			})
 			window.alert("Avatar successfully changed to " + newAvatar + " !")
 			//setNewAvatar("");
@@ -172,7 +171,6 @@ export function Settings() {
 
 	return (
 		<div>
-			<NavBar page="Settings" />
 			<div className="SettingsElement">
 				<div className="SettingsMain">
 					<div className="change Nickname">
