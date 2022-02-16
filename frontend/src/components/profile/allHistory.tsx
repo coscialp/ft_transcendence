@@ -5,11 +5,12 @@ import { ip } from '../../App';
 import './profile.css'
 import './allHistory.css'
 import { isLogged } from '../../utils/isLogged';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useHistory } from 'react-router-dom';
 import { NavBar } from '../navbar/navbar';
 
 export default function AllHistory() {
 
+    let history = useHistory();
     const [cookies] = useCookies();
     const userHistory = window.location.pathname.split('/')[1];
     const [game, setGame]: any = useState([]);
@@ -53,9 +54,9 @@ export default function AllHistory() {
                     {game.map((games: any, index: any, array: any) => (
                         (array.length - 6 <= index) ?
                             <div id="all-History" key={games?.game.id} style={games?.winner === userHistory ? { backgroundColor: "rgba(0, 141, 177, 0.39)" } : { backgroundColor: "rgb(147 63 63 / 39%)" }} >
-                                <img className="all-HistoryImage" style={{ backgroundImage: `url(${games?.game.player1.profileImage})` }} alt="" />
+                                <img className="all-HistoryImage" onClick={(e) => { return history.push(`/${games?.game.player1.username}/profile`) }} style={{ backgroundImage: `url(${games?.game.player1.profileImage})` }} alt="" />
                                 <p className="all-Score"> <span style={{ fontSize: `2vh` }} >{new Date(games?.game.date).toLocaleTimeString(undefined, { timeStyle: 'short' })}</span> <br/> {games?.game.score1} : {games?.game.score2} <br /> {games?.winner === userHistory ? "WIN" : "LOSE"} </p>
-                                <img className="all-HistoryImage" style={{ backgroundImage: `url(${games?.game.player2.profileImage})` }} alt="" />
+                                <img className="all-HistoryImage" onClick={(e) => { return history.push(`/${games?.game.player2.username}/profile`) }} style={{ backgroundImage: `url(${games?.game.player2.profileImage})` }} alt="" />
                             </div>
                             : null
                     ))

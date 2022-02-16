@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
+
+.card{
+  min-height: 475px;
+  width: 275px;
+  margin: 2rem;
+  border-radius: 15px;
+  background: #02383C;
+}
+
+.card .header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem;
+  color: #ddd;
+}
+
+.card .header .title{
+  font-weight: 300;
+}
+
+.one .sort{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-size: 14.1px;
+}
+
+.one .sort .day{
+  padding: 0.4rem 1.2rem;
+  margin: 0 0.1rem;
+  cursor: pointer;
+}
+
+.one .sort .day.active,
+.one .sort .day:active{
+  background: rgba(210, 255, 213, 0.3);
+  border-radius: 25px;
+}
+
+::selection{
+  background: rgba(210, 255, 213, 0.3);
+}
+
+.photo {
+  width: 5vw;
+  background: #fff;
+  border-radius: 50%;
+  border: 5px solid cyan;
+  box-shadow: 0 0 20px cyan;
+  margin: 1rem 0;
+  height: 5vw;
+  object-fit: cover;
+}
+
+.main {
+  width: 7vw;
+  height: 7vw;
+}
+
+.profile {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.profile .person {
+  width: 33%;
+  display: flex;
+  margin: 1rem 0;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.profile .person.first {
+  z-index: 10;
+  transform: translateY(-10%);
+}
+
+.first .fa-crown{
+  color: gold;
+  filter: drop-shadow(0px 0px 5px gold);
+}
+
+.num{
+  color: white;
+}
+
+.fa-caret-up{
+  color: cyan;
+  font-size: 21px;
+}
+
+.link{
+  margin: 0.2rem 0;
+  color: #fff;
+  margin-top: -0.3rem;
+  font-size: 13px;
+}
+
+.points {
+  color: cyan;
+  font-size: 2vh;
+}
+
+.second{
+  margin-right: -0.7rem !important;
+}
+
+.third{
+  margin-left: -0.7rem !important;
+}
+
+.p_img {
+  height: 4vw;
+  width: 4vw;
+  background: #fff;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.flex{
+  display: flex;
+  align-items: center;
+}
+
+.others {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 30px;
+  background: rgba(210, 255, 213, 0.3);
+}
+
+.info .points {
+  margin: 0;
+  margin-left: 0.2rem;
+  margin-right: 0.5vw;
+}
+
+.info .link {
+  margin: 5px;
+}
+
+.rank {
+  display: flex;
+  align-items: center;
+  margin: 0 2px;
+  flex-direction: column-reverse;
+}
+
+.rank i{
+  margin-top: -5px !important;
+}
+
+.rank .num{
+  margin: 0 !important; 
+}
+
+.rest {
+  width: 100%;
+}

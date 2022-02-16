@@ -34,7 +34,7 @@ export function Open_Message() {
 }
 
 
-export default function PrivateMessage({currentChat, setCurrentChat, me, socket}: any) {
+export default function PrivateMessage({ currentChat, setCurrentChat, me, socket }: any) {
     const [isConvOpen, setisConvOpen] = useState<any>(false);
     // eslint-disable-next-line
     const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -49,73 +49,79 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
     const scrollRef = useRef<any>();
 
     const requestApi = new RequestApi(cookies.access_token, ip);
-    
+
     useEffect(() => {
         if (currentChat !== "") {
             setReceiver(currentChat);
             setisConvOpen(true);
         }
-	}, [currentChat]);
-    
-    useEffect(() => {
-		let mount = true;
-		if (mount) {
-				requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
-                    
-					response.messages?.map((msg: any) =>
-						conversations.push({ property: msg.property, conversations: msg.conversations })
-					);
-					forceUpdate();
-				})
-		}
-		return (() => { mount = false; });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cookies, conversations]);
+    }, [currentChat]);
 
     useEffect(() => {
         let mount = true;
-		if (mount) {
-            if (socket) {
-                
-				socket.on(`private_message/${me?.username}`, (msg: any) => {
-                    const convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
+        if (mount) {
+            requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
+
+                response.messages?.map((msg: any) =>
+                    conversations.push({ property: msg.property, conversations: msg.conversations })
+                );
+                forceUpdate();
+            })
+        }
+        return (() => { mount = false; });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cookies, conversations]);
+
+    useEffect(() => {
+        let mount = true;
+        if (socket) {
+
+            socket.on(`private_message/${me?.username}`, (msg: any) => {
+                if (mount) {
+                    let convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
                     setNewDmNotif(true);
+                    console.log(conversations, convIndex);
+                    console.log(msg);
                     if (conversations && convIndex !== -1) {
                         conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
                         messages.push({ id: messages.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
+                    } else {
+                        conversations.push({ property: msg.sender, conversations: [] });
+                        convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
+                        conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
                     }
                     forceUpdate();
-                })
-			}
-		}
-		return (() => { mount = false; });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [socket, me, cookies, messages]);
-    
+                }
+            })
+        }
+        return (() => { mount = false; });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket, me, cookies, messages]);
+
     function handleSendMessage(e: any) {
         if (messageInput) {
-			if (socket) {
-                
-				socket.emit('private_message', { sentAt: Date(), sender: me , body: messageInput, receiver: receiver });
+            if (socket) {
+
+                socket.emit('private_message', { sentAt: Date(), sender: me, body: messageInput, receiver: receiver });
                 messages.push({ id: messages.length, date: Date(), sender: me?.username, content: messageInput, avatar: me?.profileImage, receiver: receiver })
             }
-			setMessageInput('');
-		}
+            setMessageInput('');
+        }
         e.preventDefault();
     }
 
     useEffect(() => {
-		let mount = true;
-		if (mount) {
+        let mount = true;
+        if (mount) {
             const indexOfConv = conversations.findIndex(obj => obj.property.username === receiver)
             conversations[indexOfConv]?.conversations.map((allMessages: any) => (
-                messages.push({ id: allMessages.id, date: new Date(allMessages.date).toLocaleTimeString(undefined, { timeStyle: 'short' }), sender: allMessages.sender.username, content: allMessages.content , avatar: allMessages.sender.profileImage, receiver: allMessages.receiver.username })
+                messages.push({ id: allMessages.id, date: new Date(allMessages.date).toLocaleTimeString(undefined, { timeStyle: 'short' }), sender: allMessages.sender.username, content: allMessages.content, avatar: allMessages.sender.profileImage, receiver: allMessages.receiver.username })
             ))
             forceUpdate();
-		}
-		return (() => { mount = false; });
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cookies, conversations, receiver]);
+        }
+        return (() => { mount = false; });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cookies, conversations, receiver]);
 
     function handleSelectConversation(receiver: string) {
         setReceiver(receiver);
@@ -131,14 +137,13 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
     return (
         <div id="Message" >
             <div id="OpenMsg" onClick={() => { Open_Message(); setNewDmNotif(false); setCurrentChat(""); setisConvOpen(false) }}>
-                <ArrowSmUp id="arrowR" /><span>Message { newDmNotif ? <span id="DmNotif">●</span> : null}</span>
+                <ArrowSmUp id="arrowR" /><span>Message {newDmNotif ? <span id="DmNotif">●</span> : null}</span>
                 <ArrowSmUp id="arrowL" />
             </div>
             <div className="scrollMessageContainer">
-            {
-                conversations?.length === 0 ? "You have no messages" :
-                isConvOpen === false ? conversations?.map((message: any) => (
-                    <article key={message.property.id} id='message-container' onClick={(e) => handleSelectConversation(message.property.username)}>
+                {
+                    isConvOpen === false ? conversations?.map((message: any) => (
+                        <article key={message.property.id} id='message-container' onClick={(e) => handleSelectConversation(message.property.username)}>
                             <div>
                                 <img id="message-image" style={{ backgroundImage: `url(${message.property.profileImage})` }} alt="" />
                             </div>
@@ -151,7 +156,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
                                 </header>
                                 <p id='message-text'>{message.conversations[message.conversations.length - 1].content}</p>
                             </div>
-                    </article>
+                        </article>
                     )) :
                     <div>
                         <section className='discussion' >
