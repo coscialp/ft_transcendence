@@ -20,7 +20,6 @@ export function MainMenu(data: any) {
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
-
 	const requestApi = new RequestApi(cookies.access_token, ip);
 
 	const forceUpdate = useForceUpdate();
@@ -29,7 +28,7 @@ export function MainMenu(data: any) {
 		let mount = true;
 		if (mount) {
 			requestApi.get('user/channels/connected').then((response) => {
-				response.channelsConnected?.map((chan: any) => 
+				response.channelsConnected?.map((chan: any) =>
 					channels.push(chan.name)
 				)
 			})
@@ -46,7 +45,7 @@ export function MainMenu(data: any) {
 				data.socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
 					messages.push({ id: messages.length, date: msg.sentAt, sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
-				})
+				});
 			}
 		}
 		return (() => { mount = false; });
@@ -59,7 +58,7 @@ export function MainMenu(data: any) {
 		setShowPopup(!showPopup);
 	}
 
- 	function handleCreateNewChannel(e: any) {
+	function handleCreateNewChannel(e: any) {
 		if (channelName === "") {
 			window.alert("Channel's name cannot be empty !")
 		}

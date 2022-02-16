@@ -154,7 +154,7 @@ export class GameGateway
     async UpdatePosition(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
-        this.server.emit(`UpdatePosition/${data.gameId}`, data.pos, data.id, data.posx, data.posy);
+        this.server.to(data.gameID).emit(`UpdatePosition`, data.pos, data.id, data.posx, data.posy);
     }
 
     @SubscribeMessage('StartParticle')
@@ -164,13 +164,20 @@ export class GameGateway
         this.server.emit(`StartParticle/${data.gameId}`);
     }
 
+    @SubscribeMessage('joinroom')
+    async joinroom(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+        socket.join(data.gameID);
+    }
+
     @SubscribeMessage('ExitQueue')
     async ExitQueue(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
             const user: User = await this.gameService.getUserFromSocket(socket);
             for (let {user: u, pool: pool} of this.usersInRankedQueue) {
-                
+                 
                 if (user.username === u.username) {
                     
                     this.usersInRankedQueue.splice(this.usersInRankedQueue.findIndex((j) => j.user.id === u.id), 1);
@@ -182,7 +189,6 @@ export class GameGateway
                 }
             }
     }
-
     async afterInit(server: Server) {
         this.logger.log('Init');
     }
@@ -210,12 +216,12 @@ export class GameGateway
     async handleConnection(@ConnectedSocket() socket: Socket) {
         const user: User = await this.gameService.getUserFromSocket(socket);
         try {
+            this.logger.log(`Clientux ${user.username} connected`);
             if (!this.connectedUser.some((u) => u.user.username === user.username)) {
                 this.connectedUser.push({user: user, socketId: socket.id});
             }
-            this.logger.log(`Client ${user.username} connected`);
         } catch (error) {
             this.logger.error(error);
-        }``
+        }
     }
 }

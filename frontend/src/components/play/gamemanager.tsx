@@ -134,6 +134,7 @@ export class GameManager {
             this._GameID = gameID;
             this._SocketId = socketId;
             setReload(true);
+            this._Socket.emit('joinroom', {gameID: this._GameID});
         });
     }
     receive_ready_up() {
@@ -192,7 +193,7 @@ export class GameManager {
         });
     }
     receive_game_info() {
-        this._Socket.on(`UpdatePosition/${this._GameID}`, (Position: number, Player: string, posx: number, posy: number) => {
+        this._Socket.on(`UpdatePosition`, (Position: number, Player: string, posx: number, posy: number) => {
             if (this._ID !== Player) {
                 if (this._ID === "Player1") {
                     this._UnityContext.send("RemotePaddle", "SetPosition", Position);
@@ -217,7 +218,7 @@ export class GameManager {
         this._UnityContext.on("SendPosition", (Position: number) => {
             if (this._UpdatePos || this._ID === 'Player2') {
                 this._UpdatePos = false;
-                this._Socket.emit('UpdatePosition', { pos: Position, id: this._ID, gameId: this._GameID, posx: this._BallPos.posx, posy: this._BallPos.posy, soId: this._SocketId });
+                this._Socket.emit('UpdatePosition', { pos: Position, id: this._ID, gameID: this._GameID, posx: this._BallPos.posx, posy: this._BallPos.posy, soId: this._SocketId });
             }
         });
     }
