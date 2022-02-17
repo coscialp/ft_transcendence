@@ -32,7 +32,7 @@ export function Normal(data: any) {
     let mount = true;
     if (mount) {
       setPlayer(new GameManager());
-      setSelectedOption("normalGame");
+      setSelectedOption("Normal Game");
     }
     return (() => { mount = false; });
   }, [cookies]);
@@ -93,10 +93,10 @@ export function Normal(data: any) {
       <div style={styles.container}>
         <select onChange={selectChange} style={styles.select}>
           <option selected disabled>
-            Normal Game
+            {selectedOption}
           </option>
-          <option value="normalGame">Normal Game</option>
-          <option value="blackHolePongMode">BlackHolePong Mode</option>
+          <option value="Normal Game">Normal Game</option>
+          <option value="BlackHolePong Mode">BlackHolePong Mode</option>
         </select>
       </div>
       {selectedOption === "normalGame" ?
