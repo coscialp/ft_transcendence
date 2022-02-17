@@ -94,7 +94,7 @@ export function Normal(data: any) {
           <option value="BlackHolePong Mode">BlackHolePong Mode</option>
         </select>
       </div>
-      {selectedOption === "normalGame" ?
+      {selectedOption === "Normal Game" ?
         <PlayOutline className="playBtn" onClick={e => {play(); setPopUp(true)}} />
         : <PlayOutline className="playBtn" onClick={e => {playGamemode(); setPopUp(true)}} />
       }
@@ -103,7 +103,7 @@ export function Normal(data: any) {
             <div className="duelPopUp"> 
               <p>Waiting for a game...</p>
               <div className="cancel-container">
-              <span className='cancel-cross' onClick={e => {setPopUp(false)}} >
+              <span className='cancel-cross' onClick={e => {exit_queue(); setPopUp(false)}} >
                 <div className="leftright"></div>
                 <div className="rightleft"></div>
                 <label className="cancel">cancel</label>
