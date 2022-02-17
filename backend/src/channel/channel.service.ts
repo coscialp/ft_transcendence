@@ -34,8 +34,10 @@ export class ChannelService {
 
   async getUserFromSocket(socket: Socket): Promise<User> {
     const cookies = socket.handshake.headers.cookie;
-    const { access_token } = parse(cookies);
-    return await this.authService.getUserFromAuthenticationToken(access_token);
+    if (cookies) {
+      const { access_token } = parse(cookies);
+      return await this.authService.getUserFromAuthenticationToken(access_token);
+    }
   }
 
   async createChannel(

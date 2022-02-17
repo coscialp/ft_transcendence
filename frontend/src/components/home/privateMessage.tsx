@@ -77,7 +77,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 		if (mount) {
             if (socket) {
                 
-				socket.on(`private_message/${me?.username}`, (msg: any) => {
+                socket.on(`private_message`, (msg: any) => {
                     const convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
                     setNewDmNotif(true);
                     if (conversations && convIndex !== -1) {
@@ -95,8 +95,9 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
     function handleSendMessage(e: any) {
         if (messageInput) {
 			if (socket) {
-                
+                const indexOfConv = conversations.findIndex(obj => obj.property.username === receiver);
 				socket.emit('private_message', { sentAt: Date(), sender: me , body: messageInput, receiver: receiver });
+                conversations[indexOfConv]?.conversations.push({ id: messages.length, date: Date(), sender: me?.username, content: messageInput, avatar: me?.profileImage, receiver: receiver });
                 messages.push({ id: messages.length, date: Date(), sender: me?.username, content: messageInput, avatar: me?.profileImage, receiver: receiver })
             }
 			setMessageInput('');
@@ -117,8 +118,9 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [cookies, conversations, receiver]);
 
-    function handleSelectConversation(receiver: string) {
-        setReceiver(receiver);
+    function handleSelectConversation(r: string) {
+        receiver !== r && setMessages([]);
+        setReceiver(r);
         setisConvOpen(true);
     }
 
@@ -126,7 +128,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
 
     useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-	}, [messages.length])
+	}, [isConvOpen, messages.length])
 
     return (
         <div id="Message" >
@@ -136,7 +138,7 @@ export default function PrivateMessage({currentChat, setCurrentChat, me, socket}
             </div>
             <div className="scrollMessageContainer">
             {
-                conversations?.length === 0 ? "You have no messages" :
+                //conversations?.length === 0 ? "You have no messages" :
                 isConvOpen === false ? conversations?.map((message: any) => (
                     <article key={message.property.id} id='message-container' onClick={(e) => handleSelectConversation(message.property.username)}>
                             <div>

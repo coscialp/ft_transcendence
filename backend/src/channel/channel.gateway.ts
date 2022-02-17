@@ -20,14 +20,34 @@ import { Channel } from '../entities/channel.entity';
 export class ChannelGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  @WebSocketServer() server: Server;
-  private logger: Logger = new Logger('ChannelGateway');
+  @WebSocketServer()
+  private server: Server;
+
   private activeChannel: Map<string, Channel>;
+  private logger: Logger = new Logger('ChannelGateway');
+
+  private onlineUsers: Array<{user: User, socketId: string}>;
+
   constructor(
-    private channelService: ChannelService,
+  private channelService: ChannelService,
     private userService: UserService,
   ) {
     this.activeChannel = new Map<string, Channel>();
+    this.onlineUsers = new Array();
+  }
+
+
+  private readonly addUser = (user: User, socketId: string) => {
+    user && !this.onlineUsers.some((u) => u.user.username === user.username) &&
+    this.onlineUsers.push({user, socketId});
+
+    if (user) { 
+      this.onlineUsers.find((u) => u.user.username === user.username).socketId = socketId;
+    }
+  }
+
+  private readonly removeUser = (socketId: string) => {
+    this.onlineUsers.filter((user) => user.socketId !== socketId);
   }
 
   @SubscribeMessage('msg_toServer')
@@ -90,7 +110,8 @@ export class ChannelGateway
 
     this.channelService.createMessage(user, response);
 
-    this.server.emit(`private_message/${data.receiver}`, response);
+    const toId = this.onlineUsers.find((u) => u.user.username === data.receiver).socketId;
+    this.server.to(toId).emit('private_message', response);
   }
 
   afterInit(server: Server) {
@@ -99,6 +120,7 @@ export class ChannelGateway
 
   async handleDisconnect(@ConnectedSocket() socket: Socket) {
     const user: User = await this.channelService.getUserFromSocket(socket);
+    this.removeUser(socket.id);
     try {
       this.logger.log(`Client ${user.username} disconnected`);
     } catch (error) {
@@ -108,6 +130,8 @@ export class ChannelGateway
 
   async handleConnection(@ConnectedSocket() socket: Socket) {
     const user: User = await this.channelService.getUserFromSocket(socket);
+
+    this.addUser(user, socket.id);
     try {
       this.logger.log(`Client ${user.username} connected`);
     } catch (error) {
