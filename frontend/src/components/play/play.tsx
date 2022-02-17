@@ -8,24 +8,18 @@ import { Duel } from "./duel";
 import "./play.css";
 import axios from "axios";
 import { ip } from "../../App";
-import { User } from "../../utils/user.type";
-import { io } from "socket.io-client";
+import { User } from "../../utils/user.type";   
 
 export function Play(props: any) {
   const [cookies] = useCookies();
   const [unauthorized, setUnauthorized] = useState(false);
   const [stats, setStats]:any = useState({});
   const [me, setMe] = useState<User>();
-  const [socket, setSocket] = useState(io());
 
   useEffect(() => {
     let mount = true;
     if (mount) {
       isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });  
-      if (cookies) {
-        setSocket(io(`ws://${ip}:5002`, { transports: ['websocket'] }));
-        console.log(socket);
-      }
     }
     return (() => { mount = false; });
   // eslint-disable-next-line
@@ -55,8 +49,8 @@ export function Play(props: any) {
   return (
     <div>
       <div className="PlayMain" >
-        <Normal me={me} stats={stats} socket={socket}/>
-        <Ranked me={me} stats={stats} socket={socket}/>
+        <Normal me={me} stats={stats} />
+        <Ranked me={me} stats={stats} />
         <Duel />
       </div>
     </div>

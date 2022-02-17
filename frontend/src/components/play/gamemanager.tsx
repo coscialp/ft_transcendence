@@ -1,5 +1,6 @@
 import { UnityContext } from "react-unity-webgl";
 import { io, Socket } from "socket.io-client";
+import { gameSocket } from "../../App";
 
 export class GameManager {
     private _P1ready: boolean;
@@ -128,16 +129,16 @@ export class GameManager {
     }
 
     receive_gameID(username: string, setReload: any) {
-        this._Socket.on(`getGameID/${username}`, (gameID: number, socketId: string) => {
+        gameSocket.on(`getGameID/${username}`, (gameID: number, socketId: string) => {
             this._GameID = gameID;
             this._SocketId = socketId;
-            this._Socket.emit('JoinRoom', {gameID: gameID});
+            gameSocket.emit('JoinRoom', {gameID: gameID});
             setReload(true);
-            this._Socket.emit('joinroom', {gameID: this._GameID});
+            gameSocket.emit('joinroom', {gameID: this._GameID});
         });
     }
     receive_ready_up() {
-        this._Socket.on(`ReadyUp/${this._GameID}`, (playerID: string) => {
+        gameSocket.on(`ReadyUp/${this._GameID}`, (playerID: string) => {
             if (playerID === 'Player1')
                 this._P1ready = true;
             else if (playerID === 'Player2')
@@ -145,27 +146,27 @@ export class GameManager {
         })
     }
     receive_particle() {
-        this._Socket.on(`StartParticle/${this._GameID}`, () => {
+        gameSocket.on(`StartParticle/${this._GameID}`, () => {
             this._UnityContext.send("HUD", "spawn_blackhole");
         })
     }
 
     receive_endGame() {
-        this._Socket.on(`finishGame/${this._GameID}`, (loser: string) => {
+        gameSocket.on(`finishGame/${this._GameID}`, (loser: string) => {
             this._GameState = true;
             this._Warning = true;
             if (loser === 'Player1') {
-                this.Socket.emit(`finishGame`, { gameId: this._GameID, player: this._ID, score1: 0, score2: 10, date: this._GameDate });
+                gameSocket.emit(`finishGame`, { gameId: this._GameID, player: this._ID, score1: 0, score2: 10, date: this._GameDate });
             }
             else if (loser === 'Player2') {
-                this.Socket.emit(`finishGame`, { gameId: this._GameID, player: this._ID, score1: 10, score2: 0, date: this._GameDate });
+                gameSocket.emit(`finishGame`, { gameId: this._GameID, player: this._ID, score1: 10, score2: 0, date: this._GameDate });
             }
         })
     }
 
     send_ready_up() {
         this._UnityContext.on("setReady", () => {
-            this._Socket.emit('ReadyUp', { player: this._ID, gameId: this._GameID });
+            gameSocket.emit('ReadyUp', { player: this._ID, gameId: this._GameID });
         });
     }
     send_ball_position() {
@@ -181,7 +182,7 @@ export class GameManager {
     }
 
     receive_game_info() {
-        this._Socket.on(`UpdatePosition`, (Position: number, Player: string, posx: number, posy: number, score1: number, score2: number) => {
+        gameSocket.on(`UpdatePosition`, (Position: number, Player: string, posx: number, posy: number, score1: number, score2: number) => {
             if (this._ID !== Player) {
                 if (this._ID === "Player1") {
                     this._UnityContext.send("RemotePaddle", "SetPosition", Position);
@@ -209,7 +210,7 @@ export class GameManager {
         this._UnityContext.on("SendPosition", (Position: number) => {
             if (this._UpdatePos || this._ID === 'Player2') {
                 this._UpdatePos = false;
-                this._Socket.emit('UpdatePosition', { pos: Position, id: this._ID, gameID: this._GameID, posx: this._BallPos.posx, posy: this._BallPos.posy, soId: this._SocketId, score1: this.Score1, score2: this.Score2 });
+                gameSocket.emit('UpdatePosition', { pos: Position, id: this._ID, gameID: this._GameID, posx: this._BallPos.posx, posy: this._BallPos.posy, soId: this._SocketId, score1: this.Score1, score2: this.Score2 });
             }
         });
     }
@@ -217,24 +218,24 @@ export class GameManager {
         this._UnityContext.on("GameResult", (PointToAdd: string, score1: number, score2: number) => {
             if (this._ID === "Player1") {
                 if (score1 === 15 && score2 !== 10) {
-                    this._Socket.emit('AddPoint', { gameId: this._GameID, point: "player1" });
+                    gameSocket.emit('AddPoint', { gameId: this._GameID, point: "player1" });
                     this._Score1++;
                 }
                 else if (score1 !== 10 && score2 !== 10) {
-                    this._Socket.emit('AddPoint', { gameId: this._GameID, point: 'player2' });
+                    gameSocket.emit('AddPoint', { gameId: this._GameID, point: 'player2' });
                     this._Score2++;
                 }
             }
             if (score1 === 10 || score2 === 10) {
                 this._UnityContext.send("LocalPaddle", "setGameStarted", 0);
                 this._UnityContext.send("RemotePaddle", "setGameStarted", 0);
-                this._Socket.emit('finishGame', { gameId: this._GameID, player: this._ID, score1: this._Score1, score2: this._Score2, date: this._GameDate })
+                gameSocket.emit('finishGame', { gameId: this._GameID, player: this._ID, score1: this._Score1, score2: this._Score2, date: this._GameDate })
                 this._GameState = true;
             }
         });
     }
     send_gameid() {
-        this._Socket.emit("getGameID", '');
+        gameSocket.emit("getGameID", '');
     }
 
     ready_checker() {

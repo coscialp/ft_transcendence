@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router";
 import { io, Socket } from "socket.io-client";
-import { ip } from "../../App";
+import { gameSocket, ip } from "../../App";
 import './home.css'
 import { Open_Message } from "./privateMessage";
 import { ArrowSmUp } from 'heroicons-react'
-
+//import { gameSocket } from "../../App";
 
 export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
@@ -35,7 +35,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
 
     if (mounted) {
       FriendRequest()
-      setSocket(io(`ws://${ip}:5002`, { transports: ['websocket'] }));
+      //setSocket(io(`ws://${ip}:5002`, { transports: ['websocket'] }));
       setRandom(Math.floor(Math.random() * 2000000000 - 1));
     }
 
@@ -136,6 +136,10 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
 
 }
 
+  function handleDuel(friend: any) {
+      gameSocket.emit('duel', {username: friend.username})
+  } 
+
 
   return (
     <div className="FriendElement" >
@@ -164,7 +168,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
           <summary className="FriendList"><img className="imgFriendList" src={friend.profileImage} alt=""></img> {friend.username}</summary>
           <nav className="menuFriendList">
             <button className="friendBtn" onClick={e => { document.getElementById(friend.id)?.removeAttribute("open"); Open_Message(); setCurrentChat(friend.username) }} ><span /><span /><span /><span />Send message</button>
-            <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>
+            <button className="friendBtn" onClick={() => { handleDuel(friend)} } ><span /><span /><span /><span />Invite game</button>
             <button className="friendBtnOut friendBorder" onClick={() => { handleDeleteFriends(friend) }}><span /><span /><span /><span />Delete friend</button>
             <button className="friendBtnOut" onClick={() => { handleDeleteFriends(friend); handleBlacklist(friend) }}><span /><span /><span /><span />Blacklist</button>
             <button className="friendBtn" onClick={() => goGame(friend)}><span /><span /><span /><span />Spectate Game</button>

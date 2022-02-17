@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { withCookies } from 'react-cookie';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { Cookies } from './components/cookies/cookies';
@@ -21,17 +21,17 @@ import { NavBar } from './components/navbar/navbar';
 import { io } from 'socket.io-client';
 
 export const ip = window.location.hostname;
+export const gameSocket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
 
 
-function Menu() {
+function Menu(data: any) {
 	const page = window.location.pathname.split('/')[1];
-
 	return (
 		<>
 			<NavBar page={page} />
 			<Route exact path={"/home"} component={Home} />
 			<Route exact path={"/play"} component={Play} />
-			<Route exact path={"/alerts"} component={Notification} />
+			<Route exact path={"/alerts"} component={() => <Notification duel={data.duel} />} />
 			<Route path={"/settings"} component={Settings} />
 			<Route path={"/:id/profile"} component={Profile} />
 			<Route path={"/:id/history"} component={AllHistory} />
@@ -40,9 +40,20 @@ function Menu() {
 }
 
 function App() {
-	useEffect (() => {
-		const socket: any = io(`ws://${ip}:5002`, { transports: ['websocket'] });
+
+	const [duel, setDuel]: any = useState({});
+
+	useEffect(() => {
+		let mount = true;
+		if (mount && gameSocket) {
+			gameSocket.on('duel', (user: any) => {
+				setDuel(user);
+			})
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
+
 	return (
 		<Router>
 			<Switch>
@@ -54,7 +65,7 @@ function App() {
 				<Route path={"/2fa"} component={TwoFA} />
 				<Route path={"/game"} component={InGame} />
 				<Route path={"/resume"} component={Resume} />
-				<Menu />
+				<Menu duel={duel} />
 				<Route component={NotFound} />
 			</Switch>
 		</Router>

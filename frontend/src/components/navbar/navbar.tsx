@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router';
-import { ip } from '../../App';
+import { gameSocket, ip } from '../../App';
 import { isLogged } from '../../utils/isLogged';
 import { Bell, Cog, UserCircle, Logout} from 'heroicons-react';
 import './navbar.css'
@@ -25,6 +25,19 @@ export function NavBar(props: any) {
   }, [cookies])
 
   const [avatar, setAvatar] = useState('/img/beluga.jpeg');
+
+  useEffect(() => {
+		let mount = true;
+		if (mount && gameSocket && history) {
+			gameSocket.on('accept_duel', (user: any) => {
+				console.log(user);
+				localStorage.setItem('playerID', user);
+        localStorage.setItem('gameMOD', "false");
+				return history.push('/game');
+			})
+		}
+		return (() => { mount = false; });
+	}, [history]);
 
   useEffect(() => {
     const interval = setInterval(() => {

@@ -20,6 +20,8 @@ export class GameGateway
     private logger: Logger = new Logger('GameGateway');
     private usersInQueue: User[];
     private usersInRankedQueue: {user: User, pool: number}[];
+    private usersDuel: {user1: User, user2: string}[];
+    private usersConnected: {user: string, socketId: Socket}[];
     private matchInProgress: {
         user1: User,
         user2: User,
@@ -32,6 +34,8 @@ export class GameGateway
         this.usersInQueue = [];
         this.usersInRankedQueue = [];
         this.matchInProgress = [];
+        this.usersConnected = [];
+        this.usersDuel = [];
     }
     @SubscribeMessage('matchmaking')
     async MatchMaking(
@@ -78,6 +82,53 @@ export class GameGateway
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         this.server.emit(`ReadyUp/${data.gameId}`, data.player);
+    }
+
+    @SubscribeMessage('duel')
+    async duel(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+        const user: User = await this.gameService.getUserFromSocket(socket);
+        let index: number = this.usersConnected.findIndex((u) => u.user === data.username);
+        let id: string;
+        if (index !== -1) {
+            id = this.usersConnected[index].socketId.id;
+            this.usersDuel.push({user1: user, user2: this.usersConnected[index].user});
+        }
+        console.log(this.usersConnected ,id);
+        this.server.to(id).emit('duel', user);
+    }
+
+    @SubscribeMessage('refuse_duel')
+    async refuse_duel(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+        const user: User = await this.gameService.getUserFromSocket(socket);
+        let index: number = this.usersDuel.findIndex((u) => (u.user1.username) === user.username);
+        if (index !== -1) {
+            this.server.to(this.usersConnected[this.usersConnected.findIndex((u) => u.user === this.usersDuel[index].user2)].socketId.id).emit('refuse_duel');
+            this.usersDuel.splice(index, 1);
+        }
+        else {
+            index = this.usersDuel.findIndex((u) => (u.user2) === user.username);
+            this.server.to(this.usersConnected[this.usersConnected.findIndex((u) => u.user === this.usersDuel[index].user1.username)].socketId.id).emit('refuse_duel');
+            this.usersDuel.splice(index, 1);
+        }
+    }
+
+    @SubscribeMessage('accept_duel')
+    async accepte_duel(
+        @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any) {
+        const user: User = await this.gameService.getUserFromSocket(socket);
+        let index: number = this.usersDuel.findIndex((u) => (u.user2) === user.username);
+        if (index !== -1) {
+            this.matchInProgress.push({ user1: user, user2: this.usersDuel[index].user1, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: false })
+            this.server.to(this.usersConnected[this.usersConnected.findIndex((u) => u.user === this.usersDuel[index].user1.username)].socketId.id).emit('accept_duel', 'Player1');
+            this.server.to(socket.id).emit('accept_duel', 'Player2');
+            this.usersDuel.splice(index, 1);
+        }
+        this.usersDuel
     }
 
     @SubscribeMessage('getGameID')
@@ -206,6 +257,13 @@ export class GameGateway
         const user: User = await this.gameService.getUserFromSocket(socket);
         try {
             this.logger.log(`Client ${user.username} connected`);
+            if (this.usersConnected.findIndex((u) => u.user === user.username) === -1) {
+                this.usersConnected.push({user: user.username, socketId: socket});
+            }
+            else { 
+                this.usersConnected.splice(this.usersConnected.findIndex((u) => u.user === user.username), 1);
+                this.usersConnected.push({user: user.username, socketId: socket});
+            }
         } catch (error) {
             this.logger.error(error);
         }

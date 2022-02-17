@@ -8,6 +8,7 @@ import { User } from "../../utils/user.type";
 import { useCookies } from "react-cookie";
 import { io } from "socket.io-client";
 import { ip } from "../../App";
+import { gameSocket } from "../../App";
 
 export function InGame() {
 
@@ -54,7 +55,6 @@ export function InGame() {
   useEffect(() => {
     window.addEventListener("blur", onBlur);
     window.addEventListener("focus", onFocus);
-    player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
     return () => {
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
@@ -62,9 +62,6 @@ export function InGame() {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
-  }, []);
   
   useEffect(() => {
     let mount = true;
@@ -77,7 +74,7 @@ export function InGame() {
         player.GameID = Number(localStorage.getItem('GameID'));
       }
     }
-    return (() => { mount = false; player.Socket.disconnect(); });
+    return (() => { mount = false;});
   }, [cookies, player]);
 
   useEffect(function () {
@@ -109,7 +106,7 @@ export function InGame() {
   }, [me, player]);
 
   function setReady() {
-    player.Socket.emit('ReadyUp', { player: player.ID, gameId: player.GameID });
+    gameSocket.emit('ReadyUp', { player: player.ID, gameId: player.GameID });
     let ready: HTMLElement | null = document.getElementById('button_ready');
     if (ready) {
       ready.style.display = 'none';
@@ -159,10 +156,10 @@ export function InGame() {
       }
       if (tabTimeRef.current === 1000 || player.GameState === true || leaveRef.current === 300) {
         if (player.ID === 'Player1') {
-          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
+           gameSocket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
         }
         else {
-          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
+          gameSocket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
         }
       }
       if (gameFinish === true || player.Warning === true) {
@@ -180,6 +177,9 @@ export function InGame() {
   useEffect(() => {
     const interval = setInterval(() => {
       check_ready();
+      if (player.Score1 !== score.score1 || player.Score2 !== score.score2) {
+        setScore({score1: player.Score1, score2: player.Score2});
+      }
     }, 1000);
     return () => clearInterval(interval);
     // eslint-disable-next-line
@@ -188,7 +188,7 @@ export function InGame() {
   useEffect(() => {
     const interval = setInterval(() => {
       if (player.GameMod === 0 && player.GameID !== 0 && player.ID === "Player1") {
-        player.Socket.emit('StartParticle', { gameId: player.GameID });
+        gameSocket.emit('StartParticle', { gameId: player.GameID });
       }
       let ready: HTMLElement | null = document.getElementById('button_ready');
       if (ready) {

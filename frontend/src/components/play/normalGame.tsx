@@ -5,7 +5,7 @@ import "./normalGame.css";
 import { PlayOutline } from 'heroicons-react';
 import { GameManager } from "./gamemanager";
 import { useHistory } from "react-router";
-
+import { gameSocket } from "../../App";
 
 export function Normal(data: any) {
 
@@ -28,7 +28,7 @@ export function Normal(data: any) {
 
       if (player) {
         console.log('here');
-        data.socket.on(`startgame/${data.me?.username}`, (msg: any) => {
+        gameSocket.on(`startgame/${data.me?.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
           localStorage.setItem('gameMOD', "false");
@@ -41,14 +41,14 @@ export function Normal(data: any) {
   }, [player, cookies, data.me, history]);
 
   function play(): void {
-    if (data.socket) {
-      console.log(data.socket);
-      data.socket.emit('matchmaking', '');
+    if (gameSocket) {
+      console.log(gameSocket);
+      gameSocket.emit('matchmaking', '');
     }
   }
   function exit_queue() {
-    if (data.socket) {
-      data.socket.emit('ExitQueue');
+    if (gameSocket) {
+      gameSocket.emit('ExitQueue');
     }
   }
   return (

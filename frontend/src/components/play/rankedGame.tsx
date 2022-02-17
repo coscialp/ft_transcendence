@@ -4,7 +4,7 @@ import { GameManager } from "./gamemanager";
 import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router";
-
+import { gameSocket } from "../../App";
 export function Ranked(data: any) {
 
   const [cookies] = useCookies();
@@ -16,9 +16,9 @@ export function Ranked(data: any) {
   useEffect(() => {
     let mount = true;
     if (mount && data.player) {
-      if (data.socket && player && data.me) {
+      if (gameSocket && player && data.me) {
 
-        data.socket.on(`startgame/${data.me.username}`, (msg: any) => {
+        gameSocket.on(`startgame/${data.me.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
           localStorage.setItem('gameMOD', "false");
@@ -34,7 +34,7 @@ export function Ranked(data: any) {
     const interval = setInterval(() => {
       console.log(inQueue);
       if (inQueue === true) {
-        data.socket.emit('matchmakingRanked', '');
+        gameSocket.emit('matchmakingRanked', '');
       }
     }, 3000);
     return () => clearInterval(interval);
@@ -42,13 +42,13 @@ export function Ranked(data: any) {
   }, [inQueue]);
   function play(): void {
     setInQueue(true);
-    if (data.socket)
-      data.socket.emit('matchmakingRanked', '');
+    if (gameSocket)
+    gameSocket.emit('matchmakingRanked', '');
   }
   function exit_queue() {
     setInQueue(false);
-    if (data.socket) {
-      data.socket.emit('ExitQueue');
+    if (gameSocket) {
+      gameSocket.emit('ExitQueue');
     }
   }
 
