@@ -94,7 +94,7 @@ img.HistoryImage {
 }
 
 p.Score {
-    font-family: 'neon';
+    font-family: sans-serif;
     margin: 0;
     height: 8vh;
 }
@@ -203,7 +203,7 @@ img.Add.friend {
 
 #Achievement_font
 {
-    font-family:'neon';
+    font-family: sans-serif;
     font-size:1.8vh;
 }
 
@@ -343,7 +343,7 @@ img.Add.friend {
     
     #Achievement_font
     {
-        font-family:'neon';
+        font-family: sans-serif;
         font-size:1.5vh;
         margin-bottom:-5px;
     }

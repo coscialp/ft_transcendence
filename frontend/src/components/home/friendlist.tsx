@@ -101,6 +101,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
     var allFriendListOpen: any = document.getElementById('allFriendListOpen')
     var arrowR: any = document.getElementById('friendArrowR')
     var arrowL: any = document.getElementById('friendArrowL')
+    var friendlistOrientation: any = document.getElementById('friendlistOrientation')
     if (FriendList.style.height === '52vh') {
         FriendList.style.transition = 'all .5s ease-in-out'
         FriendList.style.height = '50px'
@@ -114,7 +115,10 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         arrowR.style.transform = 'rotate(0deg)'
         arrowL.style.transition = 'transform 0.5s ease-in-out'
         arrowL.style.transform = 'rotate(0deg)'
-        allFriendListOpen.style.display = 'none'     
+        allFriendListOpen.style.display = 'none'
+        friendlistOrientation.style.transform = 'rotate(90deg)' 
+        friendlistOrientation.style.writingMode = 'vertical-rl' 
+        friendlistOrientation.style.textOrientation = 'upright' 
     }
     else {
         FriendList.style.transition = 'all .5s ease-in-out'
@@ -132,6 +136,9 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         arrowL.style.transform = 'rotate(-180deg)'
         allFriendListOpen.style.display = 'flex'
         allFriendListOpen.style.flexDirection = 'column'
+        friendlistOrientation.style.transform = 'none' 
+        friendlistOrientation.style.writingMode = 'unset' 
+        friendlistOrientation.style.textOrientation = 'unset' 
       }
 
 }
@@ -145,7 +152,8 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
     <div className="FriendElement" >
       <div id="friendListMini">
           <div id="OpenFriendList" onClick={() => { Open_FriendList()}}>
-            <ArrowSmUp id="friendArrowR" onClick={() => Open_FriendList()} />FriendList
+            <ArrowSmUp id="friendArrowR" onClick={() => Open_FriendList()} />
+            <p id="friendlistOrientation">FriendList</p>
             <ArrowSmUp id="friendArrowL" onClick={() => Open_FriendList()} />
           </div>
           <div id="allFriendListOpen">{friends.map((friend: any) => (
@@ -162,7 +170,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
           </div>
       </div>
       
-      <p className="FriendTitle" >Friend List</p>
+      <p className="FriendTitle" >FriendList</p>
       <div className="allFriendList">{friends.map((friend: any) => (
         <details key={friend.id} id={friend.id} >
           <summary className="FriendList"><img className="imgFriendList" src={friend.profileImage} alt=""></img> {friend.username}</summary>

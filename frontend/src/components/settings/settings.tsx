@@ -144,7 +144,7 @@ export function Settings() {
 	*/
 
 	function handle2FA() {
-
+		
 		me.twoFactorAuth ?
 			axios.request({
 				url: '/user/2FA/deactivate',
@@ -201,11 +201,19 @@ export function Settings() {
 							  />
 							)}
 					</div>
-					<div className="2FA">
+					<div className="change Nickname">
 						{me?.twoFactorAuth ?
-						<>Disable the 2FA<input className="ToggleSwitchON" type="checkbox" id="switch" onClick={handle2FA} /><label className="ToggleSLabelON" htmlFor="switch"></label></>
+						<div>
+							Disable the 2FA !
+							<input className="ToggleSwitchON" type="checkbox" id="switch" onClick={handle2FA} />
+							<label className="ToggleSLabelON" htmlFor="switch"></label>
+						</div>
 						:
-						<>Enable the 2FA<input className="ToggleSwitchOFF" type="checkbox" id="switch" onClick={handle2FA} /><label className="ToggleSLabelOFF" htmlFor="switch"></label></>
+						<div>
+							Enable the 2FA !
+							<input className="ToggleSwitchOFF" type="checkbox" id="switch" onClick={handle2FA} />
+							<label className="ToggleSLabelOFF" htmlFor="switch"></label>
+						</div>
 						}
 					</div>
 				</div>
