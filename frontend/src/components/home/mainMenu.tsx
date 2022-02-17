@@ -145,7 +145,7 @@ export function MainMenu(data: any) {
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,
 				},
-			}).then(response => setChannelAdmin(response.data.admin))
+			}).then((response:any) => setChannelAdmin(response.data.admin))
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps

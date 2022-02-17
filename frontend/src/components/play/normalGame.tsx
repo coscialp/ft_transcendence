@@ -26,6 +26,7 @@ export function Normal(data: any) {
   let history = useHistory();
   const [player, setPlayer] = useState<GameManager>();
   const [popUp, setPopUp] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<String>();
 
   useEffect(() => {
     let mount = true;
@@ -57,12 +58,37 @@ export function Normal(data: any) {
       player.Socket.emit('matchmaking', '');
   }
 
+  const selectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    setSelectedOption(value);
+  };
+
+  const styles: { [name: string]: React.CSSProperties } = {
+    container: {
+      marginTop: 50,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      margin: "10px",
+      height: "40px",
+    },
+    select: {
+      padding: 5,
+      width: 200,
+    },
+  };
+
   return (
     <div className="normalElement" >
-      <p className="normalTitle" >Normal Game</p>
-      <details className="choose-mode" >
-        <summary></summary>
-      </details>
+      <div style={styles.container}>
+        <select onChange={selectChange} style={styles.select}>
+          <option selected disabled>
+            Normal Game
+          </option>
+          <option value="normalGame">Normal Game</option>
+          <option value="blackHolePongMode">BlackHolePong Mode</option>
+        </select>
+      </div>
       <PlayOutline className="playBtn" onClick={e => {play(); setPopUp(true)}} />
       {popUp === true ? 
           <div className="duelPage">
