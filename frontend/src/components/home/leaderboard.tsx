@@ -102,6 +102,54 @@ export function Leaderboard() {
                     <ArrowSmUp id="leadArrowL" onClick={() => Open_Leaderboard()} />
                 </div>
                 <div id="LBBodyOpen" >
+                    <div id="leaderboard-slides" >
+                        <div className="leaderboard" >
+                            <div className="profile">
+                                {leaders.length >= 2 ?
+                                    <div className="person second">
+                                        <div className="num">2</div>
+                                        <i className="fas fa-caret-up"></i>
+                                        <img src={leaders[1]?.profileImage} alt="" className="photo" />
+                                        <p className="link">{leaders[1]?.username}</p>
+                                        <p className="points">{leaders[1]?.PP}PP</p>
+                                    </div> : null
+                                }
+                                <div className="person first">
+                                    <div className="num">1</div>
+                                    <i className="fas fa-crown"></i>
+                                    <img src={leaders[0]?.profileImage} alt="" className="photo main" />
+                                    <p className="link">{leaders[0]?.username}</p>
+                                    <p className="points">{leaders[0]?.PP}PP</p>
+                                </div>
+                                {leaders.length >= 3 ?
+                                    <div className="person third">
+                                        <div className="num">3</div>
+                                        <i className="fas fa-caret-up"></i>
+                                        <img src={leaders[2]?.profileImage} alt="" className="photo" />
+                                        <p className="link">{leaders[2]?.username}</p>
+                                        <p className="points">{leaders[2]?.PP}PP</p>
+                                    </div> : null
+                                }
+                            </div>
+                            {leaders.length >= 4 ?
+                                leaders.map((leader: any, index: number, array: any) => (
+                                    (index >= 3) ?
+                                    <div key={leader.id} className="rest">
+                                        <div className="others flex">
+                                            <div className="rank">
+                                                <i className="fas fa-caret-up"></i>
+                                                <p className="num">{index + 1}</p>
+                                            </div>
+                                            <div className="info flex">
+                                                <img src={leader?.profileImage} alt="" className="p_img" />
+                                                <p className="link">{leader?.username}</p>
+                                                <p className="points">{leader?.PP}PP</p>
+                                            </div>
+                                        </div>
+                                    </div> : null)) : null
+                            }
+                        </div>
+                    </div>
                 </div>
             </div>
 

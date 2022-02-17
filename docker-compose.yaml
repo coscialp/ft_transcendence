@@ -56,6 +56,7 @@ services:
     - "5000:5000"
     - "5001:5001"
     - "5002:5002"
+    - "5003:5003"
     depends_on:
       - db
     environment:

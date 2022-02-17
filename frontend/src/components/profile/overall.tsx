@@ -125,6 +125,7 @@ export function Overall(data: any) {
         },
       })
       .then((response: any) => {});
+    data.socket?.emit('newNotification', { receiver: data.user.username });
   }
 
   function handleBlacklist(friendToDelete: any) {
