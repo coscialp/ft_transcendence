@@ -32,6 +32,7 @@ export function Normal(data: any) {
     let mount = true;
     if (mount) {
       setPlayer(new GameManager());
+      setSelectedOption("normalGame");
     }
     return (() => { mount = false; });
   }, [cookies]);
@@ -58,6 +59,11 @@ export function Normal(data: any) {
       player.Socket.emit('matchmaking', '');
   }
 
+  function playGamemode(): void {
+    if (player?.Socket)
+      player.Socket.emit('matchmaking', '');
+  }
+
   const selectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setSelectedOption(value);
@@ -75,6 +81,10 @@ export function Normal(data: any) {
     select: {
       padding: 5,
       width: 200,
+      background: "transparent",
+      height: "40px",
+      color: "white",
+      borderRadius: "5px",
     },
   };
 
@@ -89,7 +99,10 @@ export function Normal(data: any) {
           <option value="blackHolePongMode">BlackHolePong Mode</option>
         </select>
       </div>
-      <PlayOutline className="playBtn" onClick={e => {play(); setPopUp(true)}} />
+      {selectedOption === "normalGame" ?
+        <PlayOutline className="playBtn" onClick={e => {play(); setPopUp(true)}} />
+        : <PlayOutline className="playBtn" onClick={e => {playGamemode(); setPopUp(true)}} />
+      }
       {popUp === true ? 
           <div className="duelPage">
             <div className="duelPopUp"> 
