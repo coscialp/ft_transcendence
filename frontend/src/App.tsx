@@ -34,6 +34,7 @@ function Menu() {
 			<Route path={"/settings"} component={Settings} />
 			<Route path={"/:id/profile"} component={Profile} />
 			<Route path={"/:id/history"} component={AllHistory} />
+			<Route component={NotFound} />
 		</>
 	)
 }
@@ -49,11 +50,9 @@ function App() {
 				<Route exact path={"/signup"} component={SignUp} />
 				<Route path={"/cookies"} component={Cookies} />
 				<Route path={"/2fa"} component={TwoFA} />
-				<Menu />
 				<Route path={"/game"} component={InGame} />
 				<Route path={"/resume"} component={Resume} />
-
-				<Route component={NotFound} />
+				<Menu />
 			</Switch>
 		</Router>
 	);

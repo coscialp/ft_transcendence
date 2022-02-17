@@ -86,7 +86,7 @@ export function Achivements() {
     console.log(achivements)
 
     return (
-        <div id="Achivements" >
+        <div id="Achievements" >
             <div className="Achievements_contents">
                 <p id="Achievement_font">Achievement</p>
                 <p><LockClosed className='logo' /> Authentifier Lvl: {achivements?.Security?.level} </p>

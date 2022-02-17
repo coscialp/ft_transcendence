@@ -26,11 +26,13 @@ export function Normal(data: any) {
   let history = useHistory();
   const [player, setPlayer] = useState<GameManager>();
   const [popUp, setPopUp] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<String>();
 
   useEffect(() => {
     let mount = true;
     if (mount) {
       setPlayer(new GameManager());
+      setSelectedOption("Normal Game");
     }
     return (() => { mount = false; });
   }, [cookies]);
@@ -57,10 +59,50 @@ export function Normal(data: any) {
       player.Socket.emit('matchmaking', '');
   }
 
+  function playGamemode(): void {
+    if (player?.Socket)
+      player.Socket.emit('matchmaking', '');
+  }
+
+  const selectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    setSelectedOption(value);
+  };
+
+  const styles: { [name: string]: React.CSSProperties } = {
+    container: {
+      marginTop: 50,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      margin: "10px",
+      height: "40px",
+    },
+    select: {
+      padding: 5,
+      width: 200,
+      background: "transparent",
+      height: "40px",
+      color: "white",
+      borderRadius: "5px",
+    },
+  };
+
   return (
     <div className="normalElement" >
-      <p className="normalTitle" >Normal Game</p>
-      <PlayOutline className="playBtn" onClick={e => {play(); setPopUp(true)}} />
+      <div style={styles.container}>
+        <select onChange={selectChange} style={styles.select}>
+          <option selected disabled>
+            {selectedOption}
+          </option>
+          <option value="Normal Game">Normal Game</option>
+          <option value="BlackHolePong Mode">BlackHolePong Mode</option>
+        </select>
+      </div>
+      {selectedOption === "normalGame" ?
+        <PlayOutline className="playBtn" onClick={e => {play(); setPopUp(true)}} />
+        : <PlayOutline className="playBtn" onClick={e => {playGamemode(); setPopUp(true)}} />
+      }
       {popUp === true ? 
           <div className="duelPage">
             <div className="duelPopUp"> 

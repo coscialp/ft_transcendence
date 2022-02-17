@@ -5,9 +5,12 @@ import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { isLogged } from '../../utils/isLogged';
 import { ip } from "../../App";
+import { User } from '../../utils/user.type';
+import './leaderboard.css'
+
 
 export function Open_Leaderboard() {
-    
+
     var Leaderboard: any = document.getElementById('leaderboardMini')
     var LBBodyOpen: any = document.getElementById('LBBodyOpen')
     var arrowR: any = document.getElementById('leadArrowR')
@@ -25,7 +28,7 @@ export function Open_Leaderboard() {
         arrowR.style.transform = 'rotate(0deg)'
         arrowL.style.transition = 'transform 0.5s ease-in-out'
         arrowL.style.transform = 'rotate(0deg)'
-        LBBodyOpen.style.display = 'none' 
+        LBBodyOpen.style.display = 'none'
     }
     else {
         Leaderboard.style.transition = 'all .5s ease-in-out'
@@ -47,100 +50,159 @@ export function Open_Leaderboard() {
 
 export function Leaderboard() {
     const [leaders, setLeaders]: any = useState([]);
-    const [friends, setFriends]: any = useState([]);
+    const [swich, setSwich] = useState<boolean>(false);
     const [cookies] = useCookies();
     const [me, setMe]: any = useState({});
-    let rankAll:number = 0;
-    let rankFriend:number = 0;
-    let rankAllReduced:number = 0;
-    let rankFriendReduced:number = 0;
-    
+
     useEffect(() => {
         let mount = true;
-        axios.request({
-            url:`/user/leaderboard/all`,
-            method: 'get',
-            baseURL: `http://${ip}:5000`,
-            headers: {
-                "Authorization": `Bearer ${cookies.access_token}`,
-            }
-        }).then((response: any) => {
-                setLeaders(response.data);
-        })
-        axios.request({
-            url: '/user/me/friends',
-            method: 'get',
-            baseURL: `http://${ip}:5000`,
-            headers: {
-              "Authorization": `Bearer ${cookies.access_token}`,
-            }
-          }).then((response: any) => {
-            setFriends(response.data.friends);
-          })
         if (mount) {
-          isLogged(cookies).then((res) => { setMe(res.me?.data) });
+            isLogged(cookies).then((res) => { setMe(res.me?.data) });
         }
         return (() => { mount = false; });
-      }, [cookies])
+    }, [cookies])
 
-      function rankUser(rank:number):number {
-        rank = rank + 1;
-        return rank;
-      }
+    useEffect(() => {
+        let mount = true;
+        if (mount) {
+            axios.request({
+                url: `/user/leaderboard/all`,
+                method: 'get',
+                baseURL: `http://${ip}:5000`,
+                headers: {
+                    "Authorization": `Bearer ${cookies.access_token}`,
+                }
+            }).then((response: any) => {
+                setLeaders(response.data);
+            })
+        }
+        return (() => { mount = false; });
+    }, [cookies])
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (swich) {
+                document.getElementById("leaderboard-slides")!.style.transform = "translateX(-50%)";
+            }
+            else {
+                document.getElementById("leaderboard-slides")!.style.transform = "translateX(0%)";
+            }
+            setSwich(!swich);
+        }, 1200000);
+        return () => clearInterval(interval);
+    }, [swich]);
+
+    console.log(leaders);
 
     return (
         <div className="LBElement" >
             <div id="leaderboardMini">
-                <div id="OpenLeaderboard" onClick={() => { Open_Leaderboard()}}>
+                <div id="OpenLeaderboard" onClick={() => { Open_Leaderboard() }}>
                     <ArrowSmUp id="leadArrowR" onClick={() => Open_Leaderboard()} />Leaderboard
                     <ArrowSmUp id="leadArrowL" onClick={() => Open_Leaderboard()} />
                 </div>
                 <div id="LBBodyOpen" >
-                    <details className="leaderboardList"> 
-                        <summary>Leaderboard</summary>
-                        <div className="leaderboardMainList">
-                        {leaders.map((users: any) => (
-                            <div className="leaderboardList theList">
-                                <p className="lbSeparateList">{rankAllReduced=rankUser(rankAllReduced)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
+                    <div id="leaderboard-slides" >
+                        <div className="leaderboard" >
+                            <div className="profile">
+                                {leaders.length >= 2 ?
+                                    <div className="person second">
+                                        <div className="num">2</div>
+                                        <i className="fas fa-caret-up"></i>
+                                        <img src={leaders[1]?.profileImage} alt="" className="photo" />
+                                        <p className="link">{leaders[1]?.username}</p>
+                                        <p className="points">{leaders[1]?.PP}PP</p>
+                                    </div> : null
+                                }
+                                <div className="person first">
+                                    <div className="num">1</div>
+                                    <i className="fas fa-crown"></i>
+                                    <img src={leaders[0]?.profileImage} alt="" className="photo main" />
+                                    <p className="link">{leaders[0]?.username}</p>
+                                    <p className="points">{leaders[0]?.PP}PP</p>
+                                </div>
+                                {leaders.length >= 3 ?
+                                    <div className="person third">
+                                        <div className="num">3</div>
+                                        <i className="fas fa-caret-up"></i>
+                                        <img src={leaders[2]?.profileImage} alt="" className="photo" />
+                                        <p className="link">{leaders[2]?.username}</p>
+                                        <p className="points">{leaders[2]?.PP}PP</p>
+                                    </div> : null
+                                }
                             </div>
-                        ))}
+                            {leaders.length >= 4 ?
+                                leaders.map((leader: any, index: number, array: any) => (
+                                    (index >= 3) ?
+                                    <div key={leader.id} className="rest">
+                                        <div className="others flex">
+                                            <div className="rank">
+                                                <i className="fas fa-caret-up"></i>
+                                                <p className="num">{index + 1}</p>
+                                            </div>
+                                            <div className="info flex">
+                                                <img src={leader?.profileImage} alt="" className="p_img" />
+                                                <p className="link">{leader?.username}</p>
+                                                <p className="points">{leader?.PP}PP</p>
+                                            </div>
+                                        </div>
+                                    </div> : null)) : null
+                            }
                         </div>
-                    </details>
-                    <details className="leaderboardList"> 
-                        <summary>Friendboard</summary>
-                        <div className="leaderboardMainList">
-                        {friends.map((users: any) => (
-                            <div className="leaderboardList theList">
-                                <p className="lbSeparateList">{rankFriendReduced=rankUser(rankFriendReduced)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
-                            </div>
-                        ))}
-                        </div>
-                    </details>
+                    </div>
                 </div>
             </div>
-            
+
             <p className="LBTitle" >Leaderboard</p>
             <div className="LBBody" >
-                <details className="leaderboardList"> 
-                    <summary>Leaderboard</summary>
-                    <div className="leaderboardMainList">
-                    {leaders.map((users: any) => (
-                        <div className="leaderboardList theList">
-                            <p className="lbSeparateList">{rankAll=rankUser(rankAll)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
+                <div id="leaderboard-slides" >
+                    <div className="leaderboard" >
+                        <div className="profile">
+                            {leaders.length >= 2 ?
+                                <div className="person second">
+                                    <div className="num">2</div>
+                                    <i className="fas fa-caret-up"></i>
+                                    <img src={leaders[1]?.profileImage} alt="" className="photo" />
+                                    <p className="link">{leaders[1]?.username}</p>
+                                    <p className="points">{leaders[1]?.PP}PP</p>
+                                </div> : null
+                            }
+                            <div className="person first">
+                                <div className="num">1</div>
+                                <i className="fas fa-crown"></i>
+                                <img src={leaders[0]?.profileImage} alt="" className="photo main" />
+                                <p className="link">{leaders[0]?.username}</p>
+                                <p className="points">{leaders[0]?.PP}PP</p>
+                            </div>
+                            {leaders.length >= 3 ?
+                                <div className="person third">
+                                    <div className="num">3</div>
+                                    <i className="fas fa-caret-up"></i>
+                                    <img src={leaders[2]?.profileImage} alt="" className="photo" />
+                                    <p className="link">{leaders[2]?.username}</p>
+                                    <p className="points">{leaders[2]?.PP}PP</p>
+                                </div> : null
+                            }
                         </div>
-                    ))}
+                        {leaders.length >= 4 ?
+                            leaders.map((leader: any, index: number, array: any) => (
+                                (index >= 3) ?
+                                <div key={leader.id} className="rest">
+                                    <div className="others flex">
+                                        <div className="rank">
+                                            <i className="fas fa-caret-up"></i>
+                                            <p className="num">{index + 1}</p>
+                                        </div>
+                                        <div className="info flex">
+                                            <img src={leader?.profileImage} alt="" className="p_img" />
+                                            <p className="link">{leader?.username}</p>
+                                            <p className="points">{leader?.PP}PP</p>
+                                        </div>
+                                    </div>
+                                </div> : null)) : null
+                        }
                     </div>
-                </details>
-                <details className="leaderboardList"> 
-                    <summary>Friendboard</summary>
-                    <div className="leaderboardMainList">
-                    {friends.map((users: any) => (
-                        <div className="leaderboardList theList">
-                            <p className="lbSeparateList">{rankFriend=rankUser(rankFriend)}<img className="imgLeaderboardList" src={users.profileImage} alt=""></img>{users.username} : {users?.PP} PP</p>
-                        </div>
-                    ))}
-                    </div>
-                </details>
+                </div>
             </div>
         </div>
     )

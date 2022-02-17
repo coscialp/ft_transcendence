@@ -11,6 +11,9 @@ import Uploady from "@rpldy/uploady";
 import UploadButton from "@rpldy/upload-button";
 import UploadPreview from "@rpldy/upload-preview";
 
+
+
+
 export function Settings() {
 	const [cookies] = useCookies();
 	const [unauthorized, setUnauthorized] = useState(false);
@@ -26,24 +29,12 @@ export function Settings() {
 		console.log(data);
 	};
 
-	function avatarChange(e:any, avatar:any) {
-		let fileInput = document.getElementById(avatar) as HTMLInputElement;
-		let file;
-		if (fileInput){
-			let files = fileInput.files;
-		
-			if (files)
-			{
-				for (var i = 0; i < files.length; i++) {
-					file = files.item(i);
-				}
-				if (file)
-					setNewAvatar(file.name);
-			}
-		}
-		if (e.target.files && e.target.files.length > 0) {
-			setPreviewAvatar(e.target.files[0]);
-		  }
+	function avatarChange(e:any) {
+		setNewAvatar(e.target.files[0].name);
+		e.setState({
+			selectedFile: e.target.files[0],
+            filename: (document.getElementById('file') as HTMLInputElement).value
+		})
 	  };
 
 	useEffect(() => {
@@ -97,7 +88,29 @@ export function Settings() {
 		}
 	}
 
-	function handleNewAvatar(e: any) {
+	const fileUploadHandler = (e:any) => {
+		e.preventDefault() // Stop form submit
+		let formData = new FormData();
+
+        formData.append('name', e.state.name);
+        formData.append('price', e.state.price);
+        formData.append('filename', e.state.filename);
+        formData.append('file', e.state.selectedFile);
+
+        const config = {     
+            headers: { 'content-type': 'multipart/form-data' }
+        }
+
+        axios.post("http://localhost:3000", formData, config)
+        .then (res => {
+            console.log(res.data);
+            console.log(e.state.filename);
+            console.log(formData);
+        })
+	}
+
+	/*
+	
 		console.log(newAvatar)
 		console.log(previewAvatar)
 
@@ -129,11 +142,10 @@ export function Settings() {
 				});
 			})
 			window.alert("Avatar successfully changed to " + newAvatar + " !")
-			setNewAvatar("");
-			setPreviewAvatar(e.target.null);
-			e.preventDefault();
-		}
-	}
+			//setNewAvatar("");
+			//setPreviewAvatar(e.target.null);
+			//e.preventDefault();
+	*/
 
 	function handle2FA() {
 
@@ -177,12 +189,12 @@ export function Settings() {
 					</div>
 					<div className="change Nickname">
 						Change your Avatar !
-						<form className="change Nick input">
+						<form className="change Nick input" encType="multipart/form">
 							<label form="file" className="avatarLabel">
 								New Avatar...
-								<input id="avatar" type="file" className="avatarInput" accept='image/png' value="" onChange={(e) => avatarChange(e, 'avatar')} />
+								<input id="avatar" type="file" className="avatarInput" accept='image/png' onChange={(e) => avatarChange(e)} />
 							</label>
-							<button className="changeNickbtn" onClick={handleNewAvatar} >Change !</button>
+							<button className="changeNickbtn" onClick={e => {fileUploadHandler(e)}} >Change !</button>
 						</form>
 						{previewAvatar && (
 								<img

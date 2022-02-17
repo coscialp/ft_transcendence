@@ -9,6 +9,10 @@ import { useForceUpdate } from "../../utils/forceUpdate";
 import { ip } from "../../App";
 import { MessageType } from "../../utils/message.type";
 
+import { io } from "socket.io-client";
+import axios from "axios";
+import { User } from "../../utils/user.type";
+
 export function MainMenu(data: any) {
 	let history = useHistory();
 	const [cookies] = useCookies();
@@ -16,6 +20,7 @@ export function MainMenu(data: any) {
 	const [messageInput, setMessageInput] = useState<string>('');
 	const [current_channel, setCurrent_Channel] = useState<string>('');
 	const [channels] = useState<string[]>([]);
+	const [channelAdmin, setChannelAdmin] = useState<User[]>([]);
 	const [channelName, setChannelName] = useState<string>('');
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
@@ -24,13 +29,20 @@ export function MainMenu(data: any) {
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
 
+	const socket = io();
+
 	const forceUpdate = useForceUpdate();
+
+
+	socket.on('connect', () => {
+		console.log(socket.id);
+	})
 
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
 			requestApi.get('user/channels/connected').then((response) => {
-				response.channelsConnected?.map((chan: any) => 
+				response.channelsConnected?.map((chan: any) =>
 					channels.push(chan.name)
 				)
 			})
@@ -54,13 +66,11 @@ export function MainMenu(data: any) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [data.socket, cookies, messages]);
 
-
-
 	function togglePopup() {
 		setShowPopup(!showPopup);
 	}
 
- 	function handleCreateNewChannel(e: any) {
+	function handleCreateNewChannel(e: any) {
 		if (channelName === "") {
 			window.alert("Channel's name cannot be empty !")
 		}
@@ -125,6 +135,21 @@ export function MainMenu(data: any) {
 		e.preventDefault();
 	}
 
+	useEffect(() => {
+		let mount = true;
+		if (mount) {
+			axios.request({
+				url: `/channel/${current_channel}`,
+				method: 'get',
+				baseURL: `http://${ip}:5000`,
+				headers: {
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+			}).then((response:any) => setChannelAdmin(response.data.admin))
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cookies, current_channel]);
 
 	useEffect(() => {
 		let mount = true;
@@ -161,8 +186,6 @@ export function MainMenu(data: any) {
 		return history.push(`/${toGo}/profile`)
 	}
 
-
-
 	return (
 		<div className="MainElement" >
 			<div className="Channel List" >{channels.map((channel: any) => (
@@ -191,9 +214,14 @@ export function MainMenu(data: any) {
 							<div className="dropdown-content">
 								<UserCircle className="chatUserParam" onClick={(e) => { return history.push(`/${message.sender}/profile`) }} />
 								<Challenge className="chatUserParam" />
-								<ChevronDoubleUp className="chatUserParam" />
-								<VolumeOff className="chatUserParam" />
-								<Trash className="chatUserParam" />
+								{ channelAdmin?.findIndex((u) => u.username === data.me.username) !== -1 ?
+									<>
+										<ChevronDoubleUp className="chatUserParam" />
+										<VolumeOff className="chatUserParam" />
+										<Trash className="chatUserParam" />
+									</>
+									: null
+								}
 							</div>
 						</div>
 					</article>
