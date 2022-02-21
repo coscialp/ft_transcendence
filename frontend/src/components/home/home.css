@@ -15,7 +15,6 @@
 }
 
 .LBElement {
-    font-family: neon;
     /* text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa; */
     width: 17%;
     height: 50vh;
@@ -23,6 +22,7 @@
     border-radius: 15px;
     display:flex;
     flex-direction: column;
+    font-family: sans-serif;
     box-shadow: rgb(207 29 61 / 30%) 0px 54px 55px, rgb(230 33 67 / 24%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
@@ -82,10 +82,6 @@ width: 5px;
     text-shadow: none;
 }
 
-.comingSoonMode:not(hover) {
-    text-shadow: none;
-}
-
 p.LBTitle {
     margin-bottom: 20px;
     padding-bottom: 10px;
@@ -140,6 +136,7 @@ nav.menuLeaderboard {
     border-radius: 15px;
     display:flex;
     flex-direction: column;
+    font-family: sans-serif;
     box-shadow: rgb(12 73 181 / 54%) 0px 54px 55px, rgb(5 72 177 / 38%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
@@ -502,6 +499,18 @@ nav.menuFriendList {
     box-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #0fa, 0 0 42px #0fa;
 }
 
+#friendlistOrientation {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    transform: rotate(90deg);
+}
+
+#leaderboardOrientation {
+    transform: rotate(-90deg);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+}
+
 @media screen and (orientation: portrait) {
 
 
@@ -545,9 +554,6 @@ nav.menuFriendList {
         display:none;
     }
 
-    #LBBodyOpen {
-        display: none;
-    }
 
 
     #leaderboardMini::-webkit-scrollbar-thumb {
@@ -559,6 +565,14 @@ nav.menuFriendList {
         background-color: rgb(128 128 128 / 42%);
         border-radius: 50px;
         width: 5px;
+    }
+
+    #leaderboardMini:hover {
+        text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
+    }
+
+    #LBBodyOpen {
+        text-shadow: none;
     }
 
     #OpenFriendList {
@@ -590,6 +604,18 @@ nav.menuFriendList {
     
     .FriendElement {
         background-color: rgba(0, 0, 0, 0.0);
+        box-shadow: none;
+    }
+
+    .FriendElement:hover {
+        text-shadow:none;
+    }
+
+    #friendListMini:hover {
+        text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa;
+    }
+
+    .FriendList {
         box-shadow: none;
     }
 

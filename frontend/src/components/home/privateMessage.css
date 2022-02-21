@@ -130,7 +130,7 @@ p#message-text {
 }
 .discussion > .bubble.recipient {
 	align-self: flex-start;
-	background-color: #606060;
+	background-color: #FB3640;
 }
 
 input.privateMessageInput {

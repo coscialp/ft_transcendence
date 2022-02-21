@@ -28,13 +28,15 @@ export function Home() {
     return (() => { mount = false; });
   }, [cookies])
 
-  /*useEffect(() => {
+  useEffect(() => {
     let mount = true;
     if (mount) {
-      setCookies("_intra_42_session_production", { sameSite: "none" })
+      socket?.on('disconnect' , function(){
+      socket.emit('user disconnect');
+    });
     }
     return (() => { mount = false; });
-  })*/
+  }, [cookies, socket])
 
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);

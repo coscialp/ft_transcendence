@@ -124,7 +124,8 @@ export function Overall(data: any) {
           newFriendId: data.user.username,
         },
       })
-      .then((response: any) => { });
+      .then((response: any) => {});
+    data.socket?.emit('newNotification', { receiver: data.user.username });
   }
 
   function handleBlacklist(friendToDelete: any) {

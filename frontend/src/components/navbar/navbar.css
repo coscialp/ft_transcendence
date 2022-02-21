@@ -433,3 +433,20 @@ div.Nick.list {
   filter: brightness(200%);
   border-radius: 3px;
 }
+
+.counter {
+  width: 5px;
+  height: 5px;
+  background-color: red;
+  color: white;
+  font-weight: 900;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}

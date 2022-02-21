@@ -34,8 +34,10 @@ export class ChannelService {
 
   async getUserFromSocket(socket: Socket): Promise<User> {
     const cookies = socket.handshake.headers.cookie;
-    const { access_token } = parse(cookies);
-    return await this.authService.getUserFromAuthenticationToken(access_token);
+    if (cookies) {
+      const { access_token } = parse(cookies);
+      return await this.authService.getUserFromAuthenticationToken(access_token);
+    }
   }
 
   async createChannel(
@@ -68,6 +70,13 @@ export class ChannelService {
 
   async createMessage(user: User, message: MessagesDto): Promise<void> {
     return await this.messagesRepository.createMessage(user, message, this.userService, this);
+  }
+  async promoteToAdmin(user: User, channel: Channel): Promise<void> {
+    return await this.channelsRepository.promoteToAdmin(user, channel);
+  }
+
+  async demoteToPeon(user: User, channel: Channel): Promise<void> {
+    return await this.channelsRepository.demoteToPeon(user, channel);
   }
 
   async joinChannel(user: User, name: string, password: string): Promise<void> {

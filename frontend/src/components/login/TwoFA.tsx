@@ -57,7 +57,7 @@ export function TwoFA() {
                 <form onSubmit={handleSubmit}>
                     <div className="logs">
                         2FA Code<br />
-                        <input type="text" className="InputStyle" placeholder="Enter your Username" value={code} onChange={(e) => { setCode(e.target.value) }} />
+                        <input type="text" className="InputStyle" placeholder="Enter your code" value={code} onChange={(e) => { setCode(e.target.value) }} />
                     </div>
                     <input className="log-button InputStyle" type="submit" value="Submit" />
                 </form>

@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router";
 import { io, Socket } from "socket.io-client";
-import { ip } from "../../App";
+import { gameSocket, ip } from "../../App";
 import './home.css'
 import { Open_Message } from "./privateMessage";
 import { ArrowSmUp } from 'heroicons-react'
-
+//import { gameSocket } from "../../App";
 
 export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
@@ -35,7 +35,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
 
     if (mounted) {
       FriendRequest()
-      setSocket(io(`ws://${ip}:5002`, { transports: ['websocket'] }));
+      //setSocket(io(`ws://${ip}:5002`, { transports: ['websocket'] }));
       setRandom(Math.floor(Math.random() * 2000000000 - 1));
     }
 
@@ -101,6 +101,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
     var allFriendListOpen: any = document.getElementById('allFriendListOpen')
     var arrowR: any = document.getElementById('friendArrowR')
     var arrowL: any = document.getElementById('friendArrowL')
+    var friendlistOrientation: any = document.getElementById('friendlistOrientation')
     if (FriendList.style.height === '52vh') {
         FriendList.style.transition = 'all .5s ease-in-out'
         FriendList.style.height = '50px'
@@ -114,7 +115,10 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         arrowR.style.transform = 'rotate(0deg)'
         arrowL.style.transition = 'transform 0.5s ease-in-out'
         arrowL.style.transform = 'rotate(0deg)'
-        allFriendListOpen.style.display = 'none'     
+        allFriendListOpen.style.display = 'none'
+        friendlistOrientation.style.transform = 'rotate(90deg)' 
+        friendlistOrientation.style.writingMode = 'vertical-rl' 
+        friendlistOrientation.style.textOrientation = 'upright' 
     }
     else {
         FriendList.style.transition = 'all .5s ease-in-out'
@@ -132,16 +136,24 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         arrowL.style.transform = 'rotate(-180deg)'
         allFriendListOpen.style.display = 'flex'
         allFriendListOpen.style.flexDirection = 'column'
+        friendlistOrientation.style.transform = 'none' 
+        friendlistOrientation.style.writingMode = 'unset' 
+        friendlistOrientation.style.textOrientation = 'unset' 
       }
 
 }
+
+  function handleDuel(friend: any) {
+      gameSocket.emit('duel', {username: friend.username})
+  } 
 
 
   return (
     <div className="FriendElement" >
       <div id="friendListMini">
           <div id="OpenFriendList" onClick={() => { Open_FriendList()}}>
-            <ArrowSmUp id="friendArrowR" onClick={() => Open_FriendList()} />FriendList
+            <ArrowSmUp id="friendArrowR" onClick={() => Open_FriendList()} />
+            <p id="friendlistOrientation">FriendList</p>
             <ArrowSmUp id="friendArrowL" onClick={() => Open_FriendList()} />
           </div>
           <div id="allFriendListOpen">{friends.map((friend: any) => (
@@ -158,13 +170,13 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
           </div>
       </div>
       
-      <p className="FriendTitle" >Friend List</p>
+      <p className="FriendTitle" >FriendList</p>
       <div className="allFriendList">{friends.map((friend: any) => (
         <details key={friend.id} id={friend.id} >
           <summary className="FriendList"><img className="imgFriendList" src={friend.profileImage} alt=""></img> {friend.username}</summary>
           <nav className="menuFriendList">
             <button className="friendBtn" onClick={e => { document.getElementById(friend.id)?.removeAttribute("open"); Open_Message(); setCurrentChat(friend.username) }} ><span /><span /><span /><span />Send message</button>
-            <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>
+            <button className="friendBtn" onClick={() => { handleDuel(friend)} } ><span /><span /><span /><span />Invite game</button>
             <button className="friendBtnOut friendBorder" onClick={() => { handleDeleteFriends(friend) }}><span /><span /><span /><span />Delete friend</button>
             <button className="friendBtnOut" onClick={() => { handleDeleteFriends(friend); handleBlacklist(friend) }}><span /><span /><span /><span />Blacklist</button>
             <button className="friendBtn" onClick={() => goGame(friend)}><span /><span /><span /><span />Spectate Game</button>

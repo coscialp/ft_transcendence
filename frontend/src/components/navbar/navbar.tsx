@@ -1,26 +1,28 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router';
-import { ip } from '../../App';
+import { gameSocket, ip } from '../../App';
 import { isLogged } from '../../utils/isLogged';
 import { Bell, Cog, UserCircle, Logout} from 'heroicons-react';
 import './navbar.css'
+import { io, Socket } from 'socket.io-client';
 
 export function NavBar(props: any) {
-
   let history = useHistory();
   const [cookies, setCookie] = useCookies();
   const [search, setSearch] = useState("");
   const [searchingPop, setSearchingPop] = useState(false);
   const [searchedUsers, setSearchedUsers]: any = useState([]);
-  const [notification, setNotification] = useState(false);
   const [me, setMe]: any = useState({});
+  const [socket, setSocket] = useState<Socket>();
+  const [counter, setCounter] = useState<number>(0);
 
   useEffect(() => {
     let mount = true;
     if (mount) {
       isLogged(cookies).then((res) => { setMe(res.me?.data) });
+      setSocket(io(`ws://${ip}:5003`, { transports: ['websocket', 'polling']}));
     }
     return (() => { mount = false; });
   }, [cookies])
@@ -28,37 +30,41 @@ export function NavBar(props: any) {
   const [avatar, setAvatar] = useState('/img/beluga.jpeg');
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      let mount = true;
-      if (me?.username !== undefined) {
-        axios.request({
-          url: `/user/${me.username}/friends/request`,
-          method: 'get',
-          baseURL: `http://${ip}:5000`,
-          headers: {
-            "Authorization": `Bearer ${cookies.access_token}`,
-          },
-        }).then((response: any) => {
-          if (mount) {
-            if (response)
-            if (response.data.from.length > 0) {
-              setNotification(true);
-            }
-            else {
-              setNotification(false);
-            }
-          }
-        })
-      }
-      return () => { mount = false }
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [cookies, notification, me]);
+		let mount = true;
+		if (mount && gameSocket && history) {
+			gameSocket.on('accept_duel', (user: any) => {
+				console.log(user);
+				localStorage.setItem('playerID', user);
+        localStorage.setItem('gameMOD', "false");
+				return history.push('/game');
+			})
+		}
+		return (() => { mount = false; });
+	}, [history]);
 
+  useEffect(() => {
+    let mount = true;
+    if (mount) {
+      socket?.on('disconnect' , function(){
+      socket.emit('user disconnect');
+    });
+    }
+    return (() => { mount = false; });
+  }, [cookies, socket])
 
+  useEffect(() => {
+    let mount = true;
+    if (mount) {
+      socket?.on('newNotification' , () => {
+                setCounter(prev => prev + 1);
+    });
+    }
+    return (() => { mount = false; });
+  }, [cookies, socket, me])
+  
   function NewNotification() {
     return (
-      <div className="Notification"></div>
+      <div className="counter">{counter / 2}</div>
     )
   }
 
@@ -155,7 +161,7 @@ export function NavBar(props: any) {
       <button className="navBtn" onClick={() => { return history.push("/home") }} ><h1 className={props.page === "home" ? "neonTextOn" : "neonTextOff"}>Home</h1></button>
       <button className="navBtn" onClick={() => { return history.push("/play") }} ><h1 className={props.page === "play" ? "neonTextOn" : "neonTextOff"}>Play</h1></button>
       <div className="prof-search">
-        {notification ? <NewNotification /> : null}
+        {counter ? <NewNotification /> : null}
         <form onSubmit={handleSearch} >
           <input type="text" className="searchBar" placeholder="Search" value={search} onChange={handleInputSearch} />
         </form>

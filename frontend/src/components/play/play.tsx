@@ -2,16 +2,15 @@ import { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
 import { isLogged } from "../../utils/isLogged";
-import { NavBar } from "../navbar/navbar";
 import { Normal } from "./normalGame";
 import { Ranked } from "./rankedGame";
 import { Duel } from "./duel";
 import "./play.css";
 import axios from "axios";
 import { ip } from "../../App";
-import { User } from "../../utils/user.type";
+import { User } from "../../utils/user.type";   
 
-export function Play() {
+export function Play(props: any) {
   const [cookies] = useCookies();
   const [unauthorized, setUnauthorized] = useState(false);
   const [stats, setStats]:any = useState({});
@@ -20,9 +19,10 @@ export function Play() {
   useEffect(() => {
     let mount = true;
     if (mount) {
-      isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
+      isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });  
     }
     return (() => { mount = false; });
+  // eslint-disable-next-line
   }, [cookies])
 
   useEffect(() => {
