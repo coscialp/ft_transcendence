@@ -27,7 +27,7 @@
 
 #all-History {
     width: 80%;
-    height: 10%;
+    height: fit-content;
     padding: 10px;
     margin: 5px 0 5px 0;
     display: flex;
@@ -51,5 +51,12 @@ p.all-Score {
     font-family: monospace;
     margin: 0;
     height: 8vh;
+}
+
+span.all-HistoryNames {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
 }
 

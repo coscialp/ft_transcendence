@@ -70,13 +70,13 @@ export function Overall(data: any) {
     let mount = true;
 
     axios.request({
-        url: `/user/me/blacklist`,
-        method: "get",
-        baseURL: `http://${ip}:5000`,
-        headers: {
-          Authorization: `Bearer ${cookies.access_token}`,
-        },
-      })
+      url: `/user/me/blacklist`,
+      method: "get",
+      baseURL: `http://${ip}:5000`,
+      headers: {
+        Authorization: `Bearer ${cookies.access_token}`,
+      },
+    })
       .then((response: any) => {
         if (mount) {
           setMyBlackList(response.data.blackList);
@@ -124,7 +124,7 @@ export function Overall(data: any) {
           newFriendId: data.user.username,
         },
       })
-      .then((response: any) => {});
+      .then((response: any) => { });
   }
 
   function handleBlacklist(friendToDelete: any) {
@@ -224,40 +224,18 @@ export function Overall(data: any) {
   return (
     <div className="ImgName">
       {data.user?.isAdmin ? <BadgeCheck /> : null}
-      {data.user?.username === data.me?.username ? (
+      {data.user?.username === data.me?.username ? 
         <div className="profile-imgpencil">
-          <img
-            className="ProfileImage"
-            style={{ backgroundImage: `url(${data.user.profileImage})` }}
-            alt=""
-            onClick={(e) => {
-              return history.push(`/settings`);
-            }}
-          ></img>
-          <Pencil
-            className="profile-pencil"
-            onClick={(e) => {
-              return history.push(`/settings`);
-            }}
-          />
-        </div>
-      ) : (
+          <img className="ProfileImage" style={{ backgroundImage: `url(${data.user.profileImage})` }} alt="" onClick={(e) => {return history.push(`/settings`);}}></img>
+          <Pencil className="profile-pencil"
+            onClick={(e) => { return history.push(`/settings`);}}/>
+        </div> :
         <div className="profile-img">
-          <img
-            className="ProfileImage"
-            style={{ backgroundImage: `url(${data.user.profileImage})` }}
-            alt=""
-          ></img>
-          {data.user.isLogged ? (
-            <div className="userLogged" />
-          ) : (
-            <div className="userNotLogged" />
-          )}
+          <img  className="ProfileImage" style={{ backgroundImage: `url(${data.user.profileImage})` }} alt=""></img>
         </div>
-      )}
+      }
       <p className="ProfileName">
-        {" "}
-        {data.user.firstName} "{data.user.nickName}" {data.user.lastName}{" "}
+        {data.user.firstName} "{data.user.nickName}" {data.user.lastName}{data.user.isLogged ? <div className="userLogged" /> : <div className="userNotLogged" />}
       </p>
       <div className="user management">
         {data.user?.username !== data.me?.username ? (
@@ -279,8 +257,8 @@ export function Overall(data: any) {
           )
         ) : null}
         {data.me?.isAdmin &&
-        data.user.isAdmin === false &&
-        data.user.username !== data.me?.username ? (
+          data.user.isAdmin === false &&
+          data.user.username !== data.me?.username ? (
           <ChevronDoubleUp onClick={handlePromoteAdmin} />
         ) : null}
         {data.me?.isAdmin && data.user.username === data.me?.username ? (
