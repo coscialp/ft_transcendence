@@ -15,6 +15,8 @@ import { Channel } from '../entities/channel.entity';
 import { Message } from '../entities/message.entity';
 import { Game } from '../entities/game.entity';
 import { StatDto } from './dto/stat.dto';
+import { AchievementsDto } from './dto/achievements.dto';
+import { GameService } from 'src/game/game.service';
 
 @Injectable()
 export class UserService {
@@ -291,6 +293,7 @@ export class UserService {
 
   async activate2FA(user: User): Promise<void> {
     user.twoFactorAuth = true;
+    user.Security = true;
     this.userRepository.save(user);
   }
 
@@ -417,5 +420,33 @@ export class UserService {
     }
 
     return { ranked, normal, GA: Number(Math.fround(currentUser.GoalSet / currentUser.GoalTaken).toFixed(2))};
+  }
+
+  async getAchievements(id: string, user: User): Promise<{Security: boolean, Friend: number, Climber:  number, Persevering: number, Hater: number}> {
+    const currentUser = await this.getUserById(id, user);
+
+    const allUser: User[] = await this.userRepository.find({
+      relations: ['friends'],
+    });
+
+    const friends: User[] = allUser.find((user) => {
+      return user.username === currentUser.username;
+    }).friends;
+
+    const allUserB = await this.userRepository.find({
+      relations: ['blackList'],
+    });
+    const blackList = allUserB.find((user) => {
+      return user.username === currentUser.username;
+    }).blackList;
+    const achievements = {
+      Security: currentUser.Security,
+      Friend: friends.length / 5 * 100,
+      Climber:  currentUser.PP >= 300 ? (currentUser.PP - 300) / 50 * 100 : 0, 
+      Persevering: (currentUser.NormalGameNumber + currentUser.RankedGameNumber) / 5 * 100, 
+      Hater: blackList.length / 5 * 100,
+    }
+    
+    return achievements;
   }
 }

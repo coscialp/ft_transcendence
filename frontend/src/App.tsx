@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { withCookies } from 'react-cookie';
+import { useCookies, withCookies } from 'react-cookie';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import { Cookies } from './components/cookies/cookies';
 import { Login } from './components/login/login';
@@ -19,6 +19,7 @@ import AllHistory from './components/profile/allHistory';
 import Connect from './components/login/connect';
 import { NavBar } from './components/navbar/navbar';
 import { io } from 'socket.io-client';
+import axios from 'axios';
 
 export const ip = window.location.hostname;
 export const gameSocket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
@@ -42,6 +43,7 @@ function Menu(data: any) {
 function App() {
 
 	const [duel, setDuel]: any = useState({});
+	const [cookies] = useCookies();
 
 	useEffect(() => {
 		let mount = true;
@@ -50,7 +52,9 @@ function App() {
 				setDuel(user);
 			})
 		}
-		return (() => { mount = false; });
+		return (() => {
+			mount = false;
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

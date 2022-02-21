@@ -85,7 +85,7 @@ export function Profile() {
 					<div className="ProfileMain">
 						<Overall me={me} user={user} socket={socket}/>
 						<History me={me} user={user} />
-						<Achivements />
+						<Achivements user={user}/>
 					</div>
 					}
 			</div>

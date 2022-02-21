@@ -87,7 +87,7 @@ export class AuthService {
       const payload: JwtPayload = { username };
       const accessToken: string = this.jwtService.sign(payload);
       user = await this.usersRepository.findOne({ username });
-      user.isLogged = true;
+      user.isLogged = "online";
       await this.usersRepository.save(user);
       return { accessToken: accessToken };
     } catch (error) {
@@ -96,7 +96,18 @@ export class AuthService {
   }
 
   async logout(user: User): Promise<void> {
-    user.isLogged = false;
+    user.isLogged = "offline";
+    await this.usersRepository.save(user);
+  }
+
+  async online(user: User): Promise<void> {
+    console.log("MA BITE ")
+    // user.isLogged = "online";
+    // await this.usersRepository.save(user);
+  }
+
+  async ingame(user: User): Promise<void> {
+    user.isLogged = "ingame";
     await this.usersRepository.save(user);
   }
 

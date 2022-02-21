@@ -9,6 +9,7 @@ import { useCookies } from "react-cookie";
 import { io } from "socket.io-client";
 import { ip } from "../../App";
 import { gameSocket } from "../../App";
+import axios from "axios";
 
 export function InGame() {
 
@@ -63,6 +64,7 @@ export function InGame() {
   }, []);
 
   
+  
   useEffect(() => {
     let mount = true;
     if (mount) {
@@ -76,6 +78,23 @@ export function InGame() {
     }
     return (() => { mount = false;});
   }, [cookies, player]);
+  
+  useEffect(() => {
+    let mount = true;
+    if (mount) {
+      axios.request({
+        url: `/auth/ingame`,
+        method: 'patch',
+        baseURL: `http://${ip}:5000`,
+        headers: {
+            "Authorization": `Bearer ${cookies.access_token}`,
+        }
+    })
+    }
+    return (() => {
+      mount = false;
+    }); 
+  }, [cookies]);
 
   useEffect(function () {
     if (player.GameID !== 0) {

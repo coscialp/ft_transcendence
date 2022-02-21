@@ -236,7 +236,8 @@ export function Overall(data: any) {
         </div>
       }
       <p className="ProfileName">
-        {data.user.firstName} "{data.user.nickName}" {data.user.lastName}{data.user.isLogged ? <div className="userLogged" /> : <div className="userNotLogged" />}
+        {console.log(data.user)}
+        {data.user.firstName} "{data.user.nickName}" {data.user.lastName}{data.user.isLogged === "online" ? <div className="userLogged" /> : (data.user.isLogged === "ingame" ? <div className="userInGame" /> : <div className="userNotLogged" />)}
       </p>
       <div className="user management">
         {data.user?.username !== data.me?.username ? (

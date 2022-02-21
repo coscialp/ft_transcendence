@@ -32,4 +32,16 @@ export class AuthController {
   async logout(@GetUser() user: User): Promise<void> {
     return await this.authService.logout(user);
   }
+
+  @UseGuards(AuthGuard())
+  @Patch('/online')
+  async online(@GetUser() user: User): Promise<void> {
+    return await this.authService.online(user);
+  }
+
+  @UseGuards(AuthGuard())
+  @Patch('/ingame')
+  async ingame(@GetUser() user: User): Promise<void> {
+    return await this.authService.ingame(user);
+  }
 }

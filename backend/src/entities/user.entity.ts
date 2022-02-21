@@ -30,8 +30,8 @@ export class User {
     @Column()
     email: string;
 
-    @Column({default: false})
-    isLogged: boolean;
+    @Column({default: 'offline'})
+    isLogged: string;
 
     @Column({default: false})
     isAdmin: boolean;
@@ -59,6 +59,18 @@ export class User {
 
     @Column({default: false})
     twoFactorAuth: boolean;
+
+    @Column({default: false})
+    Security: boolean;
+
+    @Column({default: 0})
+    Friend: number;
+
+    @Column({default: false})
+    Climber: boolean;
+
+    @Column({default: 0})
+    Hater: number;
 
     // @Column({default: [
     //     {name: 'authentifier', lvl: 1, value: 0, max: 5, ratio: 2},
