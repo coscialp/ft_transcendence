@@ -3,9 +3,19 @@ import { AuthCredentialsDto } from '../auth/dto/auth-credentials.dto';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcryptjs';
 import { GetUserFilterDto } from 'src/user/dto/user-filter.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ChannelsRepository } from 'src/channel/channels.repository';
+import { Channel } from 'src/entities/channel.entity';
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
+  constructor(
+    @InjectRepository(ChannelsRepository)
+    private readonly channelRepository: ChannelsRepository,
+  ) {
+    super();
+  }
+
   async getUser(filterDto: GetUserFilterDto): Promise<User[]> {
     const query = this.createQueryBuilder('user')
 
@@ -65,7 +75,6 @@ export class UsersRepository extends Repository<User> {
       Climber: false,
       Hater: 0,
     });
-
 
     try {
       await this.save(user);

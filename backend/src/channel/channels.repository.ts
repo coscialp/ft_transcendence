@@ -1,7 +1,6 @@
 import { Inject, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/entities/user.entity";
-import { UsersRepository } from "src/user/user.repository";
 import { UserService } from "src/user/user.service";
 import { EntityRepository, Repository } from "typeorm";
 import { Channel } from "../entities/channel.entity";
@@ -9,11 +8,6 @@ import * as bcrypt from 'bcryptjs';
 
 @EntityRepository(Channel)
 export class ChannelsRepository extends Repository<Channel> {
-    constructor(
-        @InjectRepository(UsersRepository) private readonly usersRepository: UsersRepository,
-        ) {
-        super();
-    }
 
     async getChannel(): Promise<Channel[]> {
         const query = this.createQueryBuilder('channel')
@@ -57,7 +51,6 @@ export class ChannelsRepository extends Repository<Channel> {
 
         try {
             await this.save(channel);
-            await this.usersRepository.save(currUser);
         } catch (e) {
             console.log(e.code);
         }
@@ -71,7 +64,6 @@ export class ChannelsRepository extends Repository<Channel> {
 
         try {
             await this.save(channel)
-            await this.usersRepository.save(user);
         } catch (e) {
             console.log(e.code);
         }
@@ -82,7 +74,6 @@ export class ChannelsRepository extends Repository<Channel> {
 
         try {
            await this.save(channel)
-           await this.usersRepository.save(user);
         } catch (e) {
             console.log(e.code);
         }
@@ -93,7 +84,6 @@ export class ChannelsRepository extends Repository<Channel> {
 
         try {
             await this.save(channel)
-            await this.usersRepository.save(user);
         } catch (e) {
             console.log(e.code);
         }
