@@ -1,36 +1,9 @@
 import './profile.css'
-import { LockClosed, UserAdd, Support, ChevronDoubleUp, AcademicCap, ThumbDown, Database } from 'heroicons-react';
+import { LockClosed, UserAdd, ChevronDoubleUp, AcademicCap, ThumbDown } from 'heroicons-react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ip } from '../../App';
 import { useCookies } from 'react-cookie';
-
-const achivement = {
-    Security: {
-        level: 2,
-        progression: 10,
-    },
-    Friend: {
-        level: 1,
-        progression: 60,
-    },
-    Guardian: {
-        level: 1,
-        progression: 60,
-    },
-    Climber: {
-        level: 1,
-        progression: 60,
-    },
-    Persevering: {
-        level: 1,
-        progression: 60,
-    },
-    Hater: {
-        level: 1,
-        progression: 60,
-    },
-}
 
 function Progress_Bar_Security(achivement: any): string {
     var pbf: HTMLElement | null = document.getElementById("PBFS");
@@ -72,11 +45,11 @@ export function Achivements(data: any) {
     const [achivements, setAchivements]: any = useState({})
     const [cookies] = useCookies();
 
-    console.log(data)
+    
 
     useEffect(() => {
         let mount = true;
-        if (mount && data.user) {
+        if (mount && data.user.username) {
             axios.request({
                 url: `/user/${data?.user?.username}/achievements`,
                 method: 'get',
@@ -85,14 +58,14 @@ export function Achivements(data: any) {
                     "Authorization": `Bearer ${cookies.access_token}`,
                 }
             }).then((response: any) => {
-                console.log(response.data);
+                
                 setAchivements(response.data);
             })
         }
         return (() => { mount = false; });
-    }, [data.user])
+    }, [data.user, cookies])
 
-    console.log(achivements)
+    
 
     return (
         <div id="Achievements" >

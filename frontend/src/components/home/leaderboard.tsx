@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { isLogged } from '../../utils/isLogged';
 import { ip } from "../../App";
-import { User } from '../../utils/user.type';
 import './leaderboard.css'
 
 
@@ -59,6 +58,7 @@ export function Leaderboard() {
     const [leaders, setLeaders]: any = useState([]);
     const [swich, setSwich] = useState<boolean>(false);
     const [cookies] = useCookies();
+    // eslint-disable-next-line
     const [me, setMe]: any = useState({});
 
     useEffect(() => {
@@ -99,7 +99,7 @@ export function Leaderboard() {
         return () => clearInterval(interval);
     }, [swich]);
 
-    console.log(leaders);
+    
 
     return (
         <div className="LBElement" >

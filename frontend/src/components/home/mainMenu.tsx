@@ -66,7 +66,7 @@ export function MainMenu(data: any) {
 					forceUpdate();
 				});
 				data.socket.on('admin', (admin: any) => {
-					console.log(admin);
+					
 				});
 			}
 		}
@@ -214,12 +214,12 @@ export function MainMenu(data: any) {
 
 	function handleBan(username: string) {
 		if (data.socket) {
-			console.log(username)
+			
 			data.socket.emit('ban_user', {id: username, channelName: current_channel});
 		}
 	}
 
-	console.log(messages[0]);
+	
 
 	return (
 		<div className="MainElement" >
@@ -287,7 +287,7 @@ export function MainMenu(data: any) {
 								<form onSubmit={handleJoinChannel} >
 									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => setChannelName(e.target.value)} />
 									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
-									<input type="submit" className="subbtn" value="Join !" />
+									<input type="submit" className="subbtn" value="Join channel !" />
 								</form>
 								<button className="Backbtn" onClick={(e) => { setPopupState(0) }} >Back</button>
 							</div>

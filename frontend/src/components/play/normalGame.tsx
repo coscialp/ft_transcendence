@@ -29,6 +29,7 @@ export function Normal(data: any) {
     if (mount && cookies && history) {
 
       if (player) {
+
         gameSocket.on(`startgame/${data.me?.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
@@ -49,7 +50,7 @@ export function Normal(data: any) {
 
   function play(): void {
     if (gameSocket) {
-      console.log(gameSocket);
+
       gameSocket.emit('matchmaking', '');
     }
   }
@@ -61,8 +62,8 @@ export function Normal(data: any) {
 
   function playGamemode(): void {
     if (gameSocket) {
-      console.log('test');
-      gameSocket.emit('matchmaking', {mod: "gamemod"});
+      
+      gameSocket.emit('matchmaking', { mod: "gamemod" });
     }
   }
 
@@ -94,7 +95,7 @@ export function Normal(data: any) {
     <div className="normalElement" >
       <div style={styles.container}>
         <select onChange={selectChange} style={styles.select}>
-          <option selected disabled>
+          <option style={{ display: `none` }}>
             {selectedOption}
           </option>
           <option value="Normal Game">Normal Game</option>
@@ -102,15 +103,15 @@ export function Normal(data: any) {
         </select>
       </div>
       {selectedOption === "Normal Game" ?
-        <PlayOutline className="playBtn" onClick={e => {play(); setPopUp(true)}} />
-        : <PlayOutline className="playBtn" onClick={e => {playGamemode(); setPopUp(true)}} />
+        <PlayOutline className="playBtn" onClick={e => { play(); setPopUp(true) }} />
+        : <PlayOutline className="playBtn" onClick={e => { playGamemode(); setPopUp(true) }} />
       }
-      {popUp === true ? 
-          <div className="duelPage">
-            <div className="duelPopUp"> 
-              <p>Waiting for a game...</p>
-              <div className="cancel-container">
-              <span className='cancel-cross' onClick={e => {exit_queue(); setPopUp(false)}} >
+      {popUp === true ?
+        <div className="duelPage">
+          <div className="duelPopUp">
+            <p>Waiting for a game...</p>
+            <div className="cancel-container">
+              <span className='cancel-cross' onClick={e => { exit_queue(); setPopUp(false) }} >
                 <div className="leftright"></div>
                 <div className="rightleft"></div>
                 <label className="cancel">cancel</label>

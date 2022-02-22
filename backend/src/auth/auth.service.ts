@@ -101,7 +101,7 @@ export class AuthService {
   }
 
   async online(user: User): Promise<void> {
-    console.log("MA BITE ")
+    
     // user.isLogged = "online";
     // await this.usersRepository.save(user);
   }

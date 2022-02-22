@@ -32,7 +32,7 @@ export function Ranked(data: any) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      console.log(inQueue);
+      
       if (inQueue === true) {
         gameSocket.emit('matchmakingRanked', '');
       }

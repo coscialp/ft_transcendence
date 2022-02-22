@@ -59,12 +59,12 @@ export class ChannelGateway
     try {
       let receiver: User;
       let mutedUserIndex: number = this.mutedUser.findIndex((u) => u.user === user.username);
-      console.log(this.mutedUser);
-      console.log(new Date().getMinutes());
+      
+      
       if (mutedUserIndex !== -1) {
         if (this.mutedUser[mutedUserIndex].time + 1 <= new Date().getMinutes() || (this.mutedUser[mutedUserIndex].time > new Date().getMinutes() && this.mutedUser[mutedUserIndex].time !== 70)) {
           this.mutedUser.splice(mutedUserIndex, 1);
-          console.log(this.mutedUser);
+          
           mutedUserIndex = this.mutedUser.findIndex((u) => u.user === user.username);
         }
       }
@@ -151,7 +151,7 @@ export class ChannelGateway
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
     let channel: Channel = await this.channelService.getOneChannel(data.channelName);
-    console.log(data.id);
+    
     const admin: User = await this.userService.getUserById(data.id);
     this.channelService.demoteToPeon(admin, channel);
     this.mutedUser.push({user: data.id, time: 70});
@@ -164,7 +164,7 @@ export class ChannelGateway
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
     let channel: Channel = await this.channelService.getOneChannel(data.channelName);
-    console.log(data.id);
+    
     const admin: User = await this.userService.getUserById(data.id);
     this.channelService.promoteToAdmin(admin, channel);
   }
@@ -176,7 +176,7 @@ export class ChannelGateway
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
     let channel: Channel = await this.channelService.getOneChannel(data.channelName);
-    console.log(data.id);
+    
     const admin: User = await this.userService.getUserById(data.id);
     this.channelService.demoteToPeon(admin, channel);
   }
@@ -187,7 +187,7 @@ export class ChannelGateway
     @ConnectedSocket() socket: Socket,
   ): Promise<void> {
     const user: User = await this.channelService.getUserFromSocket(socket);
-    console.log(data.channelName);
+    
     let channel: Channel = await this.channelService.getOneChannel(data.channelName);
     this.server.emit('admin', channel.admin);
   }

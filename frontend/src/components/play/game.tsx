@@ -6,9 +6,7 @@ import { Redirect, useHistory } from "react-router-dom";
 import { isLogged } from "../../utils/isLogged";
 import { User } from "../../utils/user.type";
 import { useCookies } from "react-cookie";
-import { io } from "socket.io-client";
-import { ip } from "../../App";
-import { gameSocket } from "../../App";
+import { gameSocket, ip } from "../../App";
 import axios from "axios";
 
 export function InGame() {

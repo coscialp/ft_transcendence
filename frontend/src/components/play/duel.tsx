@@ -1,6 +1,5 @@
 import axios from "axios"
 import { useState } from "react";
-// import { useHistory } from 'react-router';
 import { useCookies } from "react-cookie";
 import "./duel.css";
 import { gameSocket, ip } from '../../App';
@@ -56,7 +55,6 @@ export function Duel() {
     }
 
     function PopUpDuel(username: string) {
-      console.log(username)
       gameSocket.emit('duel', {username: username});
     }
   
@@ -64,7 +62,7 @@ export function Duel() {
       return (
         <div className="duelSearching list" >
           {searchedUsers.map((users: any) => (
-            <div className="duelList" key={users.username} onClick={(e) => { setPopUp(true); PopUpDuel(users.username) }} >
+            <div className="duelList" key={users.username} onClick={(e) => { setPopUp(true); PopUpDuel(users.username); setInviteUsr(users.username) }} >
               <div className="duelNick list" > {users.nickName}
                 <div className="duelUser list"> {users.username} </div>
               </div>

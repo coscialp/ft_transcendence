@@ -124,7 +124,7 @@ export function Overall(data: any) {
           newFriendId: data.user.username,
         },
       })
-      .then((response: any) => {});
+      .then((response: any) => { });
     data.socket?.emit('newNotification', { receiver: data.user.username });
   }
 
@@ -225,38 +225,28 @@ export function Overall(data: any) {
   return (
     <div className="ImgName">
       {data.user?.isAdmin ? <BadgeCheck /> : null}
-      {data.user?.username === data.me?.username ? 
+      {data.user?.username === data.me?.username ?
         <div className="profile-imgpencil">
-          <img className="ProfileImage" style={{ backgroundImage: `url(${data.user.profileImage})` }} alt="" onClick={(e) => {return history.push(`/settings`);}}></img>
+          <img className="ProfileImage" src={data.user.profileImage} alt="" onClick={(e) => { return history.push(`/settings`); }}></img>
           <Pencil className="profile-pencil"
-            onClick={(e) => { return history.push(`/settings`);}}/>
+            onClick={(e) => { return history.push(`/settings`); }} />
         </div> :
         <div className="profile-img">
-          <img  className="ProfileImage" style={{ backgroundImage: `url(${data.user.profileImage})` }} alt=""></img>
+          <img className="ProfileImage" src={data.user.profileImage} alt=""></img>
         </div>
       }
-      <p className="ProfileName">
-        {console.log(data.user)}
+      <div className="ProfileName">
         {data.user.firstName} "{data.user.nickName}" {data.user.lastName}{data.user.isLogged === "online" ? <div className="userLogged" /> : (data.user.isLogged === "ingame" ? <div className="userInGame" /> : <div className="userNotLogged" />)}
-      </p>
+      </div>
       <div className="user management">
         {data.user?.username !== data.me?.username ? (
           myBlackList.find((users) => users.username === data.user.username) ? (
-            <CheckCircle
-              onClick={(e) => {
-                handleWhitelist(data.user.username);
-              }}
-            />
-          ) : (
-            <>
+            <CheckCircle onClick={(e) => { handleWhitelist(data.user.username); }} />)
+            : (<>
               <UserAdd onClick={handleAddfriend} />
-              <Ban
-                onClick={(e) => {
-                  handleBlacklist(data.user.username);
-                }}
-              />
+              <Ban onClick={(e) => { handleBlacklist(data.user.username); }} />
             </>
-          )
+            )
         ) : null}
         {data.me?.isAdmin &&
           data.user.isAdmin === false &&

@@ -12,6 +12,7 @@ import { ArrowSmUp } from 'heroicons-react'
 export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
   const [friends, setFriends] = useState([]);
+  // eslint-disable-next-line
   const [socket, setSocket] = useState<Socket>();
   const [random, setRandom] = useState<number>();
   let history = useHistory();
