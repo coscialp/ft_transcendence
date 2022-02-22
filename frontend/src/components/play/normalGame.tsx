@@ -29,7 +29,7 @@ export function Normal(data: any) {
     if (mount && cookies && history) {
 
       if (player) {
-        console.log('here');
+        
         gameSocket.on(`startgame/${data.me?.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
@@ -44,7 +44,7 @@ export function Normal(data: any) {
 
   function play(): void {
     if (gameSocket) {
-      console.log(gameSocket);
+      
       gameSocket.emit('matchmaking', '');
     }
   }
@@ -87,7 +87,7 @@ export function Normal(data: any) {
     <div className="normalElement" >
       <div style={styles.container}>
         <select onChange={selectChange} style={styles.select}>
-          <option selected disabled>
+          <option style={{ display: `none` }}>
             {selectedOption}
           </option>
           <option value="Normal Game">Normal Game</option>

@@ -6,7 +6,6 @@ import './profile.css'
 import './allHistory.css'
 import { isLogged } from '../../utils/isLogged';
 import { Redirect, useHistory } from 'react-router-dom';
-import { NavBar } from '../navbar/navbar';
 
 export default function AllHistory() {
 

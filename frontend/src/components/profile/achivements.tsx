@@ -83,7 +83,7 @@ export function Achivements() {
         return (() => { mount = false; });
     }, [])
 
-    console.log(achivements)
+    
 
     return (
         <div id="Achievements" >

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router';
 import { gameSocket, ip } from '../../App';
@@ -33,7 +33,7 @@ export function NavBar(props: any) {
 		let mount = true;
 		if (mount && gameSocket && history) {
 			gameSocket.on('accept_duel', (user: any) => {
-				console.log(user);
+				
 				localStorage.setItem('playerID', user);
         localStorage.setItem('gameMOD', "false");
 				return history.push('/game');

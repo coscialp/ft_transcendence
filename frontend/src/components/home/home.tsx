@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import { Redirect } from 'react-router';
-import { NavBar } from '../navbar/navbar';
 import { Leaderboard } from './leaderboard';
 import { MainMenu } from './mainMenu';
 import { Friendlist } from './friendlist';

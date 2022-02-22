@@ -43,11 +43,12 @@ span.HistoryNames {
 }
 
 img.ProfileImage {
-    display:flex;
+    display: flex;
     height: 20vh;
     width: 20vh;
     background-size: cover;
     background-position: center;
+    object-fit: cover;
     border-radius: 100%;
 }
 
@@ -116,7 +117,7 @@ p.Score {
     align-items: center;
 }
 
-p.ProfileName {
+div.ProfileName {
     display: flex;
     font-size: 1.5vh;
 }

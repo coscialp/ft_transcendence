@@ -66,7 +66,7 @@ export function MainMenu(data: any) {
 					forceUpdate();
 				});
 				data.socket.on('admin', (admin: any) => {
-					console.log(admin);
+					
 				});
 			}
 		}
@@ -214,12 +214,12 @@ export function MainMenu(data: any) {
 
 	function handleBan(username: string) {
 		if (data.socket) {
-			console.log(username)
+			
 			data.socket.emit('ban_user', {id: username, channelName: current_channel});
 		}
 	}
 
-	console.log(messages[0]);
+	
 
 	return (
 		<div className="MainElement" >

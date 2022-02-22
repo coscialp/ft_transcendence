@@ -79,8 +79,8 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
                 socket.on(`private_message`, (msg: any) => {
                     let convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
                     setNewDmNotif(true);
-                    console.log(conversations, convIndex);
-                    console.log(msg);
+                    
+                    
                     if (conversations && convIndex !== -1) {
                         conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
                         messages.push({ id: messages.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
@@ -129,7 +129,7 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
         setisConvOpen(true);
     }
 
-    console.log(newDmNotif);
+    
 
     useEffect(() => {
 		scrollRef.current?.scrollIntoView({ behavior: "smooth" });

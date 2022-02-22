@@ -4,7 +4,6 @@ import { useCookies } from "react-cookie";
 import { Redirect } from "react-router-dom";
 import { gameSocket, ip } from "../../App";
 import { isLogged } from "../../utils/isLogged";
-import { NavBar } from "../navbar/navbar";
 import './notifications.css'
 
 export function Notification(data: any) {

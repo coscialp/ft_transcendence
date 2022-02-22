@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { gameSocket, ip } from "../../App";
 import './home.css'
 import { Open_Message } from "./privateMessage";
@@ -12,6 +12,7 @@ import { ArrowSmUp } from 'heroicons-react'
 export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
   const [friends, setFriends] = useState([]);
+  // eslint-disable-next-line
   const [socket, setSocket] = useState<Socket>();
   const [random, setRandom] = useState<number>();
   let history = useHistory();
