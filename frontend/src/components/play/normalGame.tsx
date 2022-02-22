@@ -29,11 +29,16 @@ export function Normal(data: any) {
     if (mount && cookies && history) {
 
       if (player) {
-        console.log('here');
         gameSocket.on(`startgame/${data.me?.username}`, (msg: any) => {
           player.ID = msg;
           localStorage.setItem('playerID', player.ID);
           localStorage.setItem('gameMOD', "false");
+          return history.push(`/game`)
+        })
+        gameSocket.on(`startgamemod/${data.me?.username}`, (msg: any) => {
+          player.ID = msg;
+          localStorage.setItem('playerID', player.ID);
+          localStorage.setItem('gameMOD', "true");
           return history.push(`/game`)
         })
       }
@@ -55,8 +60,10 @@ export function Normal(data: any) {
   }
 
   function playGamemode(): void {
-    if (player?.Socket)
-      player.Socket.emit('matchmaking', '');
+    if (gameSocket) {
+      console.log('test');
+      gameSocket.emit('matchmaking', {mod: "gamemod"});
+    }
   }
 
   const selectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {

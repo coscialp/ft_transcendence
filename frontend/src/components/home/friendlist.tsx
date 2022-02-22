@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { gameSocket, ip } from "../../App";
 import './home.css'
 import { Open_Message } from "./privateMessage";
@@ -35,7 +35,6 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
 
     if (mounted) {
       FriendRequest()
-      //setSocket(io(`ws://${ip}:5002`, { transports: ['websocket'] }));
       setRandom(Math.floor(Math.random() * 2000000000 - 1));
     }
 
