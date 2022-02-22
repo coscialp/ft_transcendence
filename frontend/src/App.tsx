@@ -22,7 +22,7 @@ import { io } from 'socket.io-client';
 
 export const ip = window.location.hostname;
 export const gameSocket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
-
+export const notifSocket = io(`ws://${ip}:5003`, { transports: ['websocket', 'polling']});
 
 function Menu(data: any) {
 	const page = window.location.pathname.split('/')[1];

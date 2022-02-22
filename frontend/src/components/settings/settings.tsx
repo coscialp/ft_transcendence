@@ -5,7 +5,7 @@ import { Redirect } from "react-router";
 import { ip } from "../../App";
 import { isLogged } from "../../utils/isLogged";
 import './settings.css'
-
+import { notifSocket } from "../../App";
 
 
 
@@ -19,7 +19,7 @@ export function Settings() {
 	useEffect(() => {
 		let mount = true;
 		if (mount) {
-			isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
+			isLogged(cookies).then((res) => { if (mount) { setMe(res.me?.data); setUnauthorized(res.unauthorized) }});
 		}
 		return (() => { mount = false; });
 	}, [cookies])
@@ -103,6 +103,7 @@ export function Settings() {
 				"avatar": avatar,
 			}
           })
+		  notifSocket?.emit('updateProfileImg', {path: avatar});
 	}
 
 	return (

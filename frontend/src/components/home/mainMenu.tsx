@@ -66,7 +66,7 @@ export function MainMenu(data: any) {
 					forceUpdate();
 				});
 				data.socket.on('admin', (admin: any) => {
-					
+
 				});
 			}
 		}
@@ -153,7 +153,7 @@ export function MainMenu(data: any) {
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,
 				},
-			}).then((response: any) => { setChannelCreator(response.data.creator) ; setChannelAdmin(response.data.admin)})
+			}).then((response: any) => { if (mount) { setChannelCreator(response.data.creator); setChannelAdmin(response.data.admin) } })
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -196,30 +196,30 @@ export function MainMenu(data: any) {
 
 	function handlePromotion(id: string) {
 		if (data.socket) {
-			data.socket.emit('promote_admin', {id: id,channelName: current_channel});
+			data.socket.emit('promote_admin', { id: id, channelName: current_channel });
 		}
 	}
 
 	function handleNewPeon(id: string) {
 		if (data.socket) {
-			data.socket.emit('demote_admin', {id: id,channelName: current_channel});
+			data.socket.emit('demote_admin', { id: id, channelName: current_channel });
 		}
 	}
 
 	function handleMute(username: string) {
 		if (data.socket) {
-			data.socket.emit('mute_user', {mutedUser: username, channelName: current_channel});
+			data.socket.emit('mute_user', { mutedUser: username, channelName: current_channel });
 		}
 	}
 
 	function handleBan(username: string) {
 		if (data.socket) {
-			
-			data.socket.emit('ban_user', {id: username, channelName: current_channel});
+
+			data.socket.emit('ban_user', { id: username, channelName: current_channel });
 		}
 	}
 
-	
+
 
 	return (
 		<div className="MainElement" >
@@ -249,11 +249,11 @@ export function MainMenu(data: any) {
 							<div className="dropdown-content">
 								<UserCircle className="chatUserParam" onClick={(e) => { return history.push(`/${message.sender}/profile`) }} />
 								<Challenge className="chatUserParam" />
-								{ channelAdmin?.findIndex((u) => u.username === data.me.username) !== -1 && message.sender !== channelCreator?.username && message.sender !== data.me.username ?
+								{channelAdmin?.findIndex((u) => u.username === data.me.username) !== -1 && message.sender !== channelCreator?.username && message.sender !== data.me.username ?
 									<>
-										{ channelCreator?.username === data.me.username ? (channelAdmin?.findIndex((u) => u.username === message.sender) !== -1  ? <ChevronDoubleDown className="chatUserParam" onClick={() => handleNewPeon(message.sender)}/> : <ChevronDoubleUp className="chatUserParam" onClick={() => handlePromotion(message.sender)}/>) : null}
-										<VolumeOff className="chatUserParam" onClick={() => handleMute(message.sender)}/>
-										<Trash className="chatUserParam" onClick={() => handleBan(message.sender)}/>
+										{channelCreator?.username === data.me.username ? (channelAdmin?.findIndex((u) => u.username === message.sender) !== -1 ? <ChevronDoubleDown className="chatUserParam" onClick={() => handleNewPeon(message.sender)} /> : <ChevronDoubleUp className="chatUserParam" onClick={() => handlePromotion(message.sender)} />) : null}
+										<VolumeOff className="chatUserParam" onClick={() => handleMute(message.sender)} />
+										<Trash className="chatUserParam" onClick={() => handleBan(message.sender)} />
 									</>
 									: null
 								}
