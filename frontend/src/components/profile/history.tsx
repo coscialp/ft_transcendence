@@ -22,7 +22,9 @@ export function History(data: any) {
                     "Authorization": `Bearer ${cookies.access_token}`,
                 }
             }).then((response: any) => {
-                setGame(response.data);
+                if (mount) {
+                    setGame(response.data);
+                }
             })
         }
         return (() => { mount = false; });
@@ -38,7 +40,7 @@ export function History(data: any) {
             {game.game !== undefined ?
                 <div id="History" onClick={() => { return history.push(`/${data.user.username}/history`) }} >
                     <span className='HistoryNames'><img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player1.profileImage})` }} alt="" />{game?.game.player1.username}</span>
-                    <p className="Score"> {game?.game.score1} : {game?.game.score2} <br /> {game?.winner === data.me.username ? "WIN" : "LOSE"} <br /> { game?.game.ranked ? game?.winner === data?.me.username ? `+${game?.PPaverage} PP` : `-${game?.PPaverage} PP` : null} </p>
+                    <p className="Score"> {game?.game.score1} : {game?.game.score2} <br /> {game?.winner === data.me.username ? "WIN" : "LOSE"} <br /> {game?.game.ranked ? game?.winner === data?.me.username ? `+${game?.PPaverage} PP` : `-${game?.PPaverage} PP` : null} </p>
                     <span className='HistoryNames'><img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />{game?.game.player2.username}</span>
                 </div>
                 :

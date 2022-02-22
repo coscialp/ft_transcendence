@@ -12,6 +12,7 @@ import {
   import { Socket, Server } from 'socket.io';
 import { User } from 'src/entities/user.entity';
 import { NotificationsService } from './notifications.service';
+import { emit } from 'process';
   
   @WebSocketGateway(5003, { transports: ['websocket'] })
   export class NotificationsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -70,13 +71,22 @@ import { NotificationsService } from './notifications.service';
     @SubscribeMessage('newNotification')
     async handleMessage(
       @MessageBody() data: any,
-      @ConnectedSocket() socket: Socket,
+      @ConnectedSocket() socket: Socket,  
     ): Promise<void> {
       const user: User = await this.notificationsService.getUserFromSocket(socket);
 
       
       const toId = this.onlineUsers.find((u) => u.user.username === data.receiver).socketId;
       this.server.to(toId).emit('newNotification');
+    }
+
+    @SubscribeMessage('updateProfileImg')
+    async updateProfileImg(
+      @MessageBody() data: any,
+      @ConnectedSocket() socket: Socket,
+    ): Promise<void> {
+      const user: User = await this.notificationsService.getUserFromSocket(socket);
+      this.server.to(socket.id).emit('updateProfileImg', data.path);
     }
 
 }
