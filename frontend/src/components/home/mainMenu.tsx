@@ -39,6 +39,7 @@ export function MainMenu(data: any) {
 				response.channelsConnected?.map((chan: any) =>
 					channels.push(chan.name)
 				)
+				forceUpdate();
 			})
 		}
 		return (() => { mount = false; });
