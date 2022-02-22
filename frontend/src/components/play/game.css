@@ -5,8 +5,6 @@
   }
   
 #button_ready {
-    height:10vh;
-    width:20vw;
     background: white;
     right:40vw;
     font-size: 50px;
@@ -14,6 +12,7 @@
     background: linear-gradient(rgb(207 29 61 / 30%), rgb(12 73 181 / 54%));
     filter:blur(2px);
     transform: scale(0.9);
+    visibility:hidden;
 }
 
 #button_ready:hover {
@@ -31,4 +30,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+#game_score {
+    top: 10px;
+    position: absolute;
+    color: white;
+    z-index: 1;
+    font-size: 5vw;
+    height: 10%;
+    margin: 0;
 }

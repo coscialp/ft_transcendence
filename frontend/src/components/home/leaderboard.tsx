@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { useCookies } from 'react-cookie';
 import { isLogged } from '../../utils/isLogged';
 import { ip } from "../../App";
-import { User } from '../../utils/user.type';
 import './leaderboard.css'
 
 
@@ -15,6 +14,7 @@ export function Open_Leaderboard() {
     var LBBodyOpen: any = document.getElementById('LBBodyOpen')
     var arrowR: any = document.getElementById('leadArrowR')
     var arrowL: any = document.getElementById('leadArrowL')
+    var leaderboardOrientation: any = document.getElementById('leaderboardOrientation')
     if (Leaderboard.style.height === '52vh') {
         Leaderboard.style.transition = 'all .5s ease-in-out'
         Leaderboard.style.height = '50px'
@@ -29,6 +29,9 @@ export function Open_Leaderboard() {
         arrowL.style.transition = 'transform 0.5s ease-in-out'
         arrowL.style.transform = 'rotate(0deg)'
         LBBodyOpen.style.display = 'none'
+        leaderboardOrientation.style.transform = 'rotate(-90deg)' 
+        leaderboardOrientation.style.writingMode = 'vertical-rl' 
+        leaderboardOrientation.style.textOrientation = 'upright' 
     }
     else {
         Leaderboard.style.transition = 'all .5s ease-in-out'
@@ -45,6 +48,9 @@ export function Open_Leaderboard() {
         arrowL.style.transform = 'rotate(-180deg)'
         LBBodyOpen.style.display = 'flex'
         LBBodyOpen.style.flexDirection = 'column'
+        leaderboardOrientation.style.transform = 'none' 
+        leaderboardOrientation.style.writingMode = 'unset' 
+        leaderboardOrientation.style.textOrientation = 'unset' 
     }
 }
 
@@ -52,6 +58,7 @@ export function Leaderboard() {
     const [leaders, setLeaders]: any = useState([]);
     const [swich, setSwich] = useState<boolean>(false);
     const [cookies] = useCookies();
+    // eslint-disable-next-line
     const [me, setMe]: any = useState({});
 
     useEffect(() => {
@@ -92,13 +99,14 @@ export function Leaderboard() {
         return () => clearInterval(interval);
     }, [swich]);
 
-    console.log(leaders);
+    
 
     return (
         <div className="LBElement" >
             <div id="leaderboardMini">
                 <div id="OpenLeaderboard" onClick={() => { Open_Leaderboard() }}>
-                    <ArrowSmUp id="leadArrowR" onClick={() => Open_Leaderboard()} />Leaderboard
+                    <ArrowSmUp id="leadArrowR" onClick={() => Open_Leaderboard()} />
+                    <p id="leaderboardOrientation">Leaderboard</p>
                     <ArrowSmUp id="leadArrowL" onClick={() => Open_Leaderboard()} />
                 </div>
                 <div id="LBBodyOpen" >

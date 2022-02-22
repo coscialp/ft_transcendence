@@ -74,7 +74,7 @@ import { NotificationsService } from './notifications.service';
     ): Promise<void> {
       const user: User = await this.notificationsService.getUserFromSocket(socket);
 
-      console.log(data.receiver);
+      
       const toId = this.onlineUsers.find((u) => u.user.username === data.receiver).socketId;
       this.server.to(toId).emit('newNotification');
     }

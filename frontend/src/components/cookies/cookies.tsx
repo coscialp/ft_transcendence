@@ -4,16 +4,14 @@ import { useCookies } from "react-cookie";
 import { ip } from "../../App";
 
 export function Cookies(props: any): ReactElement {
-  const [cookies, setCookie] = useCookies(["access_token"]);
+  // eslint-disable-next-line
+  const [cookies, setCookies] = useCookies(["access_token"]);
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const token = urlParams.get("token");
 
-  function HandleCookie(cookies: any): any {
-
-    cookies = null;
-    setCookie("access_token", token, { path: "/"});
-
+  function HandleCookie(): any {
+    setCookies("access_token", token, { path: "/" });
     useEffect(() => {
 
       let mounted = true;
@@ -34,9 +32,9 @@ export function Cookies(props: any): ReactElement {
             headers: {
               "Authorization": `Bearer ${token}`,
             },
-          }).then((response: any) => (
-            response.data.nickname !== null ? window.open(`http://${ip}:3000/home`, '_self') : window.open(`http://${ip}:3000/register?token=${token}`, '_self')
-          ));
+          }).then((response: any) => {
+            response?.data?.nickname !== null ? window.open(`http://${ip}:3000/home`, '_self') : window.open(`http://${ip}:3000/register?token=${token}`, '_self')
+          });
         }
       })
       return (() => {mounted = false})
@@ -46,7 +44,7 @@ export function Cookies(props: any): ReactElement {
 
   return (
     <div>
-      {HandleCookie(cookies)}
+      {HandleCookie()}
     </div>
   );
 }

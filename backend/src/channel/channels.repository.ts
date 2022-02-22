@@ -5,6 +5,7 @@ import { UsersRepository } from "src/user/user.repository";
 import { UserService } from "src/user/user.service";
 import { EntityRepository, Repository } from "typeorm";
 import { Channel } from "../entities/channel.entity";
+import * as bcrypt from 'bcryptjs';
 
 @EntityRepository(Channel)
 export class ChannelsRepository extends Repository<Channel> {
@@ -28,10 +29,13 @@ export class ChannelsRepository extends Repository<Channel> {
 
     async createChannel(user: User, name: string, password: string, userService: UserService): Promise<void> {
         const currUser = await userService.getUserById(user.id);
+
+        const salt: string = await bcrypt.genSalt();
+        const hashedPassword: string = await bcrypt.hash(password, salt);
         
         const channel: Channel = this.create({
             name,
-            password,
+            password: hashedPassword,
             creator: currUser,
             messages: [],
             admin: [],
@@ -66,8 +70,30 @@ export class ChannelsRepository extends Repository<Channel> {
         user.channelsConnected.push(channel);
 
         try {
-            this.save(channel)
-            this.usersRepository.save(user);
+            await this.save(channel)
+            await this.usersRepository.save(user);
+        } catch (e) {
+            console.log(e.code);
+        }
+    }
+
+    async promoteToAdmin(user: User, channel: Channel) {
+        channel.admin.push(user);
+
+        try {
+           await this.save(channel)
+           await this.usersRepository.save(user);
+        } catch (e) {
+            console.log(e.code);
+        }
+    }
+
+    async demoteToPeon(user: User, channel: Channel) {
+        channel.admin.splice(channel.admin.findIndex((u) => u.username === user.username), 1);
+
+        try {
+            await this.save(channel)
+            await this.usersRepository.save(user);
         } catch (e) {
             console.log(e.code);
         }

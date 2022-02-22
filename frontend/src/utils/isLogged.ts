@@ -4,6 +4,7 @@ import { ip } from '../App'
 export async function isLogged(cookies: any): Promise<{me: any, unauthorized: boolean}> {
     let unauthorized = false;
     let me: any = null;
+    
     await axios.request({
       url: '/user/me',
       method: 'get',

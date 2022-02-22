@@ -6,8 +6,8 @@ import { Redirect, useHistory } from "react-router-dom";
 import { isLogged } from "../../utils/isLogged";
 import { User } from "../../utils/user.type";
 import { useCookies } from "react-cookie";
-import { io } from "socket.io-client";
-import { ip } from "../../App";
+import { gameSocket, ip } from "../../App";
+import axios from "axios";
 
 export function InGame() {
 
@@ -18,13 +18,16 @@ export function InGame() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [me, setMe] = useState<User>();
   const [reload, setReload] = useState<boolean>(false);
-  const [gameFinish, setGameFinish] = useState<boolean>(false);
+  const [gameFinish] = useState<boolean>(false);
   const [leaveTime, setLeaveTime] = useState<number>(0);
   const leaveTimeRef = useRef(leaveTime);
   const [tabTime, setTabTime] = useState<number>(0);
   const tabTimeRef = useRef(tabTime);
   const leaveRef = useRef(leave);
-
+  const [score, setScore] = useState<{
+    score1: number,
+    score2: number
+  }>({ score1: 0, score2: 0 });
   const setMyTabTime = (data: any) => {
     tabTimeRef.current = data;
     setTabTime(data);
@@ -37,7 +40,7 @@ export function InGame() {
     leaveTimeRef.current = data;
     setLeaveTime(data);
   }
-  player.ID = String(localStorage.getItem('playerID'));
+
 
 
   const onBlur = () => {
@@ -55,28 +58,48 @@ export function InGame() {
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
     };
+    // eslint-disable-next-line
   }, []);
+
+
 
   useEffect(() => {
     let mount = true;
     if (mount) {
       isLogged(cookies).then((res: any) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
+      player.ID = String(localStorage.getItem('playerID'));
       player.Spectator = String(localStorage.getItem('playerID')) === 'spectator' ? true : false;
-      player.GameMod = String(localStorage.getItem('playerID')) === 'gameMode' ? 1 : 0;
+      player.GameMod = String(localStorage.getItem('gameMOD')) === 'true' ? 1 : 0;
       if (player.Spectator === true) {
         player.GameID = Number(localStorage.getItem('GameID'));
       }
-
     }
     return (() => { mount = false; });
   }, [cookies, player]);
+
+  useEffect(() => {
+    let mount = true;
+    if (mount) {
+      axios.request({
+        url: `/auth/ingame`,
+        method: 'patch',
+        baseURL: `http://${ip}:5000`,
+        headers: {
+          "Authorization": `Bearer ${cookies.access_token}`,
+        }
+      })
+    }
+    return (() => {
+      mount = false;
+    });
+  }, [cookies]);
 
   useEffect(function () {
     if (player.GameID !== 0) {
       if (player.Spectator === false) {
         player.send_ready_up();
-        player.send_ball_position();
         player.send_player_position();
+        player.send_ball_position();
       }
     }
   }, [player, player.GameID]);
@@ -84,7 +107,9 @@ export function InGame() {
     if (player.Spectator === false && player.GameID) {
       player.send_point();
     }
+    // eslint-disable-next-line
   }, [player.GameID])
+
   useEffect(function () {
     let mount = true;
     if (mount) {
@@ -97,8 +122,8 @@ export function InGame() {
     return (() => { mount = false; });
   }, [me, player]);
 
-  function setReady(id: string, gameid: number) {
-    player.Socket.emit('ReadyUp', { player: player.ID, gameId: player.GameID });
+  function setReady() {
+    gameSocket.emit('ReadyUp', { player: player.ID, gameId: player.GameID });
     let ready: HTMLElement | null = document.getElementById('button_ready');
     if (ready) {
       ready.style.display = 'none';
@@ -108,19 +133,15 @@ export function InGame() {
   useEffect(function () {
     if (player.GameID !== 0) {
       if (player.Spectator === false) {
-        player.receive_ball_position();
-        player.receive_player_position();
-        player.receive_point();
+        player.receive_game_info();
         player.receive_ready_up();
         player.receive_endGame();
         player.receive_particle();
       }
       else {
-        player.receive_ball_pos_spectate();
-        player.receive_pos_specate();
         player.receive_endGame();
-        player.receive_point();
         player.receive_particle();
+        player.receive_game_info();
       }
     }
   }, [reload, player, player.GameID]);
@@ -139,7 +160,7 @@ export function InGame() {
 
   useEffect(() => {
     window.addEventListener('resize', handleResize)
-    player.Socket = io(`ws://${ip}:5002`, { transports: ['websocket'] });
+    // eslint-disable-next-line
   }, []);
 
   function check_ready() {
@@ -150,60 +171,66 @@ export function InGame() {
       else {
         setTabTime(0);
       }
-      if (tabTimeRef.current === 1000) {
+      if (tabTimeRef.current === 1000 || player.GameState === true || leaveRef.current === 300) {
         if (player.ID === 'Player1') {
-          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
+          gameSocket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
         }
         else {
-          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
+          gameSocket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
         }
       }
-      if (player.GameState === true || leaveRef.current === 300) {
-        if (player.ID === 'Player1') {
-          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
-        }
-        else {
-          player.Socket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
-        }
-      }
-
       if (gameFinish === true || player.Warning === true) {
         return history.push('/resume');
       }
-      if (player.Spectator === false) {
-        player.ready_checker();
-      }
+      player.ready_checker();
     }
     else if (gameFinish === true || player.Warning === true) {
       return history.push('/home');
-      
+
     }
-    
-  
+
+
   }
   useEffect(() => {
     const interval = setInterval(() => {
       check_ready();
+      if (player.Score1 !== score.score1 || player.Score2 !== score.score2) {
+        setScore({ score1: player.Score1, score2: player.Score2 });
+      }
     }, 1000);
     return () => clearInterval(interval);
+    // eslint-disable-next-line
   }, []);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      if (player.GameMod === 2 && player.GameID !== 0)
-      {
-        player.Socket.emit('StartParticle', {gameId : player.GameID});
+      let ready: HTMLElement | null = document.getElementById('button_ready');
+      if (ready) {
+        ready.style.visibility = 'visible';
       }
     }, 10000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (player.GameMod === 2 && player.GameID !== 0 && player.ID === "Player1") {
+        gameSocket.emit('StartParticle', { gameId: player.GameID });
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+    // eslint-disable-next-line
   }, [player.GameID]);
+
 
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);
   }
   return (
     <div className="game_body">
+      <p id="game_score"> {score?.score1} : {score?.score2} </p>
       <Unity className="game_screen" unityContext={player.UnityContext} />
-      <button id="button_ready" onClick={() => setReady(player.ID, player.GameID)}>Ready up</button>
+      <button id="button_ready" onClick={() => setReady()}>Ready up</button>
     </div>
   );
 }

@@ -46,7 +46,7 @@ export class UsersRepository extends Repository<User> {
       nickName: nickName,
       profileImage: '/img/beluga.jpeg',
       email: email,
-      isLogged: false,
+      isLogged: "offline",
       friends: [],
       channels: [],
       channelsAdmin: [],
@@ -60,6 +60,10 @@ export class UsersRepository extends Repository<User> {
       NormalWinNumber: 0,
       GoalSet: 0,
       GoalTaken: 0,
+      Security: false,
+      Friend: 0,
+      Climber: false,
+      Hater: 0,
     });
 
 
@@ -82,8 +86,6 @@ export class UsersRepository extends Repository<User> {
       admin,
     } = authCredentialsDto;
 
-    
-
     const user: User = this.create({
       username: username,
       password: password,
@@ -92,7 +94,7 @@ export class UsersRepository extends Repository<User> {
       nickName: nickName,
       profileImage: `https://cdn.intra.42.fr/users/${username}.jpg`,
       email: email,
-      isLogged: false,
+      isLogged: "offline",
       isAdmin: admin,
       friends: [],
       channels: [],
@@ -107,6 +109,10 @@ export class UsersRepository extends Repository<User> {
       NormalWinNumber: 0,
       GoalSet: 0,
       GoalTaken: 0,
+      Security: false,
+      Friend: 0,
+      Climber: false,
+      Hater: 0,
     });
 
     try {

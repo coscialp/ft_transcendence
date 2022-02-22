@@ -4,12 +4,11 @@ import { RequestApi } from "../../utils/RequestApi.class";
 import './mainMenu.css'
 
 import { useHistory } from "react-router";
-import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog } from "heroicons-react";
+import { UserCircle, Play as Challenge, ChevronDoubleUp, Trash, VolumeOff, Cog, ChevronDoubleDown } from "heroicons-react";
 import { useForceUpdate } from "../../utils/forceUpdate";
 import { ip } from "../../App";
 import { MessageType } from "../../utils/message.type";
 
-import { io } from "socket.io-client";
 import axios from "axios";
 import { User } from "../../utils/user.type";
 
@@ -21,22 +20,17 @@ export function MainMenu(data: any) {
 	const [current_channel, setCurrent_Channel] = useState<string>('');
 	const [channels] = useState<string[]>([]);
 	const [channelAdmin, setChannelAdmin] = useState<User[]>([]);
+	const [channelCreator, setChannelCreator] = useState<User>();
 	const [channelName, setChannelName] = useState<string>('');
 	const [channelPassword, setChannelPassword] = useState<string>('');
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
+	const [updateAdmin, setUpdateAdmin] = useState<boolean>(false);
 	const scrollRef = useRef<any>();
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
 
-	const socket = io();
-
 	const forceUpdate = useForceUpdate();
-
-
-	socket.on('connect', () => {
-		console.log(socket.id);
-	})
 
 	useEffect(() => {
 		let mount = true;
@@ -45,6 +39,18 @@ export function MainMenu(data: any) {
 				response.channelsConnected?.map((chan: any) =>
 					channels.push(chan.name)
 				)
+				forceUpdate();
+			})
+		}
+		return (() => { mount = false; });
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [cookies]);
+
+	useEffect(() => {
+		let mount = true;
+		if (mount && data.socket) {
+			data.socket.on('update', () => {
+				setUpdateAdmin(!updateAdmin);
 			})
 		}
 		return (() => { mount = false; });
@@ -59,7 +65,10 @@ export function MainMenu(data: any) {
 				data.socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
 					messages.push({ id: messages.length, date: msg.sentAt, sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage });
 					forceUpdate();
-				})
+				});
+				data.socket.on('admin', (admin: any) => {
+
+				});
 			}
 		}
 		return (() => { mount = false; });
@@ -109,18 +118,34 @@ export function MainMenu(data: any) {
 				name: channelName,
 				password: channelPassword,
 			}
-			requestApi.patch('channel/join', { body: channelInfo, contentType: 'application/json' });
 
-			channels.push(channelName);
-			if (data.socket) {
-				data.socket.emit('change_channel', { channelName: channelName });
-				setCurrent_Channel(channelName);
-			}
-			setMessages([]);
-			togglePopup();
-			setChannelName('');
-			setChannelPassword('');
-			setPopupState(0);
+			axios.request({
+				url: `/channel/join`,
+				method: "patch",
+				baseURL: `http://${ip}:5000`,
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+				data: {
+					"name": channelInfo.name,
+					"password": channelInfo.password,
+				},
+			}).then((response) => {
+				if (response.status === 200) {
+					channels.push(channelName);
+					if (data.socket) {
+						data.socket.emit('change_channel', { channelName: channelName });
+						setCurrent_Channel(channelName);
+					}
+					setMessages([]);
+					togglePopup();
+					setChannelName('');
+					setChannelPassword('');
+					setPopupState(0);
+				}
+			}).catch((error) => {
+				window.alert("Wrong password !");
+			})
 		}
 		e.preventDefault()
 	}
@@ -145,11 +170,11 @@ export function MainMenu(data: any) {
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,
 				},
-			}).then((response:any) => setChannelAdmin(response.data.admin))
+			}).then((response: any) => { setChannelCreator(response.data.creator); setChannelAdmin(response.data.admin) })
 		}
 		return (() => { mount = false; });
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [cookies, current_channel]);
+	}, [cookies, current_channel, updateAdmin]);
 
 	useEffect(() => {
 		let mount = true;
@@ -186,6 +211,33 @@ export function MainMenu(data: any) {
 		return history.push(`/${toGo}/profile`)
 	}
 
+	function handlePromotion(id: string) {
+		if (data.socket) {
+			data.socket.emit('promote_admin', { id: id, channelName: current_channel });
+		}
+	}
+
+	function handleNewPeon(id: string) {
+		if (data.socket) {
+			data.socket.emit('demote_admin', { id: id, channelName: current_channel });
+		}
+	}
+
+	function handleMute(username: string) {
+		if (data.socket) {
+			data.socket.emit('mute_user', { mutedUser: username, channelName: current_channel });
+		}
+	}
+
+	function handleBan(username: string) {
+		if (data.socket) {
+
+			data.socket.emit('ban_user', { id: username, channelName: current_channel });
+		}
+	}
+
+
+
 	return (
 		<div className="MainElement" >
 			<div className="Channel List" >{channels.map((channel: any) => (
@@ -214,11 +266,11 @@ export function MainMenu(data: any) {
 							<div className="dropdown-content">
 								<UserCircle className="chatUserParam" onClick={(e) => { return history.push(`/${message.sender}/profile`) }} />
 								<Challenge className="chatUserParam" />
-								{ channelAdmin?.findIndex((u) => u.username === data.me.username) !== -1 ?
+								{channelAdmin?.findIndex((u) => u.username === data.me.username) !== -1 && message.sender !== channelCreator?.username && message.sender !== data.me.username ?
 									<>
-										<ChevronDoubleUp className="chatUserParam" />
-										<VolumeOff className="chatUserParam" />
-										<Trash className="chatUserParam" />
+										{channelCreator?.username === data.me.username ? (channelAdmin?.findIndex((u) => u.username === message.sender) !== -1 ? <ChevronDoubleDown className="chatUserParam" onClick={() => handleNewPeon(message.sender)} /> : <ChevronDoubleUp className="chatUserParam" onClick={() => handlePromotion(message.sender)} />) : null}
+										<VolumeOff className="chatUserParam" onClick={() => handleMute(message.sender)} />
+										<Trash className="chatUserParam" onClick={() => handleBan(message.sender)} />
 									</>
 									: null
 								}
@@ -252,7 +304,7 @@ export function MainMenu(data: any) {
 								<form onSubmit={handleJoinChannel} >
 									<input type="text" className="AJCplaceholder" placeholder="Channel name" value={channelName} onChange={(e) => setChannelName(e.target.value)} />
 									<input type="password" className="AJCplaceholder" placeholder="Password (optionnal)" value={channelPassword} onChange={(e) => setChannelPassword(e.target.value)} />
-									<input type="submit" className="subbtn" value="Join !" />
+									<input type="submit" className="subbtn" value="Join channel !" />
 								</form>
 								<button className="Backbtn" onClick={(e) => { setPopupState(0) }} >Back</button>
 							</div>

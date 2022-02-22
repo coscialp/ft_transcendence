@@ -1,15 +1,14 @@
 import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useCookies } from 'react-cookie';
 import { useHistory } from 'react-router';
-import { ip } from '../../App';
+import { gameSocket, ip } from '../../App';
 import { isLogged } from '../../utils/isLogged';
 import { Bell, Cog, UserCircle, Logout} from 'heroicons-react';
 import './navbar.css'
 import { io, Socket } from 'socket.io-client';
 
 export function NavBar(props: any) {
-
   let history = useHistory();
   const [cookies, setCookie] = useCookies();
   const [search, setSearch] = useState("");
@@ -29,6 +28,19 @@ export function NavBar(props: any) {
   }, [cookies])
 
   const [avatar, setAvatar] = useState('/img/beluga.jpeg');
+
+  useEffect(() => {
+		let mount = true;
+		if (mount && gameSocket && history) {
+			gameSocket.on('accept_duel', (user: any) => {
+				
+				localStorage.setItem('playerID', user);
+        localStorage.setItem('gameMOD', "false");
+				return history.push('/game');
+			})
+		}
+		return (() => { mount = false; });
+	}, [history]);
 
   useEffect(() => {
     let mount = true;

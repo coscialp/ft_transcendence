@@ -1,9 +1,8 @@
 import axios from "axios"
 import { useState } from "react";
-// import { useHistory } from 'react-router';
 import { useCookies } from "react-cookie";
 import "./duel.css";
-import { ip } from '../../App';
+import { gameSocket, ip } from '../../App';
 
 export function Duel() {
     // let history = useHistory();
@@ -55,32 +54,15 @@ export function Duel() {
       e.preventDefault()
     }
 
-    function PopUpDuel() {
-      
-      /*if (e.target.value) {
-        axios.request({
-          url: `/user`,
-          method: 'get',
-          baseURL: `http://${ip}:5000`,
-          headers: {
-            "Authorization": `Bearer ${cookies.access_token}`,
-          },
-          params: {
-            "duel": duel,
-          }
-        }).then((response: any) => {
-          launchDuelGame(response.data);
-        })
-      }
-      e.preventDefault()
-      }*/
+    function PopUpDuel(username: string) {
+      gameSocket.emit('duel', {username: username});
     }
   
     function SearchingList() {
       return (
         <div className="duelSearching list" >
           {searchedUsers.map((users: any) => (
-            <div className="duelList" key={users.username} onClick={(e) => { setInviteUsr(users.username) ; setPopUp(true); PopUpDuel() }} >
+            <div className="duelList" key={users.username} onClick={(e) => { setPopUp(true); PopUpDuel(users.username); setInviteUsr(users.username) }} >
               <div className="duelNick list" > {users.nickName}
                 <div className="duelUser list"> {users.username} </div>
               </div>
