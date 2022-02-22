@@ -1,5 +1,5 @@
 .duelElement {
-    font-family: neon;
+    font-family: sans-serif;
     /* text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa; */
     width: 17%;
     height: 50vh;
@@ -8,7 +8,7 @@
     display:flex;
     flex-direction: column;
     overflow:hidden;
-    
+    font-size: min(2vw, 24px);
     box-shadow: rgb(12 73 181 / 54%) 0px 54px 55px, rgb(5 72 177 / 38%) 0px -12px 30px, rgb(0 0 0 / 50%) 0px 4px 6px, rgb(0 0 0 / 50%) 0px 12px 13px, rgb(0 0 0 / 50%) 0px -3px 5px;
 }
 
@@ -54,6 +54,8 @@ input.duelSearchBar {
     padding-left: 10px;
     height: 1.5rem;
     border: 0px;
+    max-width: 200px;
+    width: 15vw;
   }
 
   
@@ -283,7 +285,7 @@ span.cancel-cross:hover label.cancel{
 @media screen and (orientation: portrait) {
 
   .duelElement {
-    font-family: neon;
+    font-family: sans-serif;
     /* text-shadow: 0 0 4px #fff, 0 0 11px #fff, 0 0 19px #fff, 0 0 40px #0fa, 0 0 80px #0fa, 0 0 90px #0fa, 0 0 100px #0fa, 0 0 150px #0fa; */
     width: 70vw;
     height: 25vh;
