@@ -84,7 +84,7 @@ export class ChannelService {
   async joinChannel(user: User, name: string, password: string): Promise<void> {
     let channel = await this.getOneChannel(name);
 
-    if (channel && await bcrypt.compare(password, channel.password)) {
+    if (channel && ( channel.password === "" || await bcrypt.compare(password, channel.password))) {
       return await this.channelsRepository.joinChannel(
         await this.userService.getUserById(user.id, user),
         channel, this.userService

@@ -24,8 +24,12 @@ export class ChannelsRepository extends Repository<Channel> {
     async createChannel(user: User, name: string, password: string, userService: UserService): Promise<void> {
         const currUser = await userService.getUserById(user.id);
 
-        const salt: string = await bcrypt.genSalt();
-        const hashedPassword: string = await bcrypt.hash(password, salt);
+        let hashedPassword: string = "";
+
+        if (password !== "" ) {
+            const salt: string = await bcrypt.genSalt();
+            hashedPassword = await bcrypt.hash(password, salt);
+        }
         
         const channel: Channel = this.create({
             name,

@@ -6,7 +6,7 @@ import { gameSocket, ip } from '../../App';
 import { isLogged } from '../../utils/isLogged';
 import { Bell, Cog, UserCircle, Logout} from 'heroicons-react';
 import './navbar.css'
-import { io, Socket } from 'socket.io-client';
+import { notifSocket } from '../../App';
 
 export function NavBar(props: any) {
   let history = useHistory();
@@ -15,14 +15,12 @@ export function NavBar(props: any) {
   const [searchingPop, setSearchingPop] = useState(false);
   const [searchedUsers, setSearchedUsers]: any = useState([]);
   const [me, setMe]: any = useState({});
-  const [socket, setSocket] = useState<Socket>();
   const [counter, setCounter] = useState<number>(0);
 
   useEffect(() => {
     let mount = true;
     if (mount) {
-      isLogged(cookies).then((res) => { setMe(res.me?.data) });
-      setSocket(io(`ws://${ip}:5003`, { transports: ['websocket', 'polling']}));
+      isLogged(cookies).then((res) => {if (mount){ setMe(res.me?.data) }});
     }
     return (() => { mount = false; });
   }, [cookies])
@@ -33,7 +31,6 @@ export function NavBar(props: any) {
 		let mount = true;
 		if (mount && gameSocket && history) {
 			gameSocket.on('accept_duel', (user: any) => {
-				
 				localStorage.setItem('playerID', user);
         localStorage.setItem('gameMOD', "false");
 				return history.push('/game');
@@ -45,22 +42,32 @@ export function NavBar(props: any) {
   useEffect(() => {
     let mount = true;
     if (mount) {
-      socket?.on('disconnect' , function(){
-      socket.emit('user disconnect');
+      notifSocket?.on('disconnect' , function(){
+      notifSocket.emit('user disconnect');
     });
     }
     return (() => { mount = false; });
-  }, [cookies, socket])
+  }, [cookies])
+
+  useEffect(() => {
+		let mount = true;
+		if (mount) {
+      notifSocket.on('updateProfileImg', (path: string) => {
+        setAvatar(path);
+      });
+    }
+		return (() => { mount = false; });
+	}, []);
 
   useEffect(() => {
     let mount = true;
     if (mount) {
-      socket?.on('newNotification' , () => {
-                setCounter(prev => prev + 1);
+      notifSocket?.on('newNotification' , () => {
+          setCounter(prev => prev + 1);
     });
     }
     return (() => { mount = false; });
-  }, [cookies, socket, me])
+  }, [cookies, me])
   
   function NewNotification() {
     return (

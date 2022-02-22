@@ -29,9 +29,9 @@ export function Open_Leaderboard() {
         arrowL.style.transition = 'transform 0.5s ease-in-out'
         arrowL.style.transform = 'rotate(0deg)'
         LBBodyOpen.style.display = 'none'
-        leaderboardOrientation.style.transform = 'rotate(-90deg)' 
-        leaderboardOrientation.style.writingMode = 'vertical-rl' 
-        leaderboardOrientation.style.textOrientation = 'upright' 
+        leaderboardOrientation.style.transform = 'rotate(-90deg)'
+        leaderboardOrientation.style.writingMode = 'vertical-rl'
+        leaderboardOrientation.style.textOrientation = 'upright'
     }
     else {
         Leaderboard.style.transition = 'all .5s ease-in-out'
@@ -48,9 +48,9 @@ export function Open_Leaderboard() {
         arrowL.style.transform = 'rotate(-180deg)'
         LBBodyOpen.style.display = 'flex'
         LBBodyOpen.style.flexDirection = 'column'
-        leaderboardOrientation.style.transform = 'none' 
-        leaderboardOrientation.style.writingMode = 'unset' 
-        leaderboardOrientation.style.textOrientation = 'unset' 
+        leaderboardOrientation.style.transform = 'none'
+        leaderboardOrientation.style.writingMode = 'unset'
+        leaderboardOrientation.style.textOrientation = 'unset'
     }
 }
 
@@ -64,7 +64,7 @@ export function Leaderboard() {
     useEffect(() => {
         let mount = true;
         if (mount) {
-            isLogged(cookies).then((res) => { setMe(res.me?.data) });
+            isLogged(cookies).then((res) => { if (mount) { setMe(res.me?.data) } });
         }
         return (() => { mount = false; });
     }, [cookies])
@@ -80,7 +80,9 @@ export function Leaderboard() {
                     "Authorization": `Bearer ${cookies.access_token}`,
                 }
             }).then((response: any) => {
-                setLeaders(response.data);
+                if (mount) {
+                    setLeaders(response.data);
+                }
             })
         }
         return (() => { mount = false; });
@@ -99,7 +101,7 @@ export function Leaderboard() {
         return () => clearInterval(interval);
     }, [swich]);
 
-    
+
 
     return (
         <div className="LBElement" >
@@ -142,19 +144,19 @@ export function Leaderboard() {
                             {leaders.length >= 4 ?
                                 leaders.map((leader: any, index: number, array: any) => (
                                     (index >= 3) ?
-                                    <div key={leader.id} className="rest">
-                                        <div className="others flex">
-                                            <div className="rank">
-                                                <i className="fas fa-caret-up"></i>
-                                                <p className="num">{index + 1}</p>
+                                        <div key={leader.id} className="rest">
+                                            <div className="others flex">
+                                                <div className="rank">
+                                                    <i className="fas fa-caret-up"></i>
+                                                    <p className="num">{index + 1}</p>
+                                                </div>
+                                                <div className="info flex">
+                                                    <img src={leader?.profileImage} alt="" className="p_img" />
+                                                    <p className="link">{leader?.username}</p>
+                                                    <p className="points">{leader?.PP}PP</p>
+                                                </div>
                                             </div>
-                                            <div className="info flex">
-                                                <img src={leader?.profileImage} alt="" className="p_img" />
-                                                <p className="link">{leader?.username}</p>
-                                                <p className="points">{leader?.PP}PP</p>
-                                            </div>
-                                        </div>
-                                    </div> : null)) : null
+                                        </div> : null)) : null
                             }
                         </div>
                     </div>
@@ -195,19 +197,19 @@ export function Leaderboard() {
                         {leaders.length >= 4 ?
                             leaders.map((leader: any, index: number, array: any) => (
                                 (index >= 3) ?
-                                <div key={leader.id} className="rest">
-                                    <div className="others flex">
-                                        <div className="rank">
-                                            <i className="fas fa-caret-up"></i>
-                                            <p className="num">{index + 1}</p>
+                                    <div key={leader.id} className="rest">
+                                        <div className="others flex">
+                                            <div className="rank">
+                                                <i className="fas fa-caret-up"></i>
+                                                <p className="num">{index + 1}</p>
+                                            </div>
+                                            <div className="info flex">
+                                                <img src={leader?.profileImage} alt="" className="p_img" />
+                                                <p className="link">{leader?.username}</p>
+                                                <p className="points">{leader?.PP}PP</p>
+                                            </div>
                                         </div>
-                                        <div className="info flex">
-                                            <img src={leader?.profileImage} alt="" className="p_img" />
-                                            <p className="link">{leader?.username}</p>
-                                            <p className="points">{leader?.PP}PP</p>
-                                        </div>
-                                    </div>
-                                </div> : null)) : null
+                                    </div> : null)) : null
                         }
                     </div>
                 </div>

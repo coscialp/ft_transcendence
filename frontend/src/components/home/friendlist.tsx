@@ -11,6 +11,7 @@ import { ArrowSmUp } from 'heroicons-react'
 export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
   const [friends, setFriends] = useState([]);
+  const [mounted, setMounted] = useState<boolean>(true);
   // eslint-disable-next-line
   const [socket, setSocket] = useState<Socket>();
   const [random, setRandom] = useState<number>();
@@ -25,7 +26,9 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         "Authorization": `Bearer ${cookies.access_token}`,
       }
     }).then((response: any) => {
-      setFriends(response.data.friends);
+      if (mounted) {
+        setFriends(response.data.friends);
+      }
     })
   }
 
@@ -45,7 +48,10 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
 
       return () => { mounted = false }
     }, 5000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      setMounted(false);
+    };
     // eslint-disable-next-line
   }, [cookies])
 

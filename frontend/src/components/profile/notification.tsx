@@ -9,15 +9,16 @@ import './notifications.css'
 export function Notification(data: any) {
     const [cookies] = useCookies();
     const [fromRequest, setFromRequest]: any = useState([]);
-	const [unauthorized, setUnauthorized] = useState(false);
+    const [unauthorized, setUnauthorized] = useState(false);
+    const [mounted, setMounted] = useState(true);
 
     useEffect(() => {
-		let mount = true;
-		if (mount) {
-			isLogged(cookies).then((res) => { setUnauthorized(res.unauthorized) });
-		}
-		return (() => { mount = false; });
-	}, [cookies])
+        let mount = true;
+        if (mount) {
+            isLogged(cookies).then((res) => { setUnauthorized(res.unauthorized) });
+        }
+        return (() => { mount = false; setMounted(false) });
+    }, [cookies])
 
     function NotifRequest() {
         axios.request({
@@ -28,7 +29,9 @@ export function Notification(data: any) {
                 "Authorization": `Bearer ${cookies.access_token}`,
             },
         }).then((response: any) => {
+            if (mounted) {
                 setFromRequest(response.data.from);
+            }
         })
     }
 
@@ -60,7 +63,7 @@ export function Notification(data: any) {
                 'newFriendId': request.username
             }
         }).then((response: any) => {
-            
+
             NotifRequest();
         })
     }
@@ -77,7 +80,7 @@ export function Notification(data: any) {
                 'fromId': request.username
             }
         }).then((response: any) => {
-            
+
             NotifRequest();
         })
     }
@@ -91,35 +94,35 @@ export function Notification(data: any) {
     }
 
     if (!cookies.access_token || unauthorized) {
-		return (<Redirect to="/" />);
-	}
+        return (<Redirect to="/" />);
+    }
 
     return (
         <div>
             <div className="AlertsELement" >
                 <div className="AlertsMain" >
                     {data.duel.username !== undefined ? <div className="Friend Request Pending" key={data.duel.id} >
-                            <div className="NameImg box">
-                                <img className="FriendRequestImg" alt="" style={{ backgroundImage: `url(${data.duel.profileImage})` }} />
-                                <p className="Name Request">{data.duel.username}</p>
-                            </div>
-                            <div className="Accept Denie btnbox" >
-                                <p className="AcceptBtn" onClick={(e: any) => handleAcceptDuel(data.duel.username)}>
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                    Accept
-                                </p>
-                                <p className="DeclineBtn" onClick={(e: any) => handleDeclineDuel(data.duel.username)}>
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                    Decline
-                                </p>
-                            </div>
-                        </div> : null}
+                        <div className="NameImg box">
+                            <img className="FriendRequestImg" alt="" style={{ backgroundImage: `url(${data.duel.profileImage})` }} />
+                            <p className="Name Request">{data.duel.username}</p>
+                        </div>
+                        <div className="Accept Denie btnbox" >
+                            <p className="AcceptBtn" onClick={(e: any) => handleAcceptDuel(data.duel.username)}>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                Accept
+                            </p>
+                            <p className="DeclineBtn" onClick={(e: any) => handleDeclineDuel(data.duel.username)}>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                                Decline
+                            </p>
+                        </div>
+                    </div> : null}
                     {fromRequest.length === 0 ? <div className="no alerts">You have no alerts !</div> : fromRequest.map((request: any) => (
                         <div className="Friend Request Pending" key={request.id} >
                             <div className="NameImg box">
