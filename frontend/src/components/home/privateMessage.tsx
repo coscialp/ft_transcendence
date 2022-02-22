@@ -161,8 +161,8 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
                         </article>
                     )) :
                     <div>
-                        <section className='discussion' >
                             <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
+                        <section className='discussion' >
                             {
                                 messages.map((message: any) => (
                                     message.sender === me.username ?
