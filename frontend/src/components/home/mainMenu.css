@@ -95,7 +95,7 @@ button.addChannel {
     border: 0;
     background: 0;
     color: wheat;
-    font-size: 4vw;
+    font-size: 4vh;
     cursor: pointer;
 }
 
@@ -291,4 +291,14 @@ article.message-container:hover .dropbtn {
 .dropdown:hover .dropdown-content {    transform: scale(1);
     transition: transform 300ms;}
 
-
+@media screen and (orientation: portrait) {
+    button.addChannel {
+        position: absolute;
+        right: 3%;
+        border: 0;
+        background: 0;
+        color: wheat;
+        font-size: 4vw;
+        cursor: pointer;
+    }
+}

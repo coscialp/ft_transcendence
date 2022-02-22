@@ -2,32 +2,28 @@
     color: aliceblue;
     display: flex;
     justify-content: space-around;
-    height: 86vh;
+    height: 100vh;
+    width: 100vw;
     text-align: center;
-    padding-bottom: 7vh;
-    flex-direction: row;
     align-items: center;
 }
 
 #ResumeMain {
-    width: 70%;
     display: flex;
-    position: relative;
+    width: 70vw;
     height: 80vh;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 15px;
     box-shadow: rgb(0 0 0) 0px 30px 60px -12px inset, rgb(0 0 0) 0px 18px 36px -18px inset;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-evenly;
 }
 
 #resume-all-score {
-    width: 70%;
-    height: 30%;
-    padding: 10px;
     display: flex;
-    margin-top: 5%;
+    width: 50vw;
+    height: 30vh;
     border-radius: 20px;
     background-color: rgb(147 63 63 / 39%);
     flex-direction: row;
@@ -43,30 +39,26 @@ img.resume-image {
     background-position: center;
 }
 
-
-
 button.resume-go-home {
     background: transparent;
     border: 0;
-    font-family: 'neon';
-    font-size: 2em;
+    font-family: sans-serif;
+    font-size: min(5vw, 32px);
     cursor: pointer;
     color: antiquewhite;
 }
 
-p#score-difference {
-    font-size: 5vw;
+#score-difference {
+    font-size: min(5vw, 32px);
     color: black;
 }
 
-p#actual-points {
-    margin: 0;
-    font-family: fantasy;
-    font-size: 5vw;
+#actual-points {
+    font-family: sans-serif;
+    font-size: min(5vw, 32px);
 }
 
-p#new-points {
-    font-size: 3vw;
-    margin: 5px 0 20px 0;
-    font-family: fantasy;
+#new-points {
+    font-size: min(3vw, 24px);
+    font-family: sans-serif;
 }

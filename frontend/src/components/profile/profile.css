@@ -154,11 +154,13 @@ p.normal-Stats {
     border-right: 1px solid white;
     padding: 10px;
     flex: 1 1 auto;
+    font-size: 1.5vh;
 }
 
 p.ranked-Stats {
     padding: 10px;
     flex: 1 1 auto;
+    font-size: 1.5vh;
 }
 
 img.Add.friend {
@@ -415,4 +417,16 @@ img.Add.friend {
         position: relative;
     }
     
+    p.normal-Stats {
+        border-right: 1px solid white;
+        padding: 10px;
+        flex: 1 1 auto;
+        font-size: 1.5vw;
+    }
+    
+    p.ranked-Stats {
+        padding: 10px;
+        flex: 1 1 auto;
+        font-size: 1.5vw;
+    }
 }
