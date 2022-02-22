@@ -83,7 +83,8 @@ export function Normal(data: any) {
     },
     select: {
       padding: 5,
-      width: 200,
+      maxWidth: 200,
+      width: "15vw",
       background: "transparent",
       height: "40px",
       color: "white",

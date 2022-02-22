@@ -39,6 +39,7 @@ export function MainMenu(data: any) {
 				response.channelsConnected?.map((chan: any) =>
 					channels.push(chan.name)
 				)
+				forceUpdate();
 			})
 		}
 		return (() => { mount = false; });
@@ -117,18 +118,38 @@ export function MainMenu(data: any) {
 				name: channelName,
 				password: channelPassword,
 			}
-			requestApi.patch('channel/join', { body: channelInfo, contentType: 'application/json' });
-
-			channels.push(channelName);
-			if (data.socket) {
-				data.socket.emit('change_channel', { channelName: channelName });
-				setCurrent_Channel(channelName);
+			if (channels.findIndex((u) => u === channelName) === -1) {
+				axios.request({
+					url: `/channel/join`,
+					method: "patch",
+					baseURL: `http://${ip}:5000`,
+					headers: {
+						Authorization: `Bearer ${cookies.access_token}`,
+					},
+					data: {
+						"name": channelInfo.name,
+						"password": channelInfo.password,
+					},
+				}).then((response) => {
+					if (response.status === 200) {
+						channels.push(channelName);
+						if (data.socket) {
+							data.socket.emit('change_channel', { channelName: channelName });
+							setCurrent_Channel(channelName);
+						}
+						setMessages([]);
+						togglePopup();
+						setChannelName('');
+						setChannelPassword('');
+						setPopupState(0);
+					}
+				}).catch((error) => {
+					window.alert("Wrong password !");
+				})
 			}
-			setMessages([]);
-			togglePopup();
-			setChannelName('');
-			setChannelPassword('');
-			setPopupState(0);
+			else {
+				window.alert(`You're already in the channel: ${channelName}`);
+			}
 		}
 		e.preventDefault()
 	}

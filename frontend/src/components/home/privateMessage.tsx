@@ -161,22 +161,22 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
                             </div>
                         </article>
                     )) :
-                        <div>
-                            <section className='discussion' >
-                                <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
-                                {
-                                    messages.map((message: any) => (
-                                        message.sender === me.username ?
-                                            <div ref={scrollRef} key={message.id} className="bubble sender"> {message.content} </div> :
-                                            <div ref={scrollRef} key={message.id} className="bubble recipient"> {message.content} </div>
-                                    ))
-                                }
-                            </section>
-                            <form onSubmit={handleSendMessage} >
-                                <input type="text" className="privateMessageInput" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
-                            </form>
-                        </div>
-                }
+                    <div>
+                        <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
+                        <section className='discussion' >
+                            {
+                                messages.map((message: any) => (
+                                    message.sender === me.username ?
+                                        <div ref={scrollRef} key={message.id} className="bubble sender"> {message.content} </div> :
+                                        <div ref={scrollRef} key={message.id} className="bubble recipient"> {message.content} </div>
+                                ))
+                            }
+                        </section>
+                        <form onSubmit={handleSendMessage} >
+                            <input type="text" className="privateMessageInput" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
+                        </form>
+                    </div>
+            }
             </div>
         </div>
     )
