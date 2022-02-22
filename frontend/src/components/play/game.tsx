@@ -6,9 +6,8 @@ import { Redirect, useHistory } from "react-router-dom";
 import { isLogged } from "../../utils/isLogged";
 import { User } from "../../utils/user.type";
 import { useCookies } from "react-cookie";
-import { io } from "socket.io-client";
-import { ip } from "../../App";
-import { gameSocket } from "../../App";
+import { gameSocket, ip } from "../../App";
+import axios from "axios";
 
 export function InGame() {
 
@@ -28,7 +27,7 @@ export function InGame() {
   const [score, setScore] = useState<{
     score1: number,
     score2: number
-  }>({score1: 0, score2: 0});
+  }>({ score1: 0, score2: 0 });
   const setMyTabTime = (data: any) => {
     tabTimeRef.current = data;
     setTabTime(data);
@@ -62,7 +61,8 @@ export function InGame() {
     // eslint-disable-next-line
   }, []);
 
-  
+
+
   useEffect(() => {
     let mount = true;
     if (mount) {
@@ -74,8 +74,25 @@ export function InGame() {
         player.GameID = Number(localStorage.getItem('GameID'));
       }
     }
-    return (() => { mount = false;});
+    return (() => { mount = false; });
   }, [cookies, player]);
+
+  useEffect(() => {
+    let mount = true;
+    if (mount) {
+      axios.request({
+        url: `/auth/ingame`,
+        method: 'patch',
+        baseURL: `http://${ip}:5000`,
+        headers: {
+          "Authorization": `Bearer ${cookies.access_token}`,
+        }
+      })
+    }
+    return (() => {
+      mount = false;
+    });
+  }, [cookies]);
 
   useEffect(function () {
     if (player.GameID !== 0) {
@@ -156,7 +173,7 @@ export function InGame() {
       }
       if (tabTimeRef.current === 1000 || player.GameState === true || leaveRef.current === 300) {
         if (player.ID === 'Player1') {
-           gameSocket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
+          gameSocket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
         }
         else {
           gameSocket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 10, score2: 0, date: player.Date });
@@ -178,7 +195,7 @@ export function InGame() {
     const interval = setInterval(() => {
       check_ready();
       if (player.Score1 !== score.score1 || player.Score2 !== score.score2) {
-        setScore({score1: player.Score1, score2: player.Score2});
+        setScore({ score1: player.Score1, score2: player.Score2 });
       }
     }, 1000);
     return () => clearInterval(interval);
@@ -187,17 +204,24 @@ export function InGame() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (player.GameMod === 0 && player.GameID !== 0 && player.ID === "Player1") {
-        gameSocket.emit('StartParticle', { gameId: player.GameID });
-      }
       let ready: HTMLElement | null = document.getElementById('button_ready');
       if (ready) {
         ready.style.visibility = 'visible';
+      }
+    }, 10000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (player.GameMod === 2 && player.GameID !== 0 && player.ID === "Player1") {
+        gameSocket.emit('StartParticle', { gameId: player.GameID });
       }
     }, 5000);
     return () => clearInterval(interval);
     // eslint-disable-next-line
   }, [player.GameID]);
+
 
   if (!cookies.access_token || unauthorized) {
     return (<Redirect to="/" />);

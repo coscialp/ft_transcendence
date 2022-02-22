@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { Redirect, useHistory, useLocation } from "react-router";
+import { Redirect } from "react-router";
 import { isLogged } from "../../utils/isLogged";
-import { NavBar } from "../navbar/navbar";
 import { Achivements } from "./achivements";
 import { History } from "./history";
 import { Overall } from "./overall";
@@ -85,7 +84,7 @@ export function Profile() {
 					<div className="ProfileMain">
 						<Overall me={me} user={user} socket={socket}/>
 						<History me={me} user={user} />
-						<Achivements />
+						<Achivements user={user}/>
 					</div>
 					}
 			</div>

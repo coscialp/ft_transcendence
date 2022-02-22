@@ -16,7 +16,7 @@ export class ImageController {
   @Post()
   @UseInterceptors(FileInterceptor('file'))
   async uploadedFile(@UploadedFile('file') file: any) {
-    console.log(file);
+    
     const response = {
       originalname: file.originalname,
       filename: file.filename,

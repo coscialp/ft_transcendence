@@ -2,16 +2,16 @@ import axios from "axios"
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router";
-import { io, Socket } from "socket.io-client";
+import { Socket } from "socket.io-client";
 import { gameSocket, ip } from "../../App";
 import './home.css'
-import { Open_Message } from "./privateMessage";
 import { ArrowSmUp } from 'heroicons-react'
 //import { gameSocket } from "../../App";
 
 export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
   const [friends, setFriends] = useState([]);
+  // eslint-disable-next-line
   const [socket, setSocket] = useState<Socket>();
   const [random, setRandom] = useState<number>();
   let history = useHistory();
@@ -35,7 +35,6 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
 
     if (mounted) {
       FriendRequest()
-      //setSocket(io(`ws://${ip}:5002`, { transports: ['websocket'] }));
       setRandom(Math.floor(Math.random() * 2000000000 - 1));
     }
 
@@ -148,6 +147,21 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
   } 
 
 
+  function Open_Priv_Message() {
+    let Message: any = document.getElementById('Message')
+    let arrowR: any = document.getElementById('arrowR')
+    let arrowL: any = document.getElementById('arrowL')
+    if (Message.style.height !== '400px') {
+        Message.style.transition = 'all .5s ease-in-out'
+        Message.style.height = '400px'
+        Message.style.overflowY = 'scroll'
+        arrowR.style.transition = 'transform 0.5s ease-in-out'
+        arrowR.style.transform = 'rotate(180deg)'
+        arrowL.style.transition = 'transform 0.5s ease-in-out'
+        arrowL.style.transform = 'rotate(-180deg)'
+    }
+}
+
   return (
     <div className="FriendElement" >
       <div id="friendListMini">
@@ -160,7 +174,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
             <details key={friend.id} id={friend.id} >
               <summary className="FriendList"><img className="imgFriendList" src={friend.profileImage} alt=""></img> {friend.username}</summary>
               <nav className="menuFriendList">
-                <button className="friendBtn" onClick={e => {document.getElementById(friend.id)?.removeAttribute("open") ; Open_Message(); setCurrentChat(friend.username)}} ><span /><span /><span /><span />Send message</button>
+                <button className="friendBtn" onClick={e => {document.getElementById(friend.id)?.removeAttribute("open") ; Open_Priv_Message(); setCurrentChat(friend.username)}} ><span /><span /><span /><span />Send message</button>
                 <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>
                 <button className="friendBtnOut friendBorder" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
                 <button className="friendBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
@@ -175,7 +189,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
         <details key={friend.id} id={friend.id} >
           <summary className="FriendList"><img className="imgFriendList" src={friend.profileImage} alt=""></img> {friend.username}</summary>
           <nav className="menuFriendList">
-            <button className="friendBtn" onClick={e => { document.getElementById(friend.id)?.removeAttribute("open"); Open_Message(); setCurrentChat(friend.username) }} ><span /><span /><span /><span />Send message</button>
+            <button className="friendBtn" onClick={e => { document.getElementById(friend.id)?.removeAttribute("open"); Open_Priv_Message(); setCurrentChat(friend.username) }} ><span /><span /><span /><span />Send message</button>
             <button className="friendBtn" onClick={() => { handleDuel(friend)} } ><span /><span /><span /><span />Invite game</button>
             <button className="friendBtnOut friendBorder" onClick={() => { handleDeleteFriends(friend) }}><span /><span /><span /><span />Delete friend</button>
             <button className="friendBtnOut" onClick={() => { handleDeleteFriends(friend); handleBlacklist(friend) }}><span /><span /><span /><span />Blacklist</button>

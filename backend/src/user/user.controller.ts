@@ -166,4 +166,9 @@ export class UserController {
     async getStat(@Param('id') id: string, @GetUser() user: User) {
         return await this.userService.getStat(id, user);
     }
+
+    @Get(':id/achievements')
+    async getAchievements(@Param('id') id: string, @GetUser() user: User) {
+        return await this.userService.getAchievements(id, user);
+    }
 } 

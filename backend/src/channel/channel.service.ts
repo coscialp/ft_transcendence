@@ -1,6 +1,7 @@
 import {
   Injectable,
   NotFoundException,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Socket } from 'socket.io';
@@ -15,6 +16,7 @@ import { Channel } from '../entities/channel.entity';
 import { MessagesDto } from './dto/messages.dto';
 import { MessagesRepository } from './messages.repository';
 import { Message } from '../entities/message.entity';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 @UseGuards(AuthGuard())
@@ -82,10 +84,14 @@ export class ChannelService {
   async joinChannel(user: User, name: string, password: string): Promise<void> {
     let channel = await this.getOneChannel(name);
 
-    return await this.channelsRepository.joinChannel(
-      await this.userService.getUserById(user.id, user),
-      channel, this.userService
-    );
+    if (channel && await bcrypt.compare(password, channel.password)) {
+      return await this.channelsRepository.joinChannel(
+        await this.userService.getUserById(user.id, user),
+        channel, this.userService
+      );
+    } else {
+      throw new UnauthorizedException('Wrong password');
+    }
   }
 
   async getMessageByChannel(name: string): Promise<{ messages: Message[] }> {

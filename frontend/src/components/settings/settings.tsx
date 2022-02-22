@@ -4,7 +4,6 @@ import { useCookies } from "react-cookie";
 import { Redirect } from "react-router";
 import { ip } from "../../App";
 import { isLogged } from "../../utils/isLogged";
-import { useForm } from "react-hook-form";
 import './settings.css'
 
 
@@ -16,22 +15,6 @@ export function Settings() {
 	const [me, setMe]: any = useState({});
 	const [newNick, setNewNick] = useState("");
 	const [newEmail, setNewEmail] = useState("");
-	const [newAvatar, setNewAvatar] = useState("");
-	const [previewAvatar, setPreviewAvatar] = useState<any>();
-	const { handleSubmit } = useForm({
-		mode: "onChange"
-	});
-	const onSubmit = (data:any) => {
-		console.log(data);
-	};
-
-	function avatarChange(e:any) {
-		setNewAvatar(e.target.files[0].name);
-		e.setState({
-			selectedFile: e.target.files[0],
-            filename: (document.getElementById('file') as HTMLInputElement).value
-		})
-	  };
 
 	useEffect(() => {
 		let mount = true;
@@ -84,65 +67,6 @@ export function Settings() {
 		}
 	}
 
-	const fileUploadHandler = (e:any) => {
-		e.preventDefault() // Stop form submit
-		let formData = new FormData();
-
-        formData.append('name', e.state.name);
-        formData.append('price', e.state.price);
-        formData.append('filename', e.state.filename);
-        formData.append('file', e.state.selectedFile);
-
-        const config = {     
-            headers: { 'content-type': 'multipart/form-data' }
-        }
-
-        axios.post(`http://${ip}:3000`, formData, config)
-        .then (res => {
-            console.log(res.data);
-            console.log(e.state.filename);
-            console.log(formData);
-        })
-	}
-
-	/*
-	
-		console.log(newAvatar)
-		console.log(previewAvatar)
-
-		console.log(previewAvatar);
-		const formData = new FormData();
-
-		formData.append('file', previewAvatar);
-		if (newAvatar !== "") {
-			axios.request({
-				url: '/upload/',
-				method: 'post',
-				baseURL: `http://${ip}:5000`,
-				headers: {
-					"Authorization": `Bearer ${cookies.access_token}`,
-					"Content-Type": "multipart/form-data; boundary=123",
-				},
-				data: formData,
-			}).then((response: any) => {
-				axios.request({
-					url: '/user/me/avatar',
-					method: 'patch',
-					baseURL: `http://${ip}:5000`,
-					headers: {
-						"Authorization": `Bearer ${cookies.access_token}`,
-					},
-					data: {
-						"avatar":  '/Users/coscialp/Project/transcendance/backend/' + response.data.path,
-					}
-				});
-			})
-			window.alert("Avatar successfully changed to " + newAvatar + " !")
-			//setNewAvatar("");
-			//setPreviewAvatar(e.target.null);
-			//e.preventDefault();
-	*/
-
 	function handle2FA() {
 		
 		me.twoFactorAuth ?
@@ -165,6 +89,22 @@ export function Settings() {
 			})
 	}
 
+	function handleChangeAvatar(avatar: string) {
+
+		axios.request({
+            url: '/user/me/avatar',
+            method: 'patch',
+            baseURL: `http://${ip}:5000`,
+            headers: {
+              "Authorization": `Bearer ${cookies.access_token}`,
+            },
+			
+			data: {
+				"avatar": avatar,
+			}
+          })
+	}
+
 	return (
 		<div>
 			<div className="SettingsElement">
@@ -184,22 +124,16 @@ export function Settings() {
 						</div>
 					</div>
 					<div className="change Nickname">
-						Change your Avatar !
-						<form className="change Nick input" encType="multipart/form">
-							<label form="file" className="avatarLabel">
-								New Avatar...
-								<input id="avatar" type="file" className="avatarInput" accept='image/png' onChange={(e) => avatarChange(e)} />
-							</label>
-							<button className="changeNickbtn" onClick={e => {fileUploadHandler(e)}} >Change !</button>
-						</form>
-						{previewAvatar && (
-								<img
-								src={URL.createObjectURL(previewAvatar)}
-								alt="Thumb"
-								width="64px"
-								height="64px"
-							  />
-							)}
+						Chose your Avatar !
+						<div className="avatar-bank">
+							{me?.password === null ? <img src={`https://cdn.intra.42.fr/users/${me.username}.jpg`} alt="" className="avatar-photo" onClick={e => handleChangeAvatar(`https://cdn.intra.42.fr/users/${me.username}.jpg`)} /> : null }
+							<img src={"./img/Beluga.jpeg"} alt="" className="avatar-photo" onClick={e => handleChangeAvatar("/img/Beluga.jpeg")} />
+							<img src={"./img/Eye.jpg"} alt="" className="avatar-photo" onClick={e => handleChangeAvatar("/img/Eye.jpg")} />
+							<img src={"./img/Goat.jpg"} alt="" className="avatar-photo" onClick={e => handleChangeAvatar("/img/Goat.jpg")} />
+							<img src={"./img/Mole.jpg"} alt="" className="avatar-photo" onClick={e => handleChangeAvatar("/img/Mole.jpg")} />
+							<img src={"./img/monkey.png"} alt="" className="avatar-photo" onClick={e => handleChangeAvatar("/img/monkey.png")} />
+							<img src={"./img/MossaBenApolocreed.jpg"} alt="" className="avatar-photo" onClick={e => handleChangeAvatar("/img/MossaBenApolocreed.jpg")} />
+						</div>
 					</div>
 					<div className="change Nickname">
 						{me?.twoFactorAuth ?

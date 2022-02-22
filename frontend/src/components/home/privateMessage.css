@@ -37,6 +37,7 @@ span#DmNotif {
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+    font-size: min(2vw, 24px);
 }
 
 article#message-container {
@@ -66,19 +67,19 @@ header#message-header {
 
 h4#message-sender {
     margin: 0;
-    font-size: 15px;
+    font-size: 1.5vw;
     color: white;
 }
 
 span#message-time {
     color: grey;
-    font-size: 8px;
+    font-size: 0.8vw;
     margin-left: 5px;
 }
 
 img#message-image {
-    height: 40px;
-    width: 40px;
+    height: 4vw;
+    width: 4vw;
     background-size: cover;
     background-position: center;
     border-radius: 100%;
@@ -86,7 +87,7 @@ img#message-image {
 
 p#message-text {
     margin: 0;
-    font-size: 12px;
+    font-size: 1.2vw;
     text-align: left;
     word-break: break-all;
     color: white;

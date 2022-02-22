@@ -40,6 +40,7 @@ export class GameGateway
     @SubscribeMessage('matchmaking')
     async MatchMaking(
         @ConnectedSocket() socket: Socket,
+        @MessageBody() data: any,
     ): Promise<void> {
         const user: User = await this.gameService.getUserFromSocket(socket);
         if (!this.usersInQueue.find((u) => u.id === user.id)) {
@@ -48,8 +49,14 @@ export class GameGateway
         for (let u of this.usersInQueue) {
             if (user.username !== u.username) {
                 this.matchInProgress.push({ user1: user, user2: u, gameID: Math.floor(Math.random() * 2000000000 - 1), ranked: false });
-                this.server.emit(`startgame/${user.username}`, 'Player1');
-                this.server.emit(`startgame/${u.username}`, 'Player2');
+                if (data.mod === "gamemod") {
+                    this.server.emit(`startgamemod/${user.username}`, 'Player1');
+                    this.server.emit(`startgamemod/${u.username}`, 'Player2');
+                }
+                else {
+                    this.server.emit(`startgame/${user.username}`, 'Player1');
+                    this.server.emit(`startgame/${u.username}`, 'Player2');
+                }
                 this.usersInQueue.splice(this.usersInQueue.indexOf(u), 1);
                 this.usersInQueue.splice(this.usersInQueue.indexOf(user), 1);
             }
@@ -95,7 +102,6 @@ export class GameGateway
             id = this.usersConnected[index].socketId.id;
             this.usersDuel.push({user1: user, user2: this.usersConnected[index].user});
         }
-        console.log(this.usersConnected ,id);
         this.server.to(id).emit('duel', user);
     }
 

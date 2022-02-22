@@ -6,7 +6,6 @@ import './profile.css'
 import './allHistory.css'
 import { isLogged } from '../../utils/isLogged';
 import { Redirect, useHistory } from 'react-router-dom';
-import { NavBar } from '../navbar/navbar';
 
 export default function AllHistory() {
 
@@ -15,11 +14,12 @@ export default function AllHistory() {
     const userHistory = window.location.pathname.split('/')[1];
     const [game, setGame]: any = useState([]);
     const [unauthorized, setUnauthorized] = useState(false);
+    const [me, setMe]: any = useState({});
 
     useEffect(() => {
         let mount = true;
         if (mount) {
-            isLogged(cookies).then((res) => { setUnauthorized(res.unauthorized) });
+            isLogged(cookies).then((res) => { setMe(res.me?.data); setUnauthorized(res.unauthorized) });
         }
         return (() => { mount = false; });
     }, [cookies])
@@ -54,7 +54,7 @@ export default function AllHistory() {
                         (array.length - 6 <= index) ?
                             <div id="all-History" key={games?.game.id} style={games?.winner === userHistory ? { backgroundColor: "rgba(0, 141, 177, 0.39)" } : { backgroundColor: "rgb(147 63 63 / 39%)" }} >
                                 <span className='all-HistoryNames'><img className="all-HistoryImage" onClick={(e) => { return history.push(`/${games?.game.player1.username}/profile`) }} style={{ backgroundImage: `url(${games?.game.player1.profileImage})` }} alt="" />{games?.game.player1.username}</span>
-                                <p className="all-Score"> <span style={{ fontSize: `2vh` }} >{new Date(games?.game.date).toLocaleTimeString(undefined, { timeStyle: 'short' })}</span> <br/> {games?.game.score1} : {games?.game.score2} <br /> {games?.winner === userHistory ? "WIN" : "LOSE"} </p>
+                                <p className="all-Score"> <span style={{ fontSize: `2vh` }} >{new Date(games?.game.date).toLocaleTimeString(undefined, { timeStyle: 'short' })}</span> <br/> {games?.game.score1} : {games?.game.score2} <br /> {games?.winner === userHistory ? "WIN" : "LOSE"} <br /> { games?.game?.ranked ? games?.winner === me?.username ? `+${games?.PPaverage} PP` : `-${games?.PPaverage} PP` : null} </p>
                                 <span className='all-HistoryNames'><img className="all-HistoryImage" onClick={(e) => { return history.push(`/${games?.game.player2.username}/profile`) }} style={{ backgroundImage: `url(${games?.game.player2.profileImage})` }} alt="" />{games?.game.player2.username}</span>
                             </div>
                             : null

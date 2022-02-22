@@ -36,6 +36,7 @@
     top: 10px;
     position: absolute;
     color: white;
+    z-index: 1;
     font-size: 5vw;
     height: 10%;
     margin: 0;

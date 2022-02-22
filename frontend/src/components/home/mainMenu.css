@@ -171,6 +171,13 @@ img.AddJoinImg {
     height: 70%;
 }
 
+.JoinChan {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 70%;
+}
+
 input.AJCplaceholder {
     margin-top: 20px;
     border: 2px solid;

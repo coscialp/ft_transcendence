@@ -50,7 +50,9 @@ function App() {
 				setDuel(user);
 			})
 		}
-		return (() => { mount = false; });
+		return (() => {
+			mount = false;
+		});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 

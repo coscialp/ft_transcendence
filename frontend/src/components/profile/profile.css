@@ -43,11 +43,12 @@ span.HistoryNames {
 }
 
 img.ProfileImage {
-    display:flex;
+    display: flex;
     height: 20vh;
     width: 20vh;
     background-size: cover;
     background-position: center;
+    object-fit: cover;
     border-radius: 100%;
 }
 
@@ -116,7 +117,7 @@ p.Score {
     align-items: center;
 }
 
-p.ProfileName {
+div.ProfileName {
     display: flex;
     font-size: 1.5vh;
 }
@@ -179,6 +180,15 @@ img.Add.friend {
     width: 2vh;
     height: 2vh;
     background-color: #48ff51;
+    border-radius: 50%;
+    margin-left: 5px;
+    position: relative;
+}
+
+.userInGame {
+    width: 2vh;
+    height: 2vh;
+    background-color: #0298E8;
     border-radius: 50%;
     margin-left: 5px;
     position: relative;
@@ -372,7 +382,7 @@ img.Add.friend {
         width:10px;
     }
 
-    p.ProfileName {
+    div.ProfileName {
         display: flex;
         font-size: 1.5vw;
     }

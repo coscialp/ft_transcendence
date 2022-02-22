@@ -240,6 +240,9 @@ export class GameManager {
 
     ready_checker() {
         if (this._P1ready === true && this._P2ready === true) {
+            if (this._GameMod === 1) {
+                this._GameMod = 2;
+            }
             if (this._ID === "Player2") {
                 this._UnityContext.send("RemotePaddle", "setID", this._ID);
                 this._UnityContext.send("Ball", "setID", this._ID);
