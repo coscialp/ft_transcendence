@@ -97,7 +97,7 @@ export function Settings() {
             headers: { 'content-type': 'multipart/form-data' }
         }
 
-        axios.post("http://localhost:3000", formData, config)
+        axios.post(`http://${ip}:3000`, formData, config)
         .then (res => {
             console.log(res.data);
             console.log(e.state.filename);
