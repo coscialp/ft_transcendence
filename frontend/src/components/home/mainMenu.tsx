@@ -26,6 +26,7 @@ export function MainMenu(data: any) {
 	const [popupState, setPopupState] = useState<number>(0);
 	const [showPopup, setShowPopup] = useState<boolean>(false);
 	const [updateAdmin, setUpdateAdmin] = useState<boolean>(false);
+	const [myBlackList, setMyBlackList] = useState<User[]>([]);
 	const scrollRef = useRef<any>();
 
 	const requestApi = new RequestApi(cookies.access_token, ip);
@@ -36,10 +37,12 @@ export function MainMenu(data: any) {
 		let mount = true;
 		if (mount) {
 			requestApi.get('user/channels/connected').then((response) => {
-				response.channelsConnected?.map((chan: any) =>
-					channels.push(chan.name)
-				)
-				forceUpdate();
+				if (mount) {
+					response.channelsConnected?.map((chan: any) =>
+						channels.push(chan.name)
+					)
+					forceUpdate();
+				}
 			})
 		}
 		return (() => { mount = false; });
@@ -59,12 +62,36 @@ export function MainMenu(data: any) {
 
 	useEffect(() => {
 		let mount = true;
+
+		axios
+			.request({
+				url: `/user/me/blacklist`,
+				method: "get",
+				baseURL: `http://${ip}:5000`,
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			})
+			.then((response: any) => {
+				if (mount) {
+					setMyBlackList(response.data.blackList);
+				}
+			});
+		return () => {
+			mount = false;
+		};
+	}, [cookies]);
+
+	useEffect(() => {
+		let mount = true;
 		if (mount) {
 			if (data.socket) {
 
 				data.socket.on(`msg_toClient/${current_channel}`, (msg: any) => {
-					messages.push({ id: messages.length, date: msg.sentAt, sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage });
-					forceUpdate();
+					if (myBlackList.findIndex((u) => u.username === msg.sender.username) === -1) {
+						messages.push({ id: messages.length, date: msg.sentAt, sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage });
+						forceUpdate();
+					}
 				});
 				data.socket.on('admin', (admin: any) => {
 
@@ -185,9 +212,12 @@ export function MainMenu(data: any) {
 		if (mount) {
 			if (current_channel) {
 				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
-					response.messages.map((msg: any) => (
-						messages.push({ id: messages.length, date: msg.date, sender: msg.sender.username, content: msg.content, avatar: msg.sender.profileImage })
-					));
+					// eslint-disable-next-line
+					response.messages.map((msg: any) => {
+						if (myBlackList.findIndex((u) => u.username === msg.sender.username) === -1) {
+							messages.push({ id: messages.length, date: msg.date, sender: msg.sender.username, content: msg.content, avatar: msg.sender.profileImage })
+						}
+					});
 					forceUpdate();
 				})
 			}

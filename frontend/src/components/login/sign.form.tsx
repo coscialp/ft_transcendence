@@ -10,7 +10,6 @@ export function SignForm() {
   const [password, setPassword] = useState("");
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
-  const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
 
   function handleSubmit(event: any) {
@@ -23,7 +22,7 @@ export function SignForm() {
         password: password,
         firstName: firstname,
         lastName: lastname,
-        nickName: nickname,
+        nickName: null,
         profileImage: null,
         email: email,
       }
@@ -61,10 +60,6 @@ export function SignForm() {
       </div>
 
       <div className='single slide'>
-        <div className="logs">
-          Nickname<br />
-          <input type="text" className="InputStyle" onKeyPress={(e) => document.getElementById("email")!.focus()} placeholder="Enter your Nickname" value={nickname} onChange={(e) => { setNickname(e.target.value) }} />
-        </div>
         <div className="logs">
           Email<br />
           <input type="text" className="InputStyle" id="email" placeholder="Enter your Email" value={email} onChange={(e) => { setEmail(e.target.value) }} />

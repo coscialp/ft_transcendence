@@ -103,9 +103,9 @@ export class AuthService {
     await this.usersRepository.save(user);
   }
 
-  async online(user: User): Promise<void> { 
-    // user.isLogged = "online";
-    // await this.usersRepository.save(user);
+  async online(user: User): Promise<void> {
+    user.isLogged = "online";
+    await this.usersRepository.save(user);
   }
 
   async ingame(user: User): Promise<void> {

@@ -57,6 +57,13 @@ export function InGame() {
     return () => {
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
+      player.UnityContext.removeAllEventListeners();
+      player.UnityContext.quitUnityInstance();
+      gameSocket.off(`ReadyUp/${player.GameID}`);
+      gameSocket.off(`finishGame/${player.GameID}`);
+      gameSocket.off(`getGameID/${me?.username}`);
+      gameSocket.off(`StartParticle/${player.GameID}`);
+      gameSocket.off(`UpdatePosition`);
     };
     // eslint-disable-next-line
   }, []);
@@ -90,6 +97,14 @@ export function InGame() {
       })
     }
     return (() => {
+      axios.request({
+        url: `/auth/online`,
+        method: 'patch',
+        baseURL: `http://${ip}:5000`,
+        headers: {
+          "Authorization": `Bearer ${cookies.access_token}`,
+        }
+      })
       mount = false;
     });
   }, [cookies]);
@@ -114,7 +129,7 @@ export function InGame() {
     let mount = true;
     if (mount) {
       player.send_gameid();
-      if (me) {
+      if (me && mount) {
         player.receive_gameID(me.username, setReload);
       }
 
@@ -139,6 +154,7 @@ export function InGame() {
         player.receive_particle();
       }
       else {
+        gameSocket.emit('JoinRoom', {gameID: player.GameID});
         player.receive_endGame();
         player.receive_particle();
         player.receive_game_info();
@@ -171,7 +187,7 @@ export function InGame() {
       else {
         setTabTime(0);
       }
-      if (tabTimeRef.current === 1000 || player.GameState === true || leaveRef.current === 300) {
+      if (tabTimeRef.current === 10 || player.GameState === true || leaveRef.current === 3) {
         if (player.ID === 'Player1') {
           gameSocket.emit('finishGame', { gameId: player.GameID, player: player.ID, score1: 0, score2: 10, date: player.Date });
         }
@@ -205,12 +221,12 @@ export function InGame() {
   useEffect(() => {
     const interval = setInterval(() => {
       let ready: HTMLElement | null = document.getElementById('button_ready');
-      if (ready) {
+      if (ready && player.Spectator === false) {
         ready.style.visibility = 'visible';
       }
     }, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [player]);
 
   useEffect(() => {
     const interval = setInterval(() => {
