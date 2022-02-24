@@ -8,6 +8,8 @@ import { MessageType } from '../../utils/message.type'
 import { RequestApi } from '../../utils/RequestApi.class'
 import { ip } from '../../App'
 import { Conversation } from '../../utils/conversation.type'
+import { User } from '../../utils/user.type'
+import axios from 'axios'
 
 export function Open_Message() {
     let Message: any = document.getElementById('Message')
@@ -44,6 +46,7 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
     const [messages, setMessages] = useState<MessageType[]>([]);
     const [receiver, setReceiver] = useState<string>("");
     const [newDmNotif, setNewDmNotif] = useState<boolean>();
+    const [myBlackList, setMyBlackList] = useState<User[]>();
 
     const forceUpdate = useForceUpdate();
     const scrollRef = useRef<any>();
@@ -59,11 +62,36 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
 
     useEffect(() => {
         let mount = true;
+
+        axios
+            .request({
+                url: `/user/me/blacklist`,
+                method: "get",
+                baseURL: `http://${ip}:5000`,
+                headers: {
+                    Authorization: `Bearer ${cookies.access_token}`,
+                },
+            })
+            .then((response: any) => {
+                if (mount) {
+                    setMyBlackList(response.data.blackList);
+                }
+            });
+        return () => {
+            mount = false;
+        };
+    }, [cookies]);
+
+    useEffect(() => {
+        let mount = true;
         if (mount) {
             requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
                 if (mount) {
-                    response.messages?.map((msg: any) =>
-                        conversations.push({ property: msg.property, conversations: msg.conversations })
+                    response.messages?.map((msg: any) => {
+                        if ((myBlackList && myBlackList?.findIndex((u) => u.username === msg?.property?.username) === -1)) {
+                            conversations.push({ property: msg.property, conversations: msg.conversations })
+                        }
+                    }
                     );
                     forceUpdate();
                 }
@@ -71,7 +99,7 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
         }
         return (() => { mount = false; });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [cookies, conversations]);
+    }, [cookies, conversations, myBlackList]);
 
     useEffect(() => {
         let mount = true;
@@ -79,17 +107,18 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
             if (socket && me && cookies && messages) {
                 socket.on(`private_message`, (msg: any) => {
                     let convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
-                    setNewDmNotif(true);
-
-                    if (conversations && convIndex !== -1) {
-                        conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
-                        messages.push({ id: messages.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
-                    } else {
-                        conversations.push({ property: msg.sender, conversations: [] });
-                        convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
-                        conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
+                    if (myBlackList?.findIndex((u) => u.username === msg?.sender?.username) === -1) {
+                        setNewDmNotif(true);
+                        if (conversations && convIndex !== -1) {
+                            conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
+                            messages.push({ id: messages.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
+                        } else {
+                            conversations.push({ property: msg.sender, conversations: [] });
+                            convIndex = conversations?.findIndex((obj => msg.sender.username === obj.property.username));
+                            conversations[convIndex!].conversations.push({ id: conversations[convIndex!].conversations.length, date: Date(), sender: msg.sender.username, content: msg.body, avatar: msg.sender.profileImage, receiver: msg.receiver.username })
+                        }
+                        forceUpdate();
                     }
-                    forceUpdate();
                 }
                 )
             }
@@ -115,9 +144,11 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
         let mount = true;
         if (mount) {
             const indexOfConv = conversations.findIndex(obj => obj.property.username === receiver)
-            conversations[indexOfConv]?.conversations.map((allMessages: any) => (
-                messages.push({ id: allMessages.id, date: new Date(allMessages.date).toLocaleTimeString(undefined, { timeStyle: 'short' }), sender: allMessages.sender.username, content: allMessages.content, avatar: allMessages.sender.profileImage, receiver: allMessages.receiver.username })
-            ))
+            conversations[indexOfConv]?.conversations.map((allMessages: any) => {
+                if (myBlackList?.findIndex((u) => u.username === allMessages?.sender?.username) === -1) {
+                    messages.push({ id: allMessages.id, date: new Date(allMessages.date).toLocaleTimeString(undefined, { timeStyle: 'short' }), sender: allMessages.sender.username, content: allMessages.content, avatar: allMessages.sender.profileImage, receiver: allMessages.receiver.username })
+                }
+            })
             forceUpdate();
         }
         return (() => { mount = false; });
@@ -161,22 +192,22 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
                             </div>
                         </article>
                     )) :
-                    <div>
-                        <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
-                        <section className='discussion' >
-                            {
-                                messages.map((message: any) => (
-                                    message.sender === me.username ?
-                                        <div ref={scrollRef} key={message.id} className="bubble sender"> {message.content} </div> :
-                                        <div ref={scrollRef} key={message.id} className="bubble recipient"> {message.content} </div>
-                                ))
-                            }
-                        </section>
-                        <form onSubmit={handleSendMessage} >
-                            <input type="text" className="privateMessageInput" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
-                        </form>
-                    </div>
-            }
+                        <div>
+                            <Backspace onClick={e => { setCurrentChat(""); setisConvOpen(false) }} />
+                            <section className='discussion' >
+                                {
+                                    messages.map((message: any) => (
+                                        message.sender === me.username ?
+                                            <div ref={scrollRef} key={message.id} className="bubble sender"> {message.content} </div> :
+                                            <div ref={scrollRef} key={message.id} className="bubble recipient"> {message.content} </div>
+                                    ))
+                                }
+                            </section>
+                            <form onSubmit={handleSendMessage} >
+                                <input type="text" className="privateMessageInput" placeholder="Message..." value={messageInput} onChange={(e) => setMessageInput(e.target.value)} />
+                            </form>
+                        </div>
+                }
             </div>
         </div>
     )

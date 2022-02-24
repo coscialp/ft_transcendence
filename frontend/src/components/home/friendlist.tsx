@@ -6,14 +6,12 @@ import { Socket } from "socket.io-client";
 import { gameSocket, ip } from "../../App";
 import './home.css'
 import { ArrowSmUp } from 'heroicons-react'
-//import { gameSocket } from "../../App";
 
 export function Friendlist({currentChat, setCurrentChat}: any) {
   const [cookies] = useCookies();
   const [friends, setFriends] = useState([]);
   const [mounted, setMounted] = useState<boolean>(true);
   // eslint-disable-next-line
-  const [socket, setSocket] = useState<Socket>();
   const [random, setRandom] = useState<number>();
   let history = useHistory();
 
@@ -85,19 +83,19 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
   }
 
   useEffect(() => {
-    if (socket) {
-      socket.on(`getSpectateID/${random}`, (gameID: number) => {
+    if (gameSocket) {
+      gameSocket.on(`getSpectateID/${random}`, (gameID: number) => {
         
         localStorage.setItem('GameID', String(gameID));
         localStorage.setItem('playerID', "spectator");
         return history.push('/game');
       });
     }
-  }, [random, socket, history]);
+  }, [random, history]);
 
   function goGame(friend: any) {
-    if (socket) {
-      socket.emit('getSpectateID', { username: friend.username, id: random });
+    if (gameSocket) {
+      gameSocket.emit('getSpectateID', { username: friend.username, id: random });
     }
   }
 
@@ -182,8 +180,9 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
               <nav className="menuFriendList">
                 <button className="friendBtn" onClick={e => {document.getElementById(friend.id)?.removeAttribute("open") ; Open_Priv_Message(); setCurrentChat(friend.username)}} ><span /><span /><span /><span />Send message</button>
                 <button className="friendBtn"  ><span /><span /><span /><span />Invite game</button>
-                <button className="friendBtnOut friendBorder" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>
-                <button className="friendBtnOut"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
+                <button className="friendBtnOut friendBorder" onClick={() => {handleDeleteFriends(friend)}}><span /><span /><span /><span />Delete friend</button>             
+                <button className="friendBtnOut friendBorder"  onClick={() => {handleDeleteFriends(friend); handleBlacklist(friend)}}><span /><span /><span /><span />Blacklist</button>
+                <button className="friendBtn" onClick={() => goGame(friend)}><span /><span /><span /><span />Spectate Game</button>
               </nav>
             </details>
           ))}
@@ -198,7 +197,7 @@ export function Friendlist({currentChat, setCurrentChat}: any) {
             <button className="friendBtn" onClick={e => { document.getElementById(friend.id)?.removeAttribute("open"); Open_Priv_Message(); setCurrentChat(friend.username) }} ><span /><span /><span /><span />Send message</button>
             <button className="friendBtn" onClick={() => { handleDuel(friend)} } ><span /><span /><span /><span />Invite game</button>
             <button className="friendBtnOut friendBorder" onClick={() => { handleDeleteFriends(friend) }}><span /><span /><span /><span />Delete friend</button>
-            <button className="friendBtnOut" onClick={() => { handleDeleteFriends(friend); handleBlacklist(friend) }}><span /><span /><span /><span />Blacklist</button>
+            <button className="friendBtnOut friendBorder" onClick={() => { handleDeleteFriends(friend); handleBlacklist(friend) }}><span /><span /><span /><span />Blacklist</button>
             <button className="friendBtn" onClick={() => goGame(friend)}><span /><span /><span /><span />Spectate Game</button>
           </nav>
         </details>

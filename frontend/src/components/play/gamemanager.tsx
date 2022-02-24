@@ -188,19 +188,23 @@ export class GameManager {
                     this._UnityContext.send("RemotePaddle", "SetPosition", Position);
                 }
                 else if ("Player2") {
-                    if (Player === 'Player2') {
-                        this._UnityContext.send("RemotePaddle", "SetPosition", Position);
-                    }
-                    else {
-                        this._UnityContext.send("LocalPaddle", "SetPosition", Position);
-                    }
+                    this._UnityContext.send("LocalPaddle", "SetPosition", Position);
                     this._Ballpos = `${posx} ${posy}`;
                     this._UnityContext.send("Ball", 'setPos', this._Ballpos);
                     this._Score1 = score1;
                     this._Score2 = score2;
                 }
                 else {
-
+                    this._Ballpos = `${posx} ${posy}`;
+                    this._UnityContext.send("Ball", 'setPos', this._Ballpos);
+                    this._Score1 = score1;
+                    this._Score2 = score2;
+                    if (Player === "Player1") {
+                        this._UnityContext.send("RemotePaddle", "SetPosition", Position);
+                    }
+                    else {
+                        this._UnityContext.send("LocalPaddle", "SetPosition", Position);
+                    }
                 }
             }
         })
@@ -219,11 +223,11 @@ export class GameManager {
             if (this._ID === "Player1") {
                 if (score1 === 15 && score2 !== 10) {
                     gameSocket.emit('AddPoint', { gameId: this._GameID, point: "player1" });
-                    this._Score1++;
+                    this._Score1 += 1;
                 }
                 else if (score1 !== 10 && score2 !== 10) {
                     gameSocket.emit('AddPoint', { gameId: this._GameID, point: 'player2' });
-                    this._Score2++;
+                    this._Score2 += 1;
                 }
             }
             if (score1 === 10 || score2 === 10) {
