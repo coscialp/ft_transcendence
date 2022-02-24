@@ -16,7 +16,7 @@ import { UserModule } from 'src/user/user.module';
     JwtModule.register({
       secret: `${process.env.SECRET_KEY}`,
       signOptions: {
-        expiresIn: 3600,
+        expiresIn: '7d',
       },
     }),
     HttpModule,

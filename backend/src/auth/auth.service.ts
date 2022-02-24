@@ -41,11 +41,14 @@ export class AuthService {
     authCredentialsDto: AuthCredentialsDto,
   ): Promise<{ accessToken: string }> {
     const { username, password } = authCredentialsDto;
-    const user: User = await this.usersRepository.findOne({ username });
+    let user: User = await this.usersRepository.findOne({ username });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { username };
       const accessToken: string = this.jwtService.sign(payload);
+      user = await this.usersRepository.findOne({ username });
+      user.isLogged = "online";
+      await this.usersRepository.save(user);
       return { accessToken };
     } else {
       throw new UnauthorizedException('Please check your login credentials');
@@ -100,8 +103,7 @@ export class AuthService {
     await this.usersRepository.save(user);
   }
 
-  async online(user: User): Promise<void> {
-    
+  async online(user: User): Promise<void> { 
     // user.isLogged = "online";
     // await this.usersRepository.save(user);
   }
