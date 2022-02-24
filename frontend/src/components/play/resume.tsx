@@ -83,14 +83,14 @@ export default function Resume() {
                 <div id="ResumeMain">
                     <div id='resume-all-score' >
                         <img className="resume-image" style={{ backgroundImage: `url(${game?.game.player1.profileImage})` }} alt="" />
-                        <p className="resume-score"> {game?.game.score1} : {game?.game.score2} </p>
+                        <div className="resume-score"> {game?.game.score1} : {game?.game.score2} </div>
                         <img className="resume-image" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />
                     </div>
-                    <p id='score-difference' > {scoreDifference} </p>
+                    <div id='score-difference' > {scoreDifference} </div>
                     {game?.game.ranked === true ?
                     <div id="ranked-points">
-                        <p id="actual-points" >{me.PP} PP</p>
-                        <p id="new-points" > {game?.winner === me.username ? `+` : `-` } {game?.PPaverage} PP</p>
+                        <div id="actual-points" >{me.PP} PP</div>
+                        <div id="new-points" > {game?.winner === me.username ? `+` : `-` } {game?.PPaverage} PP</div>
                     </div> : null }
                     {game?.scoreDifference === 10 && game?.winner !== me.username ?
                         <button className="resume-go-home" onClick={ logout }>Logout</button>

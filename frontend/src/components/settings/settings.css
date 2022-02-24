@@ -2,17 +2,16 @@
     color: aliceblue;
     display: flex;
     justify-content: space-around;
-    height: 86vh;
+    width: 100vw;
+    height: 100vh;
     text-align: center;
-    padding-bottom: 7vh;
     flex-direction: row;
     align-items: center;
 }
 
 .SettingsMain {
-    width: 70%;
     display: flex;
-    position: relative;
+    width: 70vw;
     height: 80vh;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 15px;
@@ -24,15 +23,15 @@
 
 .change.Nickname {
     display:flex;
-    margin: 30px;
-    width: 80%;
+    width: 60vw;
+    height: 8vh;
     padding: 10px;
     font-family: sans-serif;
     background-color: #5094ff63;
     border-radius: 10px;
     align-items: center;
     flex-direction: column;
-    
+    font-size: (2vh, 18px);
 }
 
 .change.Nick.input {
@@ -109,9 +108,6 @@ label.ToggleSLabelOFF:active:after {
 	width: calc(100% - 10px);
 }
 
-
-
-
 input[type=checkbox].ToggleSwitchON {
 	height: 0;
 	width: 0;
@@ -175,6 +171,7 @@ label.ToggleSLabelON:active:after {
 
 .avatar-bank {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -182,13 +179,13 @@ label.ToggleSLabelON:active:after {
 }
 
 .avatar-photo {
-    width: 5vw;
+    width: 3vh;
     background: #fff;
     border-radius: 50%;
     border: 5px solid cyan;
     box-shadow: 0 0 20px cyan;
     margin: 1rem 0;
-    height: 5vw;
+    height: 3vh;
     object-fit: cover;
     cursor: pointer;
 }
