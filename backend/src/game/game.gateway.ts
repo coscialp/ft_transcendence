@@ -210,7 +210,7 @@ export class GameGateway
     }
 
     @SubscribeMessage('UpdatePosition')
-    async UpdatePosition(
+    UpdatePosition(
         @ConnectedSocket() socket: Socket,
         @MessageBody() data: any) {
         this.server.to(data.gameID).emit(`UpdatePosition`, data.pos, data.id, data.posx, data.posy, data.score1, data.score2);

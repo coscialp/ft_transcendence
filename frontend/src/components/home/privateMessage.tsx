@@ -87,6 +87,7 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
         if (mount) {
             requestApi.get(`channel/privmessages/${me?.username}`).then((response: any) => {
                 if (mount) {
+                    // eslint-disable-next-line
                     response.messages?.map((msg: any) => {
                         if ((myBlackList && myBlackList?.findIndex((u) => u.username === msg?.property?.username) === -1)) {
                             conversations.push({ property: msg.property, conversations: msg.conversations })
@@ -144,6 +145,7 @@ export default function PrivateMessage({ currentChat, setCurrentChat, me, socket
         let mount = true;
         if (mount) {
             const indexOfConv = conversations.findIndex(obj => obj.property.username === receiver)
+            // eslint-disable-next-line
             conversations[indexOfConv]?.conversations.map((allMessages: any) => {
                 if (myBlackList?.findIndex((u) => u.username === allMessages?.sender?.username) === -1) {
                     messages.push({ id: allMessages.id, date: new Date(allMessages.date).toLocaleTimeString(undefined, { timeStyle: 'short' }), sender: allMessages.sender.username, content: allMessages.content, avatar: allMessages.sender.profileImage, receiver: allMessages.receiver.username })

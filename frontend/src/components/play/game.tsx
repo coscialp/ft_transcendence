@@ -58,6 +58,7 @@ export function InGame() {
       window.removeEventListener("blur", onBlur);
       window.removeEventListener("focus", onFocus);
       player.UnityContext.removeAllEventListeners();
+      player.UnityContext.quitUnityInstance();
       gameSocket.off(`ReadyUp/${player.GameID}`);
       gameSocket.off(`finishGame/${player.GameID}`);
       gameSocket.off(`getGameID/${me?.username}`);
@@ -96,6 +97,14 @@ export function InGame() {
       })
     }
     return (() => {
+      axios.request({
+        url: `/auth/online`,
+        method: 'patch',
+        baseURL: `http://${ip}:5000`,
+        headers: {
+          "Authorization": `Bearer ${cookies.access_token}`,
+        }
+      })
       mount = false;
     });
   }, [cookies]);
@@ -212,12 +221,12 @@ export function InGame() {
   useEffect(() => {
     const interval = setInterval(() => {
       let ready: HTMLElement | null = document.getElementById('button_ready');
-      if (ready) {
+      if (ready && player.Spectator === false) {
         ready.style.visibility = 'visible';
       }
     }, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [player]);
 
   useEffect(() => {
     const interval = setInterval(() => {

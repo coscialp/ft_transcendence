@@ -2,7 +2,6 @@ import axios from "axios"
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useHistory } from "react-router";
-import { Socket } from "socket.io-client";
 import { gameSocket, ip } from "../../App";
 import './home.css'
 import { ArrowSmUp } from 'heroicons-react'

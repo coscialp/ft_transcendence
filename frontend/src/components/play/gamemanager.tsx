@@ -187,7 +187,7 @@ export class GameManager {
                 if (this._ID === "Player1") {
                     this._UnityContext.send("RemotePaddle", "SetPosition", Position);
                 }
-                else if ("Player2") {
+                else if ("Player2" && this._Spectator === false) {
                     this._UnityContext.send("LocalPaddle", "SetPosition", Position);
                     this._Ballpos = `${posx} ${posy}`;
                     this._UnityContext.send("Ball", 'setPos', this._Ballpos);
@@ -196,13 +196,15 @@ export class GameManager {
                 }
                 else {
                     this._Ballpos = `${posx} ${posy}`;
-                    this._UnityContext.send("Ball", 'setPos', this._Ballpos);
+                    if (Player === "Player1") {
+                        this._UnityContext.send("Ball", 'setPos', this._Ballpos);
+                    }
                     this._Score1 = score1;
                     this._Score2 = score2;
-                    if (Player === "Player1") {
+                    if (Player === "Player2") {
                         this._UnityContext.send("RemotePaddle", "SetPosition", Position);
                     }
-                    else {
+                    else if (Player === "Player1"){
                         this._UnityContext.send("LocalPaddle", "SetPosition", Position);
                     }
                 }

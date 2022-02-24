@@ -212,6 +212,7 @@ export function MainMenu(data: any) {
 		if (mount) {
 			if (current_channel) {
 				requestApi.get(`channel/messages/${current_channel}`).then((response) => {
+					// eslint-disable-next-line
 					response.messages.map((msg: any) => {
 						if (myBlackList.findIndex((u) => u.username === msg.sender.username) === -1) {
 							messages.push({ id: messages.length, date: msg.date, sender: msg.sender.username, content: msg.content, avatar: msg.sender.profileImage })

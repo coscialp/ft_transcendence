@@ -12,10 +12,10 @@ export function History(data: any) {
 
     useEffect(() => {
         let mount = true;
-        if (mount) {
+        if (mount && data?.user.username !== undefined) {
 
             axios.request({
-                url: '/game/me/last',
+                url: `/game/${data?.user?.username}/last`,
                 method: 'get',
                 baseURL: `http://${ip}:5000`,
                 headers: {
@@ -28,9 +28,9 @@ export function History(data: any) {
             })
         }
         return (() => { mount = false; });
-    }, [cookies, data.me])
+    }, [cookies, data.user])
 
-    if (game.game !== undefined && game?.winner === data.me.username) {
+    if (game?.game !== undefined && game?.winner === data?.user?.username) {
         document.getElementById("History")!.style.backgroundColor = "rgba(0, 141, 177, 0.39)";
     }
 
@@ -40,7 +40,7 @@ export function History(data: any) {
             {game.game !== undefined ?
                 <div id="History" onClick={() => { return history.push(`/${data.user.username}/history`) }} >
                     <span className='HistoryNames'><img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player1.profileImage})` }} alt="" />{game?.game.player1.username}</span>
-                    <p className="Score"> {game?.game.score1} : {game?.game.score2} <br /> {game?.winner === data.me.username ? "WIN" : "LOSE"} <br /> {game?.game.ranked ? game?.winner === data?.me.username ? `+${game?.PPaverage} PP` : `-${game?.PPaverage} PP` : null} </p>
+                    <p className="Score"> {game?.game.score1} : {game?.game.score2} <br /> {game?.winner === data?.user?.username ? "WIN" : "LOSE"} <br /> {game?.game.ranked ? game?.winner === data?.user.username ? `+${game?.PPaverage} PP` : `-${game?.PPaverage} PP` : null} </p>
                     <span className='HistoryNames'><img className="HistoryImage" style={{ backgroundImage: `url(${game?.game.player2.profileImage})` }} alt="" />{game?.game.player2.username}</span>
                 </div>
                 :
